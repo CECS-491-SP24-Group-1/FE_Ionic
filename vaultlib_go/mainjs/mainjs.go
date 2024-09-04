@@ -1,10 +1,10 @@
 package main
 
 import (
-	"crypto/ed25519"
-	"encoding/base64"
 	"fmt"
 	"syscall/js"
+
+	"wraith.me/vaultlib/vaultlib"
 )
 
 func main() {
@@ -37,13 +37,5 @@ func ed25519Keygen(_ js.Value, _ []js.Value) interface{} {
 	//Call `JSON.parse()` on the string to derive an object usable in JS
 	//return js.Global().Get("JSON").Call("parse", json)
 
-	return Ed25519SK()
-}
-
-func Ed25519SK() string {
-	_, sk, err := ed25519.GenerateKey(nil)
-	if err != nil {
-		panic(err)
-	}
-	return base64.StdEncoding.EncodeToString([]byte(sk))
+	return vaultlib.Ed25519SK()
 }

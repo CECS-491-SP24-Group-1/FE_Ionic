@@ -1,7 +1,8 @@
 ### MASTER MAKEFILE ###
 
 ## EDIT THESE LINES TO CHANGE THE ENTRYPOINT & BINARY NAME ##
-ENTRYPOINT_NAME := ./mainjs/mainjs.go
+DEV_ENTRYPOINT_NAME := ./maindev/main.go
+JS_ENTRYPOINT_NAME := ./mainjs/mainjs.go
 BIN_NAME := vaultlib
 BIN_EXT := wasm
 
@@ -20,6 +21,7 @@ OUT_DIR := $(STATIC_DIR)/
 # Tools
 GO_BUILD := go build
 TINYGO_BUILD := tinygo build
+GO_DEV := go run
 WASMOPT := wasm-opt --enable-bulk-memory -Oz
 #MAKE := $(MAKE) -s
 
@@ -103,21 +105,26 @@ endif
 #Builds a Golang WASM file using the standard Go compiler
 .PHONY: build
 build:
-	@echo BUILD $(ENTRYPOINT_NAME) "->" $(BIN_NORM)
-	$(GO_OS_ARCH) $(GO_BUILD) $(GO_LD) -o $(BIN_NORM) $(ENTRYPOINT_NAME)
+	@echo BUILD $(JS_ENTRYPOINT_NAME) "->" $(BIN_NORM)
+	$(GO_OS_ARCH) $(GO_BUILD) $(GO_LD) -o $(BIN_NORM) $(JS_ENTRYPOINT_NAME)
 
 #Builds a Golang WASM file using the TinyGo compiler
 .PHONY: buildtiny
 buildtiny:
-	@echo BUILD $(ENTRYPOINT_NAME) "->" $(BIN_MIN)
-	$(TINYGO_BUILD) $(TINYGO_ARCH) $(TINYGO_LD) -o $(BIN_MIN) $(ENTRYPOINT_NAME)
+	@echo BUILD $(JS_ENTRYPOINT_NAME) "->" $(BIN_MIN)
+	$(TINYGO_BUILD) $(TINYGO_ARCH) $(TINYGO_LD) -o $(BIN_MIN) $(JS_ENTRYPOINT_NAME)
 	
-
 #Cleans the directory of any WASM files
 .PHONY: clean
 clean:
 	@echo CLEAN *.wasm
 	@$(MAKE) -s __rmfile__ TARGET=*.wasm
+
+#Runs the development main file (distinct from JS)
+.PHONY: DEV 
+dev:
+	@echo DEV $(DEV_ENTRYPOINT_NAME)
+	$(GO_DEV) $(DEV_ENTRYPOINT_NAME)
 
 #Copies the generated WASM files to the static site folder for testing
 .PHONY: install

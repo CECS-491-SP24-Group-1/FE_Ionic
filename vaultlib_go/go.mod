@@ -1,4 +1,4 @@
-module wraith.me/clientside_crypto
+module wraith.me/vaultlib
 
 go 1.21.0
 
