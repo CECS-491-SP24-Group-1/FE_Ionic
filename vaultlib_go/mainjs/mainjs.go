@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"syscall/js"
 
-	"wraith.me/vaultlib/vaultlib"
+	"wraith.me/vaultlib/jsbind"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	// PUT ALL JS FUNCTIONS TO EXPORT BELOW THIS BLOCK
 	//
 
-	js.Global().Set("ed25519Keygen", js.FuncOf(ed25519Keygen))
+	js.Global().Set("ed25519Keygen", js.FuncOf(jsbind.Ed25519Keygen))
 
 	//
 	// PUT ALL JS FUNCTIONS TO EXPORT ABOVE THIS BLOCK
@@ -27,15 +27,4 @@ func main() {
 
 	//Utilize a channel receive expression to halt the 'main' goroutine, preventing the program from terminating.
 	<-ch
-}
-
-// ed25519Keygen() -> string
-func ed25519Keygen(_ js.Value, _ []js.Value) interface{} {
-	//Create the Go object and marshal to JSON
-	///json :=
-
-	//Call `JSON.parse()` on the string to derive an object usable in JS
-	//return js.Global().Get("JSON").Call("parse", json)
-
-	return vaultlib.Ed25519SK()
 }
