@@ -3,8 +3,23 @@ import reactLogo from "./assets/react.svg";
 import "./App.css";
 import { IonButton, IonContent, IonPage } from "@ionic/react";
 
-function App() {
+import "./App.css";
+import useWasm from "./wasm_util/use_wasm";
+
+export default function App() {
 	const [count, setCount] = useState(0);
+	const [key, setKey] = useState<string | null>(null);
+
+	const wasmLoaded = useWasm("/vaultlib.wasm");
+
+	const callWasmFunction = () => {
+		if (wasmLoaded) {
+			setKey(ed25519Keygen());
+		}
+		else {
+			console.error("WASM not loaded or function not available");
+		}
+	};
 
 	return (
 		<IonPage>
@@ -23,14 +38,14 @@ function App() {
 						<IonButton onClick={() => setCount((count) => count + 1)}>
 							count is {count}
 						</IonButton>
-						<p>
-							Edit <code>src/App.tsx</code> and save to test HMR
-						</p>
+						<p>Edit <code>src/App.tsx</code> and save to test HMR</p>
+
+						<p>{wasmLoaded ? "WASM Loaded!" : "Loading WASM..."}</p>
+						<IonButton onClick={callWasmFunction} disabled={!wasmLoaded}>Call WASM function</IonButton>
+						<pre style={{ fontSize: "10px" }}>{key ? key : "<no key yet>"}</pre>
 					</div>
 				</div>
 			</IonContent>
 		</IonPage>
 	);
 }
-
-export default App;

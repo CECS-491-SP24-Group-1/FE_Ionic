@@ -11,7 +11,9 @@
 		"ionic:serve": "vite dev --host",
 		"dev:android": "ionic capacitor run android --external --livereload -p 5173",
 		"dev:ios": "ionic capacitor run ios --external --livereload -p 5173",
-		"android": "cap run android --verbose"
+		"android": "cap run android --verbose",
+		"vaultlib": "cd vaultlib_go && make build && make install",
+		"sync": "cap sync"
 	},
 	"dependencies": {
 		"@capacitor/android": "^6.1.2",
