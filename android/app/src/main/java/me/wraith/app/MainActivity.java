@@ -1,4 +1,4 @@
-package com.stafford.vite.capacitor;
+package me.wraith.app;
 
 import com.getcapacitor.BridgeActivity;
 

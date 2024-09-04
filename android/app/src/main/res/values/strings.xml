@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">vite-and-capacitor</string>
-    <string name="title_activity_main">vite-and-capacitor</string>
-    <string name="package_name">com.stafford.vite.capacitor</string>
-    <string name="custom_url_scheme">com.stafford.vite.capacitor</string>
+    <string name="app_name">wraithapp</string>
+    <string name="title_activity_main">wraithapp</string>
+    <string name="package_name">me.wraith.app</string>
+    <string name="custom_url_scheme">me.wraith.app</string>
 </resources>

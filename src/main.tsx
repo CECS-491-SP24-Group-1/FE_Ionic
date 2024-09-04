@@ -26,14 +26,14 @@ import "./variables.css";
 setupIonicReact();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/home" component={App} />
-          <Redirect exact from="/" to="/home" />
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonApp>
-  </React.StrictMode>
+	<React.StrictMode>
+		<IonApp>
+			<IonReactRouter>
+				<IonRouterOutlet>
+					<Route path="/home" component={App} />
+					<Redirect exact from="/" to="/home" />
+				</IonRouterOutlet>
+			</IonReactRouter>
+		</IonApp>
+	</React.StrictMode>
 );
