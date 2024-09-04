@@ -1,7 +1,7 @@
 ### MASTER MAKEFILE ###
 
 ## EDIT THESE LINES TO CHANGE THE ENTRYPOINT & BINARY NAME ##
-ENTRYPOINT_NAME := js_exports.go
+ENTRYPOINT_NAME := ./mainjs/mainjs.go
 BIN_NAME := vaultlib
 BIN_EXT := wasm
 
