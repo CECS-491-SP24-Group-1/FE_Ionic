@@ -1,0 +1,3 @@
+packages:
+  - path: "wraith.me/vaultlib/vaultlib"
+  - path: "wraith.me/vaultlib/vaultlib/crypto"
