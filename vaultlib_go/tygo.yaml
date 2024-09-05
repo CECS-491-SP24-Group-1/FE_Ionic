@@ -1,3 +1,9 @@
 packages:
-  - path: "wraith.me/vaultlib/vaultlib"
-  - path: "wraith.me/vaultlib/vaultlib/crypto"
+  - path: "wraith.me/vaultlib/vaultlib/keystore"
+    output_path: "dist/keystore"
+    indent: "\t"
+    type_mappings:
+      KeyStore: "KeyStore"
+      ccrypto.PUBKEY_SIZE: 32
+      ccrypto.Privseed: "Uint8Array"
+      ccrypto.Pubkey: "Uint8Array"
