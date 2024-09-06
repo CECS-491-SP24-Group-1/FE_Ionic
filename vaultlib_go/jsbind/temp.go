@@ -1,3 +1,5 @@
+//go:build wasm
+
 package jsbind
 
 import (
@@ -18,3 +20,5 @@ func Ed25519Keygen(_ js.Value, _ []js.Value) interface{} {
 	fmt.Println("running the jsbind.Ed25519Keygen file")
 	return vaultlib.Ed25519SK()
 }
+
+func HKDF()
