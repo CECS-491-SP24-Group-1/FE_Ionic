@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	ccrypto "wraith.me/message_server/crypto"
 	"wraith.me/vaultlib/vaultlib/crypto"
 )
 
@@ -29,7 +28,7 @@ func TestHKDF(t *testing.T){
 	fmt.Printf("key:  %s\n", sk.String())
 
 	//Ensure the key is always the same
-	expected, err:= ccrypto.ParsePrivkey("tkE0uZP1ccLZsMZu5K0da60tDxD5wW33tGftELfteTPBkNVRKSZWW4PqYLiIFmtvExzMdmtwqNeT3eLtkXaEqA==")
+	expected, err:= crypto.ParsePrivkey("tkE0uZP1ccLZsMZu5K0da60tDxD5wW33tGftELfteTPBkNVRKSZWW4PqYLiIFmtvExzMdmtwqNeT3eLtkXaEqA==")
 	if err != nil {
 		t.Fatal(err)
 	}

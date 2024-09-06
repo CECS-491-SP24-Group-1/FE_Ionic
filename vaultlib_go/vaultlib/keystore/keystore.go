@@ -8,24 +8,24 @@ import (
 	"encoding/json"
 	"fmt"
 
-	ccrypto "wraith.me/message_server/crypto"
+	"wraith.me/vaultlib/vaultlib/crypto"
 )
 
 const (
-	ED25519_LEN = ccrypto.PUBKEY_SIZE
+	ED25519_LEN = crypto.PUBKEY_SIZE
 )
 
 // Represents an Ed25519 keypair inside a keystore.
 type KeyStore struct {
-	SK          ccrypto.Privseed `json:"sk"`          //Holds the private key.
-	PK          ccrypto.Pubkey   `json:"pk"`          //Holds the public key.
+	SK          crypto.Privseed `json:"sk"`          //Holds the private key.
+	PK          crypto.Pubkey   `json:"pk"`          //Holds the public key.
 	Fingerprint string           `json:"fingerprint"` //Holds the fingerprint of the public key as a SHA-256 hash.
 }
 
 // Generates a new keystore.
 func NewKeyStore() KeyStore {
 	//Generate a new keypair
-	pk, sk, err := ccrypto.NewKeypair(nil)
+	pk, sk, err := crypto.NewKeypair(nil)
 	if err != nil {
 		panic(err)
 	}
@@ -38,8 +38,8 @@ func NewKeyStore() KeyStore {
 // Derives a keystore object from raw bytes.
 func FromBytes(sk []byte, pk []byte) KeyStore {
 	//Get the key objects
-	sko := ccrypto.MustFromBytes(ccrypto.PrivkeyFromBytes, sk)
-	pko := ccrypto.MustFromBytes(ccrypto.PubkeyFromBytes, pk)
+	sko := crypto.MustFromBytes(crypto.PrivkeyFromBytes, sk)
+	pko := crypto.MustFromBytes(crypto.PubkeyFromBytes, pk)
 
 	//Ensure the input PK corresponds to the SK
 	if !pko.Equal(sko.Public()) {
@@ -64,8 +64,8 @@ func FromBytes(sk []byte, pk []byte) KeyStore {
 func FromJSON(jsons string) (KeyStore, error) {
 	//Create an intermediate struct
 	type intermediate struct {
-		SK ccrypto.Privseed `json:"sk"`
-		PK ccrypto.Pubkey   `json:"pk"`
+		SK crypto.Privseed `json:"sk"`
+		PK crypto.Pubkey   `json:"pk"`
 	}
 
 	//Attempt to unmarshal an object from the JSON
@@ -79,17 +79,17 @@ func FromJSON(jsons string) (KeyStore, error) {
 // Derives a keystore object from a private key via `scalar_mult()“.
 func FromSK(sk []byte) KeyStore {
 	//Get the public key equivalent via `scalar_mult()`
-	pubSmult := ccrypto.MustFromBytes(ccrypto.PrivkeyFromBytes, sk).Public()
+	pubSmult := crypto.MustFromBytes(crypto.PrivkeyFromBytes, sk).Public()
 
 	//Return the object
 	return FromBytes(sk, pubSmult[:])
 }
 
 // Derives a `Privkey` object from this object.
-func (kp KeyStore) Amalgamate() ccrypto.Privkey {
-	bytes := [ccrypto.PRIVKEY_SIZE]byte{}
-	copy(bytes[:ccrypto.PRIVKEY_SEED_SIZE], kp.SK[:])
-	copy(bytes[ccrypto.PRIVKEY_SEED_SIZE:], kp.PK[:])
+func (kp KeyStore) Amalgamate() crypto.Privkey {
+	bytes := [crypto.PRIVKEY_SIZE]byte{}
+	copy(bytes[:crypto.PRIVKEY_SEED_SIZE], kp.SK[:])
+	copy(bytes[crypto.PRIVKEY_SEED_SIZE:], kp.PK[:])
 	return bytes
 }
 
@@ -107,8 +107,8 @@ func (kp KeyStore) JSON() string {
 }
 
 // Signs a message with this key store's private key.
-func (kp KeyStore) Sign(msg []byte) ccrypto.Signature {
-	return ccrypto.Sign(kp.Amalgamate(), msg)
+func (kp KeyStore) Sign(msg []byte) crypto.Signature {
+	return crypto.Sign(kp.Amalgamate(), msg)
 }
 
 // Returns the string representation of the object.
@@ -120,6 +120,6 @@ func (kp KeyStore) String() string {
 }
 
 // Verifies a message and signature with this key store's public key.
-func (kp KeyStore) Verify(msg []byte, sig ccrypto.Signature) bool {
-	return ccrypto.Verify(kp.PK, msg, sig)
+func (kp KeyStore) Verify(msg []byte, sig crypto.Signature) bool {
+	return crypto.Verify(kp.PK, msg, sig)
 }

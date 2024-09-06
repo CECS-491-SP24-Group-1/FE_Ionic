@@ -1,6 +1,7 @@
 package crypto
 
 import (
+	"crypto/ed25519"
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/subtle"
@@ -9,9 +10,6 @@ import (
 	"io"
 
 	"golang.org/x/crypto/hkdf"
-	"wraith.me/vaultlib/vaultlib/keystore"
-
-	ccrypto "wraith.me/message_server/crypto"
 )
 
 // Sets the minimum the salt and destination buffers must be for an HKDF operation.
@@ -24,26 +22,26 @@ var (
 )
 
 // Derives an Ed25519 private key from a passphrase, salt, and optional info.
-func Ed25519HKDF(passphrase string, salt, info []byte) (ccrypto.Privkey, error) {
+func Ed25519HKDF(passphrase string, salt, info []byte) (Privkey, error) {
 	//Create the output Ed25519 buffer
-	privkey := make([]byte, keystore.ED25519_LEN)
+	privkey := make([]byte, ed25519.SeedSize)
 
 	//Populate the salt with random bytes if its nil
 	if salt == nil {
 		salt = make([]byte, _DEFAULT_SALT_SIZE)
 		if _, err := rand.Read(salt); err != nil {
-			return ccrypto.NilPrivkey(), err
+			return NilPrivkey(), err
 		}
 	}
 
 	//Perform HKDF
 	err := hkdfHelper(&privkey, passphrase, salt, info)
 	if err != nil {
-		return ccrypto.NilPrivkey(), err
+		return NilPrivkey(), err
 	}
 
 	//Construct the private key object
-	return ccrypto.PrivkeyFromBytes(privkey)
+	return PrivkeyFromBytes(privkey)
 }
 
 // Derives x random bytes from a passphrase, salt, and optional info.
