@@ -7,7 +7,7 @@ import (
 	"wraith.me/vaultlib/vaultlib/vault"
 )
 
-func main(){
+func main() {
 	uuid := util.MustNewUUID7()
 	v := vault.New(uuid, "no_ident")
 

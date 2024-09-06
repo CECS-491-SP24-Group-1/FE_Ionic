@@ -133,6 +133,25 @@ enum:
 	@echo GO-ENUM .
 	$(GO) generate ./...
 
+.PHONY: fmt checkfmt
+
+#Target to format Go files
+fmt:
+	@echo "Formatting Go files..."
+	@gofmt -w .
+
+#Target to check for formatting issues
+checkfmt:
+	@echo "Checking Go files format..."
+	@if [ -n "$$(gofmt -l .)" ]; then \
+		echo "Unformatted files found:"; \
+		gofmt -l .; \
+		exit 1; \
+	else \
+		echo "All files are formatted."; \
+	fi
+
+
 #Copies the generated WASM files to the static site folder for testing
 .PHONY: install
 install:

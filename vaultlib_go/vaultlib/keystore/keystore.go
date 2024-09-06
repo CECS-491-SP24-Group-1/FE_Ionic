@@ -15,7 +15,7 @@ import (
 type KeyStore struct {
 	SK          crypto.Privseed `json:"sk"`          //Holds the private key.
 	PK          crypto.Pubkey   `json:"pk"`          //Holds the public key.
-	Fingerprint string           `json:"fingerprint"` //Holds the fingerprint of the public key as a SHA-256 hash.
+	Fingerprint string          `json:"fingerprint"` //Holds the fingerprint of the public key as a SHA-256 hash.
 }
 
 // Generates a new keystore.
@@ -91,9 +91,9 @@ func (kp KeyStore) Amalgamate() crypto.Privkey {
 
 // Checks if this keystore object is equal to another.
 func (kp KeyStore) Equal(other KeyStore) bool {
-	return subtle.ConstantTimeCompare(kp.SK[:], other.SK[:]) == 1 && 
-	subtle.ConstantTimeCompare(kp.PK[:], other.PK[:]) == 1 && 
-	subtle.ConstantTimeCompare([]byte(kp.Fingerprint), []byte(other.Fingerprint)) == 1
+	return subtle.ConstantTimeCompare(kp.SK[:], other.SK[:]) == 1 &&
+		subtle.ConstantTimeCompare(kp.PK[:], other.PK[:]) == 1 &&
+		subtle.ConstantTimeCompare([]byte(kp.Fingerprint), []byte(other.Fingerprint)) == 1
 }
 
 // Returns the JSON representation of the object.
@@ -109,9 +109,9 @@ func (kp KeyStore) Sign(msg []byte) crypto.Signature {
 
 // Returns the string representation of the object.
 func (kp KeyStore) String() string {
-	return fmt.Sprintf("Ed25519KP{sk=%s, pk=%s}", 
-	base64.StdEncoding.EncodeToString(kp.SK[:]),
-	 base64.StdEncoding.EncodeToString(kp.PK[:]),
+	return fmt.Sprintf("Ed25519KP{sk=%s, pk=%s}",
+		base64.StdEncoding.EncodeToString(kp.SK[:]),
+		base64.StdEncoding.EncodeToString(kp.PK[:]),
 	)
 }
 

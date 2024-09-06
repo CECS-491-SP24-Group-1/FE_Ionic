@@ -35,8 +35,8 @@ func Ed25519HKDF(passphrase string, salt, info []byte) (Privkey, error) {
 	return PrivkeyFromBytes(privkey)
 }
 
-//Generates n HKDF bytes from a given secret, salt, and info.
-func HKDF(in, salt, info []byte, outlen uint) ([]byte, error){
+// Generates n HKDF bytes from a given secret, salt, and info.
+func HKDF(in, salt, info []byte, outlen uint) ([]byte, error) {
 	buf := make([]byte, outlen)
 	err := hkdfHelper(&buf, in, salt, nil)
 	if err != nil {
@@ -48,8 +48,8 @@ func HKDF(in, salt, info []byte, outlen uint) ([]byte, error){
 // Derives x random bytes from input data, salt, and optional info.
 func hkdfHelper(dest *[]byte, in []byte, salt, info []byte) error {
 	//Ensure the destination pointer is sufficiently large
-	if subtle.ConstantTimeLessOrEq(_HKDF_MIN_BUF_SIZE, len(*dest)) == 0  {
-    	return fmt.Errorf("destination buffer too small; minimum size is %d bytes", _HKDF_MIN_BUF_SIZE)
+	if subtle.ConstantTimeLessOrEq(_HKDF_MIN_BUF_SIZE, len(*dest)) == 0 {
+		return fmt.Errorf("destination buffer too small; minimum size is %d bytes", _HKDF_MIN_BUF_SIZE)
 	}
 
 	//Populate the salt with random bytes if its nil

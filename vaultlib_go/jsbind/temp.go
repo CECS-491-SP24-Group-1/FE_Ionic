@@ -1,4 +1,4 @@
-//go:build wasm
+//go:build js && wasm
 
 package jsbind
 
@@ -9,7 +9,7 @@ import (
 	"wraith.me/vaultlib/vaultlib"
 )
 
-// ed25519Keygen() -> string
+// Ed25519Keygen() -> string
 func Ed25519Keygen(_ js.Value, _ []js.Value) interface{} {
 	//Create the Go object and marshal to JSON
 	///json :=
@@ -21,4 +21,11 @@ func Ed25519Keygen(_ js.Value, _ []js.Value) interface{} {
 	return vaultlib.Ed25519SK()
 }
 
-func HKDF()
+// HKDF(password: string) -> string
+func HKDF(this js.Value, args []js.Value) interface{} {
+	//password := Val2Any[string](args[0])
+	//key, err := crypto.Ed25519HKDF(password, nil, nil)
+
+	println("Button clicked!")
+	return nil
+}

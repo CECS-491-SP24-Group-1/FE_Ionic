@@ -9,7 +9,7 @@ import (
 	"wraith.me/vaultlib/vaultlib/crypto"
 )
 
-func TestPSeed(t *testing.T){
+func TestPSeed(t *testing.T) {
 	_, key, err := crypto.NewKeypair(nil)
 	if err != nil {
 		t.Fatal(err)

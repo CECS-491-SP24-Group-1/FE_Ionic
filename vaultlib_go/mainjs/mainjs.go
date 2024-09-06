@@ -1,4 +1,4 @@
-//go:build wasm
+//go:build js && wasm
 
 package main
 
@@ -22,6 +22,12 @@ func main() {
 	//
 
 	js.Global().Set("ed25519Keygen", js.FuncOf(jsbind.Ed25519Keygen))
+
+	jsbind.JSWarn(
+		"this is a test error",
+		"this is another test error",
+		"this is yet another test error",
+	)
 
 	//
 	// PUT ALL JS FUNCTIONS TO EXPORT ABOVE THIS BLOCK

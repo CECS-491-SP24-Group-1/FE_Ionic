@@ -1,12 +1,24 @@
-//go:build wasm
+//go:build js && wasm
 
 package jsbind
 
 import (
+	"fmt"
+	"runtime"
+	"strings"
 	"syscall/js"
 
 	"github.com/norunners/vert"
 )
+
+// Creates a generic array from a given array.
+func GenerifyArray[T any](arr []T) []interface{} {
+	out := make([]interface{}, len(arr))
+	for i := 0; i < len(arr); i++ {
+		out[i] = interface{}(arr[i])
+	}
+	return out
+}
 
 // Creates a Golang array from a JS array.
 func JSArray2GoArray[T any](jsa js.Value, maxlen int, convFunc func(v js.Value) T) []T {
@@ -27,19 +39,47 @@ func JSArray2GoByteArray(jsa js.Value, maxlen int) []byte {
 	return JSArray2GoArray[byte](jsa, maxlen, Val2Any)
 }
 
+// Emits errors to the JS console if any occur.
+func JSErr(errs ...error) {
+	strErrs := make([]string, len(errs))
+	for i, err := range errs {
+		strErrs[i] = err.Error()
+	}
+	jsLog("error", strErrs...)
+}
+
+// Emits a string or series of strings to the console.
+func jsLog(typ string, msgs ...string) {
+	//Get the name of the caller
+	var caller string
+	pc, _, _, ok := runtime.Caller(2)
+	if !ok {
+		caller = "<Unknown Function>"
+	} else {
+		caller = runtime.FuncForPC(pc).Name()
+	}
+
+	//Format the output string
+	out := fmt.Sprintf(
+		"---|/!\\| vaultlib::%s with function %s |/!\\|---\n%v\n",
+		typ,
+		caller,
+		strings.Join(msgs, "\n"),
+	)
+
+	//Call `console.error`
+	js.Global().Get("console").Call(typ, out)
+}
+
+// Emits warnings to the JS console if any occur.
+func JSWarn(warns ...string) {
+	jsLog("warn", warns...)
+}
+
 // Converts a JS object to a Go object using Vert.
 func Val2Any[T any](val js.Value) T {
 	v := vert.ValueOf(val)
 	var out T
 	v.AssignTo(&out)
-	return out
-}
-
-// Creates a generic array from a given array.
-func GenerifyArray[T any](arr []T) []interface{} {
-	out := make([]interface{}, len(arr))
-	for i := 0; i < len(arr); i++ {
-		out[i] = interface{}(arr[i])
-	}
 	return out
 }
