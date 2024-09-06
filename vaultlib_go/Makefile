@@ -19,9 +19,10 @@ STATIC_DIR := ../public
 OUT_DIR := $(STATIC_DIR)/
 
 # Tools
-GO_BUILD := go build
+GO := go
+GO_BUILD := $(GO) build
 TINYGO_BUILD := tinygo build
-GO_DEV := go run
+GO_DEV := $(GO) run
 WASMOPT := wasm-opt --enable-bulk-memory -Oz
 #MAKE := $(MAKE) -s
 
@@ -121,10 +122,16 @@ clean:
 	@$(MAKE) -s __rmfile__ TARGET=*.wasm
 
 #Runs the development main file (distinct from JS)
-.PHONY: DEV 
+.PHONY: dev
 dev:
 	@echo DEV $(DEV_ENTRYPOINT_NAME)
 	$(GO_DEV) $(DEV_ENTRYPOINT_NAME)
+
+#Generates enum files based on `go-enum` syntax
+.PHONY: enum
+enum:
+	@echo GO-ENUM .
+	$(GO) generate ./...
 
 #Copies the generated WASM files to the static site folder for testing
 .PHONY: install

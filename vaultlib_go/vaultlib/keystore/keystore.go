@@ -19,7 +19,7 @@ type KeyStore struct {
 }
 
 // Generates a new keystore.
-func NewKeyStore() KeyStore {
+func New() *KeyStore {
 	//Generate a new keypair
 	pk, sk, err := crypto.NewKeypair(nil)
 	if err != nil {
@@ -32,7 +32,7 @@ func NewKeyStore() KeyStore {
 }
 
 // Derives a keystore object from raw bytes.
-func FromBytes(sk []byte, pk []byte) KeyStore {
+func FromBytes(sk []byte, pk []byte) *KeyStore {
 	//Get the key objects
 	sko := crypto.MustFromBytes(crypto.PrivkeyFromBytes, sk)
 	pko := crypto.MustFromBytes(crypto.PubkeyFromBytes, pk)
@@ -53,11 +53,11 @@ func FromBytes(sk []byte, pk []byte) KeyStore {
 	out.Fingerprint = hex.EncodeToString(h[:])
 
 	//Return the object
-	return out
+	return &out
 }
 
 // Derives a keystore object from a JSON string.
-func FromJSON(jsons string) (KeyStore, error) {
+func FromJSON(jsons string) (*KeyStore, error) {
 	//Create an intermediate struct
 	type intermediate struct {
 		SK crypto.Privseed `json:"sk"`
@@ -73,7 +73,7 @@ func FromJSON(jsons string) (KeyStore, error) {
 }
 
 // Derives a keystore object from a private key via `scalar_mult()“.
-func FromSK(sk []byte) KeyStore {
+func FromSK(sk []byte) *KeyStore {
 	//Get the public key equivalent via `scalar_mult()`
 	pubSmult := crypto.MustFromBytes(crypto.PrivkeyFromBytes, sk).Public()
 
