@@ -11,10 +11,6 @@ import (
 	"wraith.me/vaultlib/vaultlib/crypto"
 )
 
-const (
-	ED25519_LEN = crypto.PUBKEY_SIZE
-)
-
 // Represents an Ed25519 keypair inside a keystore.
 type KeyStore struct {
 	SK          crypto.Privseed `json:"sk"`          //Holds the private key.
