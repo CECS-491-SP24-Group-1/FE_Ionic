@@ -15,7 +15,7 @@ export default function App() {
 	const wasmLoaded = useWasm("/vaultlib.wasm");
 
 	useEffect(() => {
-		if (wasmLoaded) setSalt(HKDF_SALT)
+		if (wasmLoaded) setSalt(HKDF_SALT);
 	});
 
 	const callWasmFunction = () => {
