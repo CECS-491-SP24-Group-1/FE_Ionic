@@ -30,3 +30,20 @@ func TestEd25519HKDF(t *testing.T) {
 	fmt.Printf("salt: %s\n", base64.StdEncoding.EncodeToString(salt[:]))
 	fmt.Printf("priv: %s\n", privkey.String())
 }
+
+func TestEd25519Argon(t *testing.T) {
+	//Define the passphrase, salt, and ctx
+	passphrase := "password12345"
+	salt := uuid.MustParse("a91742ba-8771-45f2-92b4-e233d4615438")
+
+	//Run HKDF
+	privkey, err := crypto.Ed25519Argon(passphrase, salt[:])
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Printf("pass: %s\n", passphrase)
+	fmt.Printf("salt: %s\n", base64.StdEncoding.EncodeToString(salt[:]))
+	fmt.Printf("priv: %s\n", privkey.String())
+	fmt.Printf("prnt: %s\n", privkey.Fingerprint())
+}
