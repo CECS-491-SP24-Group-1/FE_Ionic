@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import { IonButton, IonContent, IonInput, IonItem, IonPage } from "@ionic/react";
@@ -9,8 +9,14 @@ import useWasm from "./wasm_util/use_wasm";
 export default function App() {
 	const [count, setCount] = useState(0);
 	const [key, setKey] = useState<string | null>(null);
+	const [salt, setSalt] = useState<string | null>(null);
+	const [hkdf, setHkdf] = useState<string | null>(null);
 	const [inputValue, setInputValue] = useState<string>("");
 	const wasmLoaded = useWasm("/vaultlib.wasm");
+
+	useEffect(() => {
+		if (wasmLoaded) setSalt(HKDF_SALT)
+	});
 
 	const callWasmFunction = () => {
 		if (wasmLoaded) {
@@ -22,10 +28,8 @@ export default function App() {
 	};
 
 	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault(); // Prevent the default form submission
-		console.log('Submitted value:', inputValue);
-		// Add your submission logic here
-		setInputValue(""); // Clear the input field after submission
+		event.preventDefault();
+		if (wasmLoaded) setHkdf(HKDF(inputValue));
 	};
 
 	return (
@@ -49,19 +53,22 @@ export default function App() {
 
 						<p>{wasmLoaded ? "WASM Loaded!" : "Loading WASM..."}</p>
 						<IonButton onClick={callWasmFunction} disabled={!wasmLoaded}>Call WASM function</IonButton>
-						<pre style={{ fontSize: "10px" }}>{key ? key : "<no key yet>"}</pre>
+						<pre className="text-2xs mt-1">{key ? key : "<no key yet>"}</pre>
+						<div className="h-20"></div>
 						<p>Password HKDF Test</p>
-						<form onSubmit={handleSubmit} style={{ display: "flex", alignItems: "center" }}>
+						<form className="mx-auto max-w-screen-sm" onSubmit={handleSubmit} style={{ display: "flex", alignItems: "center" }}>
 							<IonItem style={{ flex: 1 }}>
 								<IonInput
 									value={inputValue}
 									onIonChange={(e) => setInputValue(e.detail.value!)}
-									placeholder="Enter text"
+									placeholder="Enter a passphrase"
 									required
 								/>
 							</IonItem>
 							<IonButton type="submit" expand="full">Submit</IonButton>
 						</form>
+						<pre className="text-2xs mt-2"><strong>salt:</strong> {salt}</pre>
+						<pre className="text-2xs mt-2">{hkdf ? hkdf : "<no hkdf key yet>"}</pre>
 					</div>
 				</div>
 			</IonContent>

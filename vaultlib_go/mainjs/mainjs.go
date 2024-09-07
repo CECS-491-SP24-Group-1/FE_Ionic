@@ -21,13 +21,10 @@ func main() {
 	// PUT ALL JS FUNCTIONS TO EXPORT BELOW THIS BLOCK
 	//
 
+	//TODO: make binder function that simplifies this
 	js.Global().Set("ed25519Keygen", js.FuncOf(jsbind.Ed25519Keygen))
-
-	jsbind.JSWarn(
-		"this is a test error",
-		"this is another test error",
-		"this is yet another test error",
-	)
+	js.Global().Set("HKDF", js.FuncOf(jsbind.HKDF))
+	js.Global().Set("HKDF_SALT", js.ValueOf(jsbind.HKDF_SALT))
 
 	//
 	// PUT ALL JS FUNCTIONS TO EXPORT ABOVE THIS BLOCK
