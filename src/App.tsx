@@ -65,7 +65,7 @@ export default function App() {
 									required
 								/>
 							</IonItem>
-							<IonButton type="submit" expand="full">Submit</IonButton>
+							<IonButton type="submit">Submit</IonButton>
 						</form>
 						<pre className="text-2xs mt-2"><strong>salt:</strong> {salt}</pre>
 						<pre className="text-2xs mt-1">{hkdf ? hkdf : "<no hkdf key yet>"}</pre>
