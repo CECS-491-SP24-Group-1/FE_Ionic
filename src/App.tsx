@@ -15,12 +15,12 @@ export default function App() {
 	const wasmLoaded = useWasm("/vaultlib.wasm");
 
 	useEffect(() => {
-		if (wasmLoaded) setSalt(HKDF_SALT);
+		if (wasmLoaded) setSalt(vaultlib.HKDF_SALT);
 	});
 
 	const callWasmFunction = () => {
 		if (wasmLoaded) {
-			setKey(ed25519Keygen());
+			setKey(vaultlib.Ed25519Keygen());
 		}
 		else {
 			console.error("WASM not loaded or function not available");
@@ -29,7 +29,7 @@ export default function App() {
 
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
-		if (wasmLoaded) setHkdf(HKDF(inputValue));
+		if (wasmLoaded) setHkdf(vaultlib.HKDF(inputValue));
 	};
 
 	return (

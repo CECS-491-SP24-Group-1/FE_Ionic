@@ -12,7 +12,7 @@ import (
 	"wraith.me/vaultlib/vaultlib/crypto"
 )
 
-const HKDF_SALT = "X7m9pKfR2jN/qLwE3Yt8Dw=="
+const HKDF_SALT = "0UsWeiCtpBO3N1sNnCyR/Q=="
 
 // Ed25519Keygen() -> string
 func Ed25519Keygen(_ js.Value, _ []js.Value) interface{} {
