@@ -2,26 +2,56 @@ package vault
 
 import (
 	"bytes"
-	"encoding/base64"
+	"crypto/rand"
+	"crypto/subtle"
 	"encoding/gob"
-	"fmt"
 
+	"golang.org/x/crypto/chacha20poly1305"
 	"wraith.me/vaultlib/vaultlib/crypto"
 )
 
 // Encrypts a vault using the passphrase method.
 func (v Vault) EncryptPassphrase(passphrase string) (*EVault, error) {
-	//Derive a symmetric key via HKDF on the passphrase
-	idBytes := v.ID.Bytes()
-	keyb, err := crypto.HKDF([]byte(passphrase), nil, idBytes[:], crypto.PRIVKEY_SEED_SIZE)
+	//Derive a symmetric key via Argon2id on the passphrase
+	keyb, err := crypto.Argon([]byte(passphrase), nil, crypto.PRIVKEY_SEED_SIZE)
 	if err != nil {
 		return nil, err
 	}
 	key := crypto.Privseed(keyb[:crypto.PRIVKEY_SEED_SIZE])
 
-	v.Encrypt(key)
+	//Encrypt the vault
+	return v.Encrypt(key)
+}
 
-	return nil, nil
+// Decrypts an encrypted vault object using XChaCha20-Poly1305, given a symmetric key.
+func (ev EVault) Decrypt(key crypto.Privseed) (*Vault, error) {
+	//Extract the nonce and ciphertext from the payload
+	nonce := make([]byte, chacha20poly1305.NonceSizeX)
+	ciph := make([]byte, ev.PayloadSize - chacha20poly1305.NonceSizeX)
+	subtle.ConstantTimeCopy(1, nonce, ev.Payload[:chacha20poly1305.NonceSizeX])
+	subtle.ConstantTimeCopy(1, ciph, ev.Payload[chacha20poly1305.NonceSizeX:])
+
+	//Decrypt the vault using XChaCha20-Poly1305; the vault ID is checked as AEAD
+	aead, err := chacha20poly1305.NewX(key[:])
+	if err != nil {
+		return nil, err
+	}
+	plain, err := aead.Open(nil, nonce, ciph, ev.ID.UUID[:])
+	if err != nil {
+		return nil, err
+	}
+
+
+	//Deserialize the vault from a GOB stream
+	var vault Vault
+	vbytes := bytes.NewBuffer(plain)
+	dec := gob.NewDecoder(vbytes)
+	if err := dec.Decode(&vault); err != nil {
+		return nil, err
+	}
+
+	//Return the decrypted vault object
+	return &vault, nil
 }
 
 // Encrypts a vault object using XChaCha20-Poly1305, given a symmetric key.
@@ -33,16 +63,27 @@ func (v Vault) Encrypt(key crypto.Privseed) (*EVault, error) {
 		return nil, err
 	}
 
-	/*
-			aead, err := chacha20poly1305.NewX(key)
-		    if err != nil {
-		        log.Println("Error when creating cipher.")
-		        panic(err)
-		    }
-	*/
+	//Create a random nonce for the cipher
+	nonce := make([]byte, chacha20poly1305.NonceSizeX)
+	if _, err := rand.Read(nonce); err != nil {
+		return nil, err
+	}
 
-	s := base64.StdEncoding.EncodeToString(vbytes.Bytes())
-	fmt.Printf("gob: %s\n", s)
+	//Encrypt the vault using XChaCha20-Poly1305; the vault ID is added as AEAD
+	//The first 24 bytes of the encrypted vault are reserved for the nonce
+	aead, err := chacha20poly1305.NewX(key[:])
+	if err != nil {
+		return nil, err
+	}
+	ciph := aead.Seal(nil, nonce, vbytes.Bytes(), v.ID.UUID[:])
+	encrypted := append(nonce, ciph...)
 
-	return nil, nil
+	//Construct the encrypted vault object and return it
+	evault:= EVault{
+		ID: v.ID,
+		Subject: v.Subject,
+		PayloadSize: uint64(len(encrypted)),
+		Payload: encrypted,
+	}
+	return &evault, nil
 }
