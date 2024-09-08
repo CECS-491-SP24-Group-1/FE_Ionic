@@ -14,10 +14,10 @@ const _ARGON_MIN_BUF_SIZE = 8
 
 var (
 	//The number of Argon iterations to use.
-	ArgonTime uint32 = 1
+	ArgonTime uint32 = 3
 
 	//The memory to use for Argon (in kilobytes).
-	ArgonMem uint32 = 64 * 1024
+	ArgonMem uint32 = 128 * 1024
 
 	//The number of threads to use for Argon.
 	ArgonThread uint8 = 1
