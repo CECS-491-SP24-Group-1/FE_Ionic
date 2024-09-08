@@ -1,7 +1,5 @@
-/* Tailwind imports handled here; do not remove these 3 lines. */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind imports handled here; do not remove this line. */
+@import "tailwind";
 
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
+		"fmt": "npx prettier --write .",
 		"preview": "vite preview",
 		"check-types": "tsc --noEmit",
 		"ionic:serve": "vite dev --host",
@@ -29,8 +30,11 @@
 		"@ionic/react-router": "^8.2.7",
 		"autoprefixer": "^10.4.20",
 		"postcss": "^8.4.45",
+		"prettier": "^3.3.3",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
+		"sass-embedded": "^1.78.0",
+		"scss": "^0.2.4",
 		"tailwindcss": "^3.4.10"
 	},
 	"devDependencies": {

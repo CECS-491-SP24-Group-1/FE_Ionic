@@ -1,26 +1,29 @@
 // use_wasm.ts
-import { useEffect, useState } from "react";
-import Go from "./go_wasm";
+import {useEffect, useState} from "react"
+import Go from "./go_wasm"
 
 const useWasm = (wasmPath: string): boolean => {
-	const [loaded, setLoaded] = useState(false);
+	const [loaded, setLoaded] = useState(false)
 
 	useEffect(() => {
 		const loadWasm = async (): Promise<void> => {
 			try {
-				const go = new Go();
-				const result = await WebAssembly.instantiateStreaming(fetch(wasmPath), go.importObject);
-				go.run(result.instance);
-				setLoaded(true);
+				const go = new Go()
+				const result = await WebAssembly.instantiateStreaming(
+					fetch(wasmPath),
+					go.importObject
+				)
+				go.run(result.instance)
+				setLoaded(true)
 			} catch (err) {
-				console.error("Failed to load WASM:", err);
+				console.error("Failed to load WASM:", err)
 			}
-		};
+		}
 
-		loadWasm();
-	}, [wasmPath]);
+		loadWasm()
+	}, [wasmPath])
 
-	return loaded;
-};
+	return loaded
+}
 
-export default useWasm;
+export default useWasm

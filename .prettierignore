@@ -1,0 +1,6 @@
+.vscode
+android
+dist
+ios
+node_modules
+vaultlib_go

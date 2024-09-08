@@ -1,4 +1,4 @@
-import { CapacitorConfig } from "@capacitor/cli";
+import {CapacitorConfig} from "@capacitor/cli"
 
 const config: CapacitorConfig = {
 	appId: "me.wraith.app",
@@ -8,6 +8,6 @@ const config: CapacitorConfig = {
 	android: {
 		loggingBehavior: "debug"
 	}
-};
+}
 
-export default config;
+export default config
