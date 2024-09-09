@@ -12,8 +12,8 @@
 		"ionic:serve": "vite dev --host",
 		"dev:android": "ionic capacitor run android --external --livereload -p 5173 --consolelogs --serverlogs",
 		"dev:ios": "ionic capacitor run ios --external --livereload -p 5173",
-		"android": "cap run android --verbose",
-		"vaultlib": "cd vaultlib_go && make build && make install",
+		"android": "npm build && cap run android --verbose",
+		"vaultlib": "cd vaultlib_go && make fmt && make build && make install",
 		"sync": "cap sync",
 		"android_logs": "adb logcat -T '1' | grep --line-buffered 'Capacitor/Console' | sed -n 's/.*File: //p'"
 	},

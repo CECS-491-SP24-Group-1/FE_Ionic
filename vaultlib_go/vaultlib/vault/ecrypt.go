@@ -25,13 +25,14 @@ func (v Vault) EncryptPassphrase(passphrase string) (*EVault, error) {
 
 // Decrypts an encrypted vault object using XChaCha20-Poly1305, given a symmetric key.
 func (ev EVault) Decrypt(key crypto.Privseed) (*Vault, error) {
-	//Extract the nonce and ciphertext from the payload
+	//Extract the nonce and ciphertext from the payload; arrays are pre-alloced
 	nonce := make([]byte, chacha20poly1305.NonceSizeX)
-	ciph := make([]byte, ev.PayloadSize - chacha20poly1305.NonceSizeX)
+	ciph := make([]byte, ev.PayloadSize-chacha20poly1305.NonceSizeX)
 	subtle.ConstantTimeCopy(1, nonce, ev.Payload[:chacha20poly1305.NonceSizeX])
 	subtle.ConstantTimeCopy(1, ciph, ev.Payload[chacha20poly1305.NonceSizeX:])
 
 	//Decrypt the vault using XChaCha20-Poly1305; the vault ID is checked as AEAD
+	//TODO: prealloc the output array
 	aead, err := chacha20poly1305.NewX(key[:])
 	if err != nil {
 		return nil, err
@@ -40,7 +41,6 @@ func (ev EVault) Decrypt(key crypto.Privseed) (*Vault, error) {
 	if err != nil {
 		return nil, err
 	}
-
 
 	//Deserialize the vault from a GOB stream
 	var vault Vault
@@ -71,6 +71,7 @@ func (v Vault) Encrypt(key crypto.Privseed) (*EVault, error) {
 
 	//Encrypt the vault using XChaCha20-Poly1305; the vault ID is added as AEAD
 	//The first 24 bytes of the encrypted vault are reserved for the nonce
+	//TODO: prealloc the output array
 	aead, err := chacha20poly1305.NewX(key[:])
 	if err != nil {
 		return nil, err
@@ -79,11 +80,11 @@ func (v Vault) Encrypt(key crypto.Privseed) (*EVault, error) {
 	encrypted := append(nonce, ciph...)
 
 	//Construct the encrypted vault object and return it
-	evault:= EVault{
-		ID: v.ID,
-		Subject: v.Subject,
+	evault := EVault{
+		ID:          v.ID,
+		Subject:     v.Subject,
 		PayloadSize: uint64(len(encrypted)),
-		Payload: encrypted,
+		Payload:     encrypted,
 	}
 	return &evault, nil
 }

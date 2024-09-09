@@ -23,7 +23,6 @@ var (
 	ArgonThread uint8 = 1
 )
 
-
 // Derives an Ed25519 private key from a passphrase and salt using Argon2id.
 func Ed25519Argon(passphrase string, salt []byte) (Privkey, error) {
 	//Create the output Ed25519 buffer
