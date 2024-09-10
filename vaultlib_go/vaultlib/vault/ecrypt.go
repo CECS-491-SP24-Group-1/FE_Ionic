@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"crypto/rand"
 	"crypto/subtle"
-	"encoding/gob"
 
 	"golang.org/x/crypto/chacha20poly1305"
 	"wraith.me/vaultlib/vaultlib/crypto"
+	"wraith.me/vaultlib/vaultlib/io"
 )
 
 // Encrypts a vault using the passphrase method.
@@ -44,9 +44,7 @@ func (ev EVault) Decrypt(key crypto.Privseed) (*Vault, error) {
 
 	//Deserialize the vault from a GOB stream
 	var vault Vault
-	vbytes := bytes.NewBuffer(plain)
-	dec := gob.NewDecoder(vbytes)
-	if err := dec.Decode(&vault); err != nil {
+	if err := io.Bytes2Obj(&vault, bytes.NewBuffer(plain)); err != nil {
 		return nil, err
 	}
 
@@ -58,8 +56,7 @@ func (ev EVault) Decrypt(key crypto.Privseed) (*Vault, error) {
 func (v Vault) Encrypt(key crypto.Privseed) (*EVault, error) {
 	//Serialize the vault to a GOB stream
 	var vbytes bytes.Buffer
-	enc := gob.NewEncoder(&vbytes)
-	if err := enc.Encode(v); err != nil {
+	if err := io.Obj2Bytes(&vbytes, &v); err != nil {
 		return nil, err
 	}
 

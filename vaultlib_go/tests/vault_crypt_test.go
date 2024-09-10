@@ -1,9 +1,7 @@
 package tests
 
 import (
-	"bytes"
 	"crypto/sha256"
-	"encoding/gob"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -11,6 +9,7 @@ import (
 	"testing"
 
 	"wraith.me/vaultlib/vaultlib/crypto"
+	"wraith.me/vaultlib/vaultlib/io"
 	"wraith.me/vaultlib/vaultlib/util"
 	"wraith.me/vaultlib/vaultlib/vault"
 )
@@ -30,7 +29,7 @@ func TestVaultCrypt(t *testing.T) {
 	//Create a test vault obj and serialize it
 	devIdent := "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko"
 	vt := vault.New(util.MustNewUUID7(), devIdent)
-	if err := obj2File(vpath, vt); err != nil {
+	if err := io.Obj2File(vpath, vt); err != nil {
 		t.Fatal(err)
 	}
 	vjson, err := json.Marshal(vt)
@@ -55,7 +54,7 @@ func TestVaultCrypt(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := obj2File(vdepath, vt); err != nil {
+	if err := io.Obj2File(vdepath, vt); err != nil {
 		t.Fatal(err)
 	}
 	dvjson, err := json.Marshal(dvt)
@@ -85,46 +84,6 @@ func TestVaultCrypt(t *testing.T) {
 	if err := os.Remove(vdepath); err != nil {
 		t.Fatal(err)
 	}
-}
-
-// Deserializes an object from a file containing GOB bytes.
-func file2Obj[T any](obj *T, path string) error {
-	//Read the bytes of the file
-	fb, err := os.ReadFile(path)
-	if err != nil {
-		return err
-	}
-
-	//Deserialize the GOB stream to an object
-	buf := bytes.NewBuffer(fb)
-	dec := gob.NewDecoder(buf)
-	return dec.Decode(&obj)
-}
-
-// Serializes an object to a file containing GOB bytes.
-func obj2File[T any](path string, obj T) error {
-	//Initialize the file writer
-	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	//Serialize the object to a GOB stream
-	var buf bytes.Buffer
-	enc := gob.NewEncoder(&buf)
-	if err := enc.Encode(obj); err != nil {
-		return err
-	}
-
-	//Write the GOB bytes to the file
-	_, err = file.Write(buf.Bytes())
-	if err != nil {
-		return err
-	}
-
-	//No errors so return nil
-	return nil
 }
 
 // Gets the SHA256 checksum of a file.
