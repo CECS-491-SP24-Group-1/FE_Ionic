@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"crypto/subtle"
+	"fmt"
 
 	"golang.org/x/crypto/chacha20poly1305"
 	"wraith.me/vaultlib/vaultlib/crypto"
@@ -31,22 +32,33 @@ func (ev EVault) Decrypt(key crypto.Privseed) (*Vault, error) {
 	subtle.ConstantTimeCopy(1, nonce, ev.Payload[:chacha20poly1305.NonceSizeX])
 	subtle.ConstantTimeCopy(1, ciph, ev.Payload[chacha20poly1305.NonceSizeX:])
 
+	//Ensure the ciphertext is long enough
+	if len(ciph) < chacha20poly1305.Overhead {
+		return nil, fmt.Errorf("ciphertext too short")
+	}
+
+	//Preallocate the output array (ciphertext size - AEAD overhead)
+	alloc := make([]byte, 0, len(ciph)-chacha20poly1305.Overhead)
+
 	//Decrypt the vault using XChaCha20-Poly1305; the vault ID is checked as AEAD
-	//TODO: prealloc the output array
+	//A sub-slice of `alloc` containing just the plaintext is used as the return
 	aead, err := chacha20poly1305.NewX(key[:])
 	if err != nil {
 		return nil, err
 	}
-	plain, err := aead.Open(nil, nonce, ciph, ev.ID.UUID[:])
+	plain, err := aead.Open(alloc, nonce, ciph, ev.ID.UUID[:])
 	if err != nil {
 		return nil, err
 	}
 
 	//Deserialize the vault from a GOB stream
 	var vault Vault
-	if err := io.Bytes2Obj(&vault, bytes.NewBuffer(plain)); err != nil {
+	vbytes := bytes.NewBuffer(plain)
+	if err := io.Bytes2Obj(&vault, vbytes); err != nil {
 		return nil, err
 	}
+
+	//fmt.Printf("same mem addr: %v\n", io.SameUnderlyingArray(alloc, plain)) //true
 
 	//Return the decrypted vault object
 	return &vault, nil
@@ -66,15 +78,18 @@ func (v Vault) Encrypt(key crypto.Privseed) (*EVault, error) {
 		return nil, err
 	}
 
+	//Preallocate the output slice (nonce size + ciphertext size + AEAD overhead)
+	encrypted := make([]byte, vbytes.Len()+chacha20poly1305.Overhead+chacha20poly1305.NonceSizeX)
+	subtle.ConstantTimeCopy(1, encrypted[:chacha20poly1305.NonceSizeX], nonce) //Bytes 0 - 24: nonce
+
 	//Encrypt the vault using XChaCha20-Poly1305; the vault ID is added as AEAD
 	//The first 24 bytes of the encrypted vault are reserved for the nonce
-	//TODO: prealloc the output array
+	//`Seal` begins writing after the nonce all the way to the capacity of the slice
 	aead, err := chacha20poly1305.NewX(key[:])
 	if err != nil {
 		return nil, err
 	}
-	ciph := aead.Seal(nil, nonce, vbytes.Bytes(), v.ID.UUID[:])
-	encrypted := append(nonce, ciph...)
+	aead.Seal(encrypted[chacha20poly1305.NonceSizeX:chacha20poly1305.NonceSizeX], nonce, vbytes.Bytes(), v.ID.UUID[:])
 
 	//Construct the encrypted vault object and return it
 	evault := EVault{
