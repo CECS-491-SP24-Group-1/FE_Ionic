@@ -1,60 +1,36 @@
-import { Text, type TextProps, StyleSheet } from 'react-native';
+import React from 'react';
+import { useThemeColor } from '../hooks/useThemeColor';  
+import './ThemedText.css';  
 
-import { useThemeColor } from '@/hooks/useThemeColor';
-
-export type ThemedTextProps = TextProps & {
+export type ThemedTextProps = React.HTMLAttributes<HTMLSpanElement> & {
   lightColor?: string;
   darkColor?: string;
   type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };
 
 export function ThemedText({
-  style,
+  className,
   lightColor,
   darkColor,
   type = 'default',
   ...rest
 }: ThemedTextProps) {
+  // Get the correct color based on theme
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
   return (
-    <Text
-      style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
-      {...rest}
+    <span
+      className={[
+        'themed-text',  // Default class for text styling
+        type === 'default' ? 'default-text' : '',
+        type === 'title' ? 'title-text' : '',
+        type === 'defaultSemiBold' ? 'default-semi-bold-text' : '',
+        type === 'subtitle' ? 'subtitle-text' : '',
+        type === 'link' ? 'link-text' : '',
+        className  // Allow custom classNames to be passed in
+      ].join(' ')}
+      style={{ color }}  // Apply the color dynamically
+      {...rest}  // Pass any remaining props (e.g., children)
     />
   );
 }
-
-const styles = StyleSheet.create({
-  default: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 32,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
-  },
-});

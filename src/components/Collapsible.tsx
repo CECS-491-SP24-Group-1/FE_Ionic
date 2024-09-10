@@ -3,8 +3,8 @@ import { IoChevronDown, IoChevronForwardOutline } from 'react-icons/io5';
 import './Collapsible.css';
 
 // Assuming you've created these components or imported them from a UI library
-import { ThemedText } from '@/components/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { ThemedText } from './ThemedText';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
   const [isOpen, setIsOpen] = useState(false);
