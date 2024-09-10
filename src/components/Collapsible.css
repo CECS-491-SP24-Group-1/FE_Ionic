@@ -1,29 +1,29 @@
 .collapsible {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  }
-  
-  .collapsible-heading {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border: none;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-  }
-  
-  .collapsible-heading:hover {
-    background-color: #e5e5e5;
-  }
-  
-  .collapsible-content {
-    padding: 10px;
-  }
-  
-  .defaultSemiBold {
-    font-weight: 600;
-    margin-left: 10px;
-  }
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+
+.collapsible-heading {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	background-color: #f5f5f5;
+	border: none;
+	width: 100%;
+	text-align: left;
+	cursor: pointer;
+}
+
+.collapsible-heading:hover {
+	background-color: #e5e5e5;
+}
+
+.collapsible-content {
+	padding: 10px;
+}
+
+.defaultSemiBold {
+	font-weight: 600;
+	margin-left: 10px;
+}
