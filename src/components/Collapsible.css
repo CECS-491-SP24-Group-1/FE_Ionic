@@ -1,0 +1,22 @@
+/* Collapsible.css */
+.themed-view {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  
+  .collapsible-heading {
+    display: flex;
+    align-items: center;
+    gap: 6px;  /* Replaces gap in react-native */
+    background: none;  /* Remove default button styles */
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .collapsible-content {
+    margin-top: 6px;
+    margin-left: 24px;
+  }
+  
