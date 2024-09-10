@@ -1,9 +1,26 @@
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+import React from 'react';
+import { IconBaseProps } from 'react-icons';
+import * as IoIcons from 'react-icons/io5'; // Import Ionicons from react-icons
 
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { type IconProps } from '@expo/vector-icons/build/createIconSet';
-import { type ComponentProps } from 'react';
+type TabBarIconProps = {
+  name: keyof typeof IoIcons;
+  color?: string;
+} & Omit<IconBaseProps, 'name'>;
 
-export function TabBarIcon({ style, ...rest }: IconProps<ComponentProps<typeof Ionicons>['name']>) {
-  return <Ionicons size={28} style={[{ marginBottom: -3 }, style]} {...rest} />;
+export function TabBarIcon({ name, color, style, ...rest }: TabBarIconProps) {
+  const IconComponent = IoIcons[name];
+
+  if (!IconComponent) {
+    console.warn(`Icon ${name} not found`);
+    return null;
+  }
+
+  return (
+    <IconComponent
+      size={28}
+      color={color}
+      style={{ marginBottom: -3, ...(style as React.CSSProperties) }}
+      {...rest}
+    />
+  );
 }

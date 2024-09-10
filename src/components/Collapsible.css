@@ -1,22 +1,29 @@
-/* Collapsible.css */
-.themed-view {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 16px;
+.collapsible {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
   }
   
   .collapsible-heading {
     display: flex;
     align-items: center;
-    gap: 6px;  /* Replaces gap in react-native */
-    background: none;  /* Remove default button styles */
+    padding: 10px;
+    background-color: #f5f5f5;
     border: none;
+    width: 100%;
+    text-align: left;
     cursor: pointer;
-    padding: 0;
+  }
+  
+  .collapsible-heading:hover {
+    background-color: #e5e5e5;
   }
   
   .collapsible-content {
-    margin-top: 6px;
-    margin-left: 24px;
+    padding: 10px;
   }
   
+  .defaultSemiBold {
+    font-weight: 600;
+    margin-left: 10px;
+  }
