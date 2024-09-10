@@ -1,34 +1,33 @@
 /* ThemedText.css */
 
 .themed-text {
-    font-size: 16px;
-    line-height: 24px;
-  }
-  
-  .default-text {
-    font-weight: 400;
-  }
-  
-  .default-semi-bold-text {
-    font-weight: 600;
-  }
-  
-  .title-text {
-    font-size: 32px;
-    font-weight: bold;
-    line-height: 32px;
-  }
-  
-  .subtitle-text {
-    font-size: 20px;
-    font-weight: bold;
-  }
-  
-  .link-text {
-    line-height: 30px;
-    font-size: 16px;
-    color: #0a7ea4;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  
+	font-size: 16px;
+	line-height: 24px;
+}
+
+.default-text {
+	font-weight: 400;
+}
+
+.default-semi-bold-text {
+	font-weight: 600;
+}
+
+.title-text {
+	font-size: 32px;
+	font-weight: bold;
+	line-height: 32px;
+}
+
+.subtitle-text {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.link-text {
+	line-height: 30px;
+	font-size: 16px;
+	color: #0a7ea4;
+	text-decoration: underline;
+	cursor: pointer;
+}

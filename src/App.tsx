@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.scss";
-import { IonButton, IonContent, IonInput, IonItem, IonPage } from "@ionic/react";
+import {IonButton, IonContent, IonInput, IonItem, IonPage} from "@ionic/react";
 
 import "./App.scss";
 import useWasm from "./wasm_util/use_wasm";
 
 // Import the components from the components/navigation folder
-import {TabBarIcon} from './components/navigation/TabBarIcon';
-import {Collapsible} from './components/Collapsible';
-import {ExternalLink} from './components/ExternalLink';
-import ParallaxScrollView from './components/ParallaxScrollView';
-import {ThemedText} from './components/ThemedText';
-import {ThemedView} from './components/ThemedView';
+import {TabBarIcon} from "./components/navigation/TabBarIcon";
+import {Collapsible} from "./components/Collapsible";
+import {ExternalLink} from "./components/ExternalLink";
+import ParallaxScrollView from "./components/ParallaxScrollView";
+import {ThemedText} from "./components/ThemedText";
+import {ThemedView} from "./components/ThemedView";
 
 export default function App() {
 	const [count, setCount] = useState(0);
@@ -70,8 +70,8 @@ export default function App() {
 						<form
 							className="mx-auto max-w-screen-sm"
 							onSubmit={handleSubmit}
-							style={{ display: "flex", alignItems: "center" }}>
-							<IonItem style={{ flex: 1 }}>
+							style={{display: "flex", alignItems: "center"}}>
+							<IonItem style={{flex: 1}}>
 								<IonInput
 									value={inputValue}
 									onIonChange={(e) => setInputValue(e.detail.value!)}
@@ -98,13 +98,14 @@ export default function App() {
 						{/* Another icon with different size */}
 						<TabBarIcon name="IoHeartSharp" color="red" size={50} />
 
-
 						<Collapsible title="Section 1">
-						<p>This is some collapsible content!</p>
+							<p>This is some collapsible content!</p>
 						</Collapsible>
 
-						 {/* External link to Google */}
-						<ExternalLink href="https://www.google.com" style={{ marginTop: '10px', display: 'block' }}>
+						{/* External link to Google */}
+						<ExternalLink
+							href="https://www.google.com"
+							style={{marginTop: "10px", display: "block"}}>
 							Visit Google
 						</ExternalLink>
 					</div>
