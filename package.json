@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
-		"fmt": "npx prettier --write .",
+		"fmt": "npx prettier --write . && cd vaultlib_go && make fmt",
 		"preview": "vite preview",
 		"check-types": "tsc --noEmit",
 		"ionic:serve": "vite dev --host",
