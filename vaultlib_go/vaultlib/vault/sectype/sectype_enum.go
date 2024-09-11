@@ -12,8 +12,10 @@ import (
 )
 
 const (
-	// No encrypted (not recommended).
+	// Not encrypted (not recommended).
 	SecTypeNONE SecType = iota
+	// Encrypted with a plain symmetric key.
+	SecTypeENCKEY
 	// Encrypted via a passphrase (most simple).
 	SecTypePASSPHRASE
 	// Encrypted via a scannable QR code.
@@ -21,19 +23,20 @@ const (
 	// Encrypted via biometrics (fingerprint or face ID).
 	SecTypeBIOMETRICS
 	// Encrypted via a hardware security key.
-	SecTypeSECKEY
+	SecTypeHWKEY
 )
 
 var ErrInvalidSecType = fmt.Errorf("not a valid SecType, try [%s]", strings.Join(_SecTypeNames, ", "))
 
-const _SecTypeName = "NONEPASSPHRASEQRBIOMETRICSSEC_KEY"
+const _SecTypeName = "NONEENC_KEYPASSPHRASEQRBIOMETRICSHW_KEY"
 
 var _SecTypeNames = []string{
 	_SecTypeName[0:4],
-	_SecTypeName[4:14],
-	_SecTypeName[14:16],
-	_SecTypeName[16:26],
-	_SecTypeName[26:33],
+	_SecTypeName[4:11],
+	_SecTypeName[11:21],
+	_SecTypeName[21:23],
+	_SecTypeName[23:33],
+	_SecTypeName[33:39],
 }
 
 // SecTypeNames returns a list of possible string values of SecType.
@@ -47,19 +50,21 @@ func SecTypeNames() []string {
 func SecTypeValues() []SecType {
 	return []SecType{
 		SecTypeNONE,
+		SecTypeENCKEY,
 		SecTypePASSPHRASE,
 		SecTypeQR,
 		SecTypeBIOMETRICS,
-		SecTypeSECKEY,
+		SecTypeHWKEY,
 	}
 }
 
 var _SecTypeMap = map[SecType]string{
 	SecTypeNONE:       _SecTypeName[0:4],
-	SecTypePASSPHRASE: _SecTypeName[4:14],
-	SecTypeQR:         _SecTypeName[14:16],
-	SecTypeBIOMETRICS: _SecTypeName[16:26],
-	SecTypeSECKEY:     _SecTypeName[26:33],
+	SecTypeENCKEY:     _SecTypeName[4:11],
+	SecTypePASSPHRASE: _SecTypeName[11:21],
+	SecTypeQR:         _SecTypeName[21:23],
+	SecTypeBIOMETRICS: _SecTypeName[23:33],
+	SecTypeHWKEY:      _SecTypeName[33:39],
 }
 
 // String implements the Stringer interface.
@@ -79,10 +84,11 @@ func (x SecType) IsValid() bool {
 
 var _SecTypeValue = map[string]SecType{
 	_SecTypeName[0:4]:   SecTypeNONE,
-	_SecTypeName[4:14]:  SecTypePASSPHRASE,
-	_SecTypeName[14:16]: SecTypeQR,
-	_SecTypeName[16:26]: SecTypeBIOMETRICS,
-	_SecTypeName[26:33]: SecTypeSECKEY,
+	_SecTypeName[4:11]:  SecTypeENCKEY,
+	_SecTypeName[11:21]: SecTypePASSPHRASE,
+	_SecTypeName[21:23]: SecTypeQR,
+	_SecTypeName[23:33]: SecTypeBIOMETRICS,
+	_SecTypeName[33:39]: SecTypeHWKEY,
 }
 
 // ParseSecType attempts to convert a string to a SecType.

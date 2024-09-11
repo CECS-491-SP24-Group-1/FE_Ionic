@@ -12,14 +12,54 @@ import (
 	"wraith.me/vaultlib/vaultlib/io"
 	"wraith.me/vaultlib/vaultlib/util"
 	"wraith.me/vaultlib/vaultlib/vault"
+	"wraith.me/vaultlib/vaultlib/vault/sectype"
 )
 
-// Tests if the vault encryption routine is working.
-func TestVaultCrypt(t *testing.T) {
+// Tests if the vault key encryption routine is working.
+func TestVaultKeyCrypt(t *testing.T) {
 	//Generate a new crypto key
 	_, sk, err := crypto.NewKeypair(nil)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	//Run tests
+	runVCTest(t, sectype.SecTypeENCKEY, sk.Seed(), sk.Seed())
+}
+
+// Tests if the vault passphrase encryption routine is working.
+func TestVaultPassCrypt(t *testing.T) {
+	//Generate a new passphrase
+	password := "password12345"
+
+	//Run tests
+	runVCTest(t, sectype.SecTypePASSPHRASE, password, password)
+}
+
+// Runs the vault crypto tests in a method-independent way.
+func runVCTest(t *testing.T, typ sectype.SecType, earg, darg interface{}) {
+	//Select the appropriate functions for encryption and decryption
+	var eFunc func(*vault.Vault, interface{}) (*vault.EVault, error)
+	var dFunc func(*vault.EVault, interface{}) (*vault.Vault, error)
+	switch typ {
+	//Select crypto key as the type to use for crypto
+	case sectype.SecTypeENCKEY:
+		eFunc = func(v *vault.Vault, arg interface{}) (*vault.EVault, error) {
+			return (*vault.Vault).EncryptKey(v, arg.(crypto.Privseed))
+		}
+		dFunc = func(v *vault.EVault, arg interface{}) (*vault.Vault, error) {
+			return (*vault.EVault).DecryptKey(v, arg.(crypto.Privseed))
+		}
+	//Select passphrase as the type to use for crypto
+	case sectype.SecTypePASSPHRASE:
+		eFunc = func(v *vault.Vault, arg interface{}) (*vault.EVault, error) {
+			return (*vault.Vault).EncryptPassphrase(v, arg.(string))
+		}
+		dFunc = func(v *vault.EVault, arg interface{}) (*vault.Vault, error) {
+			return (*vault.EVault).DecryptPassphrase(v, arg.(string))
+		}
+	default:
+		t.Fatalf("unsupported encryption type %s", typ.String())
 	}
 
 	//Set paths
@@ -39,7 +79,7 @@ func TestVaultCrypt(t *testing.T) {
 	fmt.Printf("vault in:   %s\n", vjson)
 
 	//Encrypt the vault
-	evt, err := vt.Encrypt(sk.Seed())
+	evt, err := eFunc(vt, earg)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -50,7 +90,7 @@ func TestVaultCrypt(t *testing.T) {
 	fmt.Printf("vault enc:  %s\n", evjson)
 
 	//Decrypt the vault and write it to a file
-	dvt, err := evt.Decrypt(sk.Seed())
+	dvt, err := dFunc(evt, darg)
 	if err != nil {
 		t.Fatal(err)
 	}
