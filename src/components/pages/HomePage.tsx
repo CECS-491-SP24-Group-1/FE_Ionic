@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 //import reactLogo from "../assets/react.svg";
-import "./App.scss";
+import "../../App.scss";
 import {IonButton, IonContent, IonInput, IonItem, IonPage} from "@ionic/react";
 
 //import "./App.scss";
