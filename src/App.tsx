@@ -13,6 +13,8 @@ import {ExternalLink} from "./components/ExternalLink";
 import ParallaxScrollView from "./components/ParallaxScrollView";
 import {ThemedText} from "./components/ThemedText";
 import {ThemedView} from "./components/ThemedView";
+import TabBar from "./components/navigation/TabBar";
+import HomePage from "./components/pages/HomePage";
 
 export default function App() {
 	const [count, setCount] = useState(0);
@@ -42,74 +44,8 @@ export default function App() {
 	return (
 		<IonPage>
 			<IonContent>
-				<div className="App">
-					<div className="logoContainer">
-						<a href="https://vitejs.dev" target="_blank">
-							<img src="/vite.svg" className="logo" alt="Vite logo" />
-						</a>
-						<a href="https://reactjs.org" target="_blank">
-							<img src={reactLogo} className="logo react" alt="React logo" />
-						</a>
-					</div>
-					<h1>Vite + React + Ionic</h1>
-					<div className="card">
-						<IonButton onClick={() => setCount((count) => count + 1)}>
-							count is {count}
-						</IonButton>
-						<p>
-							Edit <code>src/App.tsx</code> and save to test HMR
-						</p>
-
-						<p>{wasmLoaded ? "WASM Loaded!" : "Loading WASM..."}</p>
-						<IonButton onClick={callWasmFunction} disabled={!wasmLoaded}>
-							Call WASM function
-						</IonButton>
-						<pre className="text-2xs mt-1">{key ? key : "<no key yet>"}</pre>
-						<div className="h-20"></div>
-						<p>Password HKDF Test</p>
-						<form
-							className="mx-auto max-w-screen-sm"
-							onSubmit={handleSubmit}
-							style={{display: "flex", alignItems: "center"}}>
-							<IonItem style={{flex: 1}}>
-								<IonInput
-									value={inputValue}
-									onIonChange={(e) => setInputValue(e.detail.value!)}
-									placeholder="Enter a passphrase"
-									required
-								/>
-							</IonItem>
-							<IonButton type="submit">Submit</IonButton>
-						</form>
-						<pre className="text-2xs mt-2">
-							<strong>salt:</strong> {salt}
-						</pre>
-						<pre className="text-2xs mt-1">{hkdf ? hkdf : "<no hkdf key yet>"}</pre>
-					</div>
-
-					{/* Render the imported components for testing */}
-					<div>
-						<h2>Testing Components</h2>
-						<TabBarIcon name="IoHome" color="blue" />
-
-						{/* Example with IoSettingsSharp */}
-						<TabBarIcon name="IoSettingsSharp" color="green" />
-
-						{/* Another icon with different size */}
-						<TabBarIcon name="IoHeartSharp" color="red" size={50} />
-
-						<Collapsible title="Section 1">
-							<p>This is some collapsible content!</p>
-						</Collapsible>
-
-						{/* External link to Google */}
-						<ExternalLink
-							href="https://www.google.com"
-							style={{marginTop: "10px", display: "block"}}>
-							Visit Google
-						</ExternalLink>
-					</div>
-				</div>
+				<TabBar />
+				<HomePage />
 			</IonContent>
 		</IonPage>
 	);

@@ -4,6 +4,7 @@ import App from "./App";
 import {IonApp, IonRouterOutlet, setupIonicReact} from "@ionic/react";
 import {IonReactRouter} from "@ionic/react-router";
 import {Route} from "react-router";
+import TabBar from "./components/navigation/TabBar";
 
 import "./index.scss";
 
@@ -29,6 +30,7 @@ setupIonicReact();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<React.StrictMode>
 		<IonApp>
+			<TabBar />
 			<IonReactRouter>
 				<IonRouterOutlet>
 					<Route path="/" component={App} />
