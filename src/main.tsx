@@ -70,6 +70,7 @@ export function Root() {
 	}
 
 	//Render the component when vaultlib loads successfully
+	//TODO: add registration and login stuff here
 	return (
 		<IonApp>
 			<IonReactRouter>
