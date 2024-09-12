@@ -9,5 +9,7 @@
 	},
 	"[scss]": {
 		"editor.defaultFormatter": "vscode.css-language-features"
-	}
+	},
+	"prettier.configPath": ".prettierrc",
+	"prettier.requireConfig": true
 }

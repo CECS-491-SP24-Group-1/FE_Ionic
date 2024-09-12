@@ -61,6 +61,15 @@ button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
 }
 
+.loadPlaceholder {
+	margin: 6em auto 0;
+	text-align: center;
+}
+
+.loadPlaceholder code {
+	font-size: 0.75em;
+}
+
 @media (prefers-color-scheme: light) {
 	:root {
 		color: #213547;

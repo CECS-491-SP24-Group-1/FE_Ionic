@@ -53,7 +53,7 @@ const Camera: React.FC = () => {
                 // Get the data URL of the image
                 const imageData = canvas.toDataURL("image/png");
                 setPhoto(imageData);
-                
+
                 // Stop the camera stream after taking the picture
                 if (stream) {
                     stream.getTracks().forEach((track) => track.stop());
@@ -90,10 +90,10 @@ const Camera: React.FC = () => {
 
                 {/* Button to take the picture */}
                 {!photo ? (
-					<div className="capture-button" onClick={takePicture}></div>
-				) : (
-					<div className="capture-button" onClick={retakePicture}></div>
-				)}
+                    <div className="capture-button" onClick={takePicture}></div>
+                ) : (
+                    <div className="capture-button" onClick={retakePicture}></div>
+                )}
             </IonContent>
         </IonPage>
     );

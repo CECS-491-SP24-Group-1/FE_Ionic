@@ -1,4 +1,4 @@
-import {IonPage, IonHeader, IonToolbar, IonTitle, IonContent} from "@ionic/react";
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/react";
 
 const Settings: React.FC = () => (
 	<IonPage>
@@ -7,7 +7,12 @@ const Settings: React.FC = () => (
 				<IonTitle>Settings</IonTitle>
 			</IonToolbar>
 		</IonHeader>
-		<IonContent>{/* Settings content goes here */}</IonContent>
+		<IonContent>
+			<div style={{ padding: "1em" }}>
+				<h1>Vaultlib sanity check</h1>
+				<code>{vaultlib.Ed25519Keygen()}</code>
+			</div>
+		</IonContent>
 	</IonPage>
 );
 

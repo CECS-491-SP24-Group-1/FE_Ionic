@@ -15,10 +15,7 @@ import (
 //-- ALIAS: Privseed
 //
 
-/*
-Represents the "seed bytes" of an entity's private key. This can also
-represent a symmetric key used in XChaCha20-Poly1305 or AES256.
-*/
+// Represents the "seed bytes" of an entity's private key.
 type Privseed [PRIVKEY_SEED_SIZE]byte
 
 // Creates an empty private key.

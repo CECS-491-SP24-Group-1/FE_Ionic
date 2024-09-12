@@ -1,5 +1,5 @@
 import React from "react";
-import {useThemeColor} from "../hooks/useThemeColor";
+import { useThemeColor } from "../hooks/useThemeColor";
 import "./ThemedText.css";
 
 export type ThemedTextProps = React.HTMLAttributes<HTMLSpanElement> & {
@@ -16,7 +16,7 @@ export function ThemedText({
 	...rest
 }: ThemedTextProps) {
 	// Get the correct color based on theme
-	const color = useThemeColor({light: lightColor, dark: darkColor}, "text");
+	const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
 	return (
 		<span
@@ -29,7 +29,7 @@ export function ThemedText({
 				type === "link" ? "link-text" : "",
 				className // Allow custom classNames to be passed in
 			].join(" ")}
-			style={{color}} // Apply the color dynamically
+			style={{ color }} // Apply the color dynamically
 			{...rest} // Pass any remaining props (e.g., children)
 		/>
 	);

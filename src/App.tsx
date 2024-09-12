@@ -7,9 +7,9 @@ import {
 	IonLabel,
 	IonIcon
 } from "@ionic/react";
-import {IonReactRouter} from "@ionic/react-router";
-import {Route, Redirect} from "react-router-dom";
-import {home, camera, settings} from "ionicons/icons";
+import { IonReactRouter } from "@ionic/react-router";
+import { Route, Redirect } from "react-router-dom";
+import { home, camera, settings } from "ionicons/icons";
 
 // Import pages
 import Home from "./pages/Home";
