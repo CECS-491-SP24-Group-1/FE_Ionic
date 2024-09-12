@@ -1,90 +1,102 @@
-import React, {useRef, useState, useEffect} from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
-	IonPage,
-	IonHeader,
-	IonToolbar,
-	IonTitle,
-	IonContent,
-	IonButton,
-	IonIcon
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    IonIcon,
 } from "@ionic/react";
-import {camera} from "ionicons/icons";
-import "./Camera.css"; // Custom styling if needed
+import "./Camera.css"; // Custom styling
 
 const Camera: React.FC = () => {
-	const videoRef = useRef<HTMLVideoElement>(null);
-	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const [photo, setPhoto] = useState<string | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [photo, setPhoto] = useState<string | null>(null);
+    const [stream, setStream] = useState<MediaStream | null>(null);
 
-	// Request access to the user's camera when the component mounts
-	useEffect(() => {
-		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-			navigator.mediaDevices
-				.getUserMedia({video: true})
-				.then((stream) => {
-					if (videoRef.current) {
-						videoRef.current.srcObject = stream;
-					}
-				})
-				.catch((err) => {
-					console.error("Error accessing the camera: ", err);
-				});
-		}
-	}, []);
+    // Function to start the camera stream
+    const startCamera = () => {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .then((stream) => {
+                    setStream(stream);  // Store the stream in the state
+                    if (videoRef.current) {
+                        videoRef.current.srcObject = stream;
+                    }
+                })
+                .catch((err) => {
+                    console.error("Error accessing the camera: ", err);
+                });
+        }
+    };
 
-	// Function to capture a photo from the video stream
-	const takePicture = () => {
-		const canvas = canvasRef.current;
-		const video = videoRef.current;
-		if (canvas && video) {
-			const context = canvas.getContext("2d");
-			if (context) {
-				// Set canvas size to match video size
-				canvas.width = video.videoWidth;
-				canvas.height = video.videoHeight;
-				// Draw the current video frame onto the canvas
-				context.drawImage(video, 0, 0, canvas.width, canvas.height);
-				// Get the data URL of the image
-				const imageData = canvas.toDataURL("image/png");
-				setPhoto(imageData);
-			}
-		}
-	};
+    // Request access to the user's camera when the component mounts
+    useEffect(() => {
+        startCamera();
+    }, []);
 
-	return (
-		<IonPage>
-			<IonHeader>
-				<IonToolbar>
-					<IonTitle>Camera</IonTitle>
-				</IonToolbar>
-			</IonHeader>
-			<IonContent className="ion-padding">
-				<div className="camera-container">
-					{/* Video element for displaying the camera stream */}
-					{!photo ? (
-						<video ref={videoRef} autoPlay playsInline></video>
-					) : (
-						<img src={photo} alt="Captured" />
-					)}
+    // Function to capture a photo from the video stream
+    const takePicture = () => {
+        const canvas = canvasRef.current;
+        const video = videoRef.current;
+        if (canvas && video) {
+            const context = canvas.getContext("2d");
+            if (context) {
+                // Set canvas size to match video size
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                // Draw the current video frame onto the canvas
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                // Get the data URL of the image
+                const imageData = canvas.toDataURL("image/png");
+                setPhoto(imageData);
+                
+                // Stop the camera stream after taking the picture
+                if (stream) {
+                    stream.getTracks().forEach((track) => track.stop());
+                }
+            }
+        }
+    };
 
-					{/* Hidden canvas to capture the video frame */}
-					<canvas ref={canvasRef} style={{display: "none"}}></canvas>
-				</div>
+    // Function to reset the photo and restart the camera
+    const retakePicture = () => {
+        setPhoto(null);
+        startCamera();  // Restart the camera stream when retaking the picture
+    };
 
-				{/* Button to take the picture */}
-				{!photo ? (
-					<IonButton expand="full" onClick={takePicture}>
-						<IonIcon icon={camera} slot="start" />
-						Take Picture
-					</IonButton>
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonTitle>Camera</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+            <IonContent className="ion-padding">
+                <div className="camera-container">
+                    {/* Video element for displaying the camera stream */}
+                    {!photo ? (
+                        <video ref={videoRef} autoPlay playsInline></video>
+                    ) : (
+                        <img src={photo} alt="Captured" />
+                    )}
+
+                    {/* Hidden canvas to capture the video frame */}
+                    <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
+                </div>
+
+                {/* Button to take the picture */}
+                {!photo ? (
+					<div className="capture-button" onClick={takePicture}></div>
 				) : (
-					<IonButton expand="full" onClick={() => setPhoto(null)}>
-						Retake Picture
-					</IonButton>
+					<div className="capture-button" onClick={retakePicture}></div>
 				)}
-			</IonContent>
-		</IonPage>
-	);
+            </IonContent>
+        </IonPage>
+    );
 };
 
 export default Camera;
