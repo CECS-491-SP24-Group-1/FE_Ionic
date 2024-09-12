@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
 /**
  * This hook replaces the `useColorScheme` from React Native, which detects the user's

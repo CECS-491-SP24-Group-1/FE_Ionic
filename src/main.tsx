@@ -1,11 +1,10 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import {IonApp, IonRouterOutlet, setupIonicReact, IonSpinner} from "@ionic/react";
-import {IonReactRouter} from "@ionic/react-router";
-import {Route} from "react-router";
+import { IonApp, IonRouterOutlet, setupIonicReact, IonSpinner } from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+import { Route } from "react-router";
 import useWasm from "./wasm_util/use_wasm";
-import {ImSpinner3} from "react-icons/im";
 
 import "./index.scss";
 
@@ -32,7 +31,7 @@ setupIonicReact();
 /** Sets up the entire React application. */
 export function Root() {
 	//Setup the WASM loader for vaultlib
-	const {loaded: wasmLoaded, error: wasmError} = useWasm("/vaultlib.wasm");
+	const { loaded: wasmLoaded, error: wasmError } = useWasm("/vaultlib.wasm");
 
 	//Listen for state changes to the loader,
 	useEffect(() => {
@@ -47,7 +46,7 @@ export function Root() {
 		return (
 			<IonApp>
 				<div className="loadPlaceholder">
-					<h1 style={{color: "#FF0000"}}>Error loading Vaultlib</h1>
+					<h1 style={{ color: "#FF0000" }}>Error loading Vaultlib</h1>
 					<code>{wasmError.message}</code>
 				</div>
 			</IonApp>

@@ -1,5 +1,5 @@
 // use_wasm.ts
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Go from "./go_wasm";
 
 interface WasmState {
@@ -8,7 +8,7 @@ interface WasmState {
 }
 
 const useWasm = (wasmPath: string): WasmState => {
-	const [state, setState] = useState<WasmState>({loaded: false, error: null});
+	const [state, setState] = useState<WasmState>({ loaded: false, error: null });
 
 	useEffect(() => {
 		const loadWasm = async (): Promise<void> => {
@@ -23,7 +23,7 @@ const useWasm = (wasmPath: string): WasmState => {
 					console.log("WASM instantiated");
 					go.run(result.instance);
 					console.log("WASM running");
-					setState({loaded: true, error: null});
+					setState({ loaded: true, error: null });
 					console.log("State set to loaded");
 				});
 

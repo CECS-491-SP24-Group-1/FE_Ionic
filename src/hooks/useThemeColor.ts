@@ -1,5 +1,5 @@
-import {useState, useEffect} from "react";
-import {Colors} from "../constants/Colors"; // Adjust the path based on your project structure
+import { useState, useEffect } from "react";
+import { Colors } from "../constants/Colors"; // Adjust the path based on your project structure
 
 /**
  * This hook is used to retrieve the appropriate color based on the current theme (light/dark).
@@ -10,7 +10,7 @@ import {Colors} from "../constants/Colors"; // Adjust the path based on your pro
  * 3. If no custom colors are passed, it defaults to the color values from the global `Colors` object.
  */
 export function useThemeColor(
-	props: {light?: string; dark?: string},
+	props: { light?: string; dark?: string },
 	colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
 	// Ported useColorScheme hook using window.matchMedia for web

@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
 	IonPage,
 	IonHeader,
@@ -8,7 +8,7 @@ import {
 	IonButton,
 	IonIcon
 } from "@ionic/react";
-import {camera} from "ionicons/icons";
+import { camera } from "ionicons/icons";
 import "./Camera.css"; // Custom styling if needed
 
 const Camera: React.FC = () => {
@@ -20,7 +20,7 @@ const Camera: React.FC = () => {
 	useEffect(() => {
 		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 			navigator.mediaDevices
-				.getUserMedia({video: true})
+				.getUserMedia({ video: true })
 				.then((stream) => {
 					if (videoRef.current) {
 						videoRef.current.srcObject = stream;
@@ -68,7 +68,7 @@ const Camera: React.FC = () => {
 					)}
 
 					{/* Hidden canvas to capture the video frame */}
-					<canvas ref={canvasRef} style={{display: "none"}}></canvas>
+					<canvas ref={canvasRef} style={{ display: "none" }}></canvas>
 				</div>
 
 				{/* Button to take the picture */}
