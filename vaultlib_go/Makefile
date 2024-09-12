@@ -156,6 +156,7 @@ checkfmt:
 .PHONY: install
 install:
 	@echo INSTALL $(BIN_NORM) $(BIN_MIN)
+	$(MAKE) build
 	@$(MAKE) -s __cpfile__ SRC=$(BIN_NORM) DEST=$(OUT_DIR)
 	@$(MAKE) -s __cpfile__ SRC=$(BIN_MIN) DEST=$(OUT_DIR)
 
