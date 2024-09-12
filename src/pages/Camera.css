@@ -1,18 +1,45 @@
 .camera-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 60vh;
-	background-color: #f0f0f0;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-video,
-img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
+video, img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
 
-canvas {
-	display: none; /* Hidden canvas */
+.capture-button {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px; /* Adjust size as needed */
+    height: 80px;
+    background-color: white;
+    border-radius: 50%;
+    border: 6px solid rgba(255, 255, 255, 0.8); /* White outer border */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optional shadow for a subtle 3D effect */
+    cursor: pointer;
+}
+
+.capture-button:before {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly dim inner circle */
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(0, 0, 0, 0.1); /* Inner thin border */
+}
+
+.capture-button:hover {
+    background-color: rgb(126, 125, 125);
 }
