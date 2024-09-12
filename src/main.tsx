@@ -32,8 +32,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 			<IonReactRouter>
 				<IonRouterOutlet>
 					<Route path="/" component={App} />
-					{/* <Route path="/home" component={App} /> */}
-					{/* <Redirect exact from="/" to="/home" /> */}
 				</IonRouterOutlet>
 			</IonReactRouter>
 		</IonApp>

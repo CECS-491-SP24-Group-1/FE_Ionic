@@ -1,85 +1,55 @@
-import {useEffect, useState} from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.scss";
-import {IonButton, IonContent, IonInput, IonItem, IonPage} from "@ionic/react";
+import {
+	IonApp,
+	IonRouterOutlet,
+	IonTabs,
+	IonTabBar,
+	IonTabButton,
+	IonLabel,
+	IonIcon
+} from "@ionic/react";
+import {IonReactRouter} from "@ionic/react-router";
+import {Route, Redirect} from "react-router-dom";
+import {home, camera, settings} from "ionicons/icons";
 
-import "./App.scss";
-import useWasm from "./wasm_util/use_wasm";
+// Import pages
+import Home from "./pages/Home";
+import CameraPage from "./pages/Camera";
+import Settings from "./pages/Settings";
 
-export default function App() {
-	const [count, setCount] = useState(0);
-	const [key, setKey] = useState<string | null>(null);
-	const [salt, setSalt] = useState<string | null>(null);
-	const [hkdf, setHkdf] = useState<string | null>(null);
-	const [inputValue, setInputValue] = useState<string>("");
-	const wasmLoaded = useWasm("/vaultlib.wasm");
-
-	useEffect(() => {
-		if (wasmLoaded) setSalt(vaultlib.HKDF_SALT);
-	});
-
-	const callWasmFunction = () => {
-		if (wasmLoaded) {
-			setKey(vaultlib.Ed25519Keygen());
-		} else {
-			console.error("WASM not loaded or function not available");
-		}
-	};
-
-	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault();
-		if (wasmLoaded) setHkdf(vaultlib.HKDF(inputValue));
-	};
-
+const App: React.FC = () => {
 	return (
-		<IonPage>
-			<IonContent>
-				<div className="App">
-					<div className="logoContainer">
-						<a href="https://vitejs.dev" target="_blank">
-							<img src="/vite.svg" className="logo" alt="Vite logo" />
-						</a>
-						<a href="https://reactjs.org" target="_blank">
-							<img src={reactLogo} className="logo react" alt="React logo" />
-						</a>
-					</div>
-					<h1>Vite + React + Ionic</h1>
-					<div className="card">
-						<IonButton onClick={() => setCount((count) => count + 1)}>
-							count is {count}
-						</IonButton>
-						<p>
-							Edit <code>src/App.tsx</code> and save to test HMR
-						</p>
+		<IonApp>
+			<IonReactRouter>
+				<IonTabs>
+					<IonRouterOutlet>
+						{/* Define routes for each tab */}
+						<Route path="/home" component={Home} exact={true} />
+						<Route path="/camera" component={CameraPage} exact={true} />
+						<Route path="/settings" component={Settings} exact={true} />
+						<Route exact path="/" render={() => <Redirect to="/home" />} />
+					</IonRouterOutlet>
 
-						<p>{wasmLoaded ? "WASM Loaded!" : "Loading WASM..."}</p>
-						<IonButton onClick={callWasmFunction} disabled={!wasmLoaded}>
-							Call WASM function
-						</IonButton>
-						<pre className="text-2xs mt-1">{key ? key : "<no key yet>"}</pre>
-						<div className="h-20"></div>
-						<p>Password HKDF Test</p>
-						<form
-							className="mx-auto max-w-screen-sm"
-							onSubmit={handleSubmit}
-							style={{display: "flex", alignItems: "center"}}>
-							<IonItem style={{flex: 1}}>
-								<IonInput
-									value={inputValue}
-									onIonChange={(e) => setInputValue(e.detail.value!)}
-									placeholder="Enter a passphrase"
-									required
-								/>
-							</IonItem>
-							<IonButton type="submit">Submit</IonButton>
-						</form>
-						<pre className="text-2xs mt-2">
-							<strong>salt:</strong> {salt}
-						</pre>
-						<pre className="text-2xs mt-1">{hkdf ? hkdf : "<no hkdf key yet>"}</pre>
-					</div>
-				</div>
-			</IonContent>
-		</IonPage>
+					{/* Tab Bar for navigation */}
+					<IonTabBar slot="bottom">
+						<IonTabButton tab="home" href="/home">
+							<IonIcon icon={home} />
+							<IonLabel>Home</IonLabel>
+						</IonTabButton>
+
+						<IonTabButton tab="camera" href="/camera">
+							<IonIcon icon={camera} />
+							<IonLabel>Camera</IonLabel>
+						</IonTabButton>
+
+						<IonTabButton tab="settings" href="/settings">
+							<IonIcon icon={settings} />
+							<IonLabel>Settings</IonLabel>
+						</IonTabButton>
+					</IonTabBar>
+				</IonTabs>
+			</IonReactRouter>
+		</IonApp>
 	);
-}
+};
+
+export default App;

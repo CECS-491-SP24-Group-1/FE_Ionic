@@ -1,0 +1,18 @@
+.camera-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 60vh;
+	background-color: #f0f0f0;
+}
+
+video,
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+}
+
+canvas {
+	display: none; /* Hidden canvas */
+}

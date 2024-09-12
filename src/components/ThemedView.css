@@ -1,0 +1,8 @@
+/* ThemedView.css */
+
+.themed-view {
+	/* Default container styles for ThemedView can go here if needed */
+	display: block;
+	padding: 16px;
+	border-radius: 8px;
+}
