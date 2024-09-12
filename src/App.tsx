@@ -1,52 +1,55 @@
-import {useEffect, useState} from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.scss";
-import {IonButton, IonContent, IonInput, IonItem, IonPage} from "@ionic/react";
+import {
+	IonApp,
+	IonRouterOutlet,
+	IonTabs,
+	IonTabBar,
+	IonTabButton,
+	IonLabel,
+	IonIcon
+} from "@ionic/react";
+import {IonReactRouter} from "@ionic/react-router";
+import {Route, Redirect} from "react-router-dom";
+import {home, camera, settings} from "ionicons/icons";
 
-import "./App.scss";
-import useWasm from "./wasm_util/use_wasm";
+// Import pages
+import Home from "./pages/Home";
+import CameraPage from "./pages/Camera";
+import Settings from "./pages/Settings";
 
-// Import the components from the components/navigation folder
-import {TabBarIcon} from "./components/navigation/TabBarIcon";
-import {Collapsible} from "./components/Collapsible";
-import {ExternalLink} from "./components/ExternalLink";
-import ParallaxScrollView from "./components/ParallaxScrollView";
-import {ThemedText} from "./components/ThemedText";
-import {ThemedView} from "./components/ThemedView";
-import TabBar from "./components/navigation/TabBar";
-import HomePage from "./components/pages/HomePage";
-
-export default function App() {
-	const [count, setCount] = useState(0);
-	const [key, setKey] = useState<string | null>(null);
-	const [salt, setSalt] = useState<string | null>(null);
-	const [hkdf, setHkdf] = useState<string | null>(null);
-	const [inputValue, setInputValue] = useState<string>("");
-	const wasmLoaded = useWasm("/vaultlib.wasm");
-
-	useEffect(() => {
-		if (wasmLoaded) setSalt(vaultlib.HKDF_SALT);
-	}, [wasmLoaded]);
-
-	const callWasmFunction = () => {
-		if (wasmLoaded) {
-			setKey(vaultlib.Ed25519Keygen());
-		} else {
-			console.error("WASM not loaded or function not available");
-		}
-	};
-
-	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault();
-		if (wasmLoaded) setHkdf(vaultlib.HKDF(inputValue));
-	};
-
+const App: React.FC = () => {
 	return (
-		<IonPage>
-			<IonContent>
-				<TabBar />
-				<HomePage />
-			</IonContent>
-		</IonPage>
+		<IonApp>
+			<IonReactRouter>
+				<IonTabs>
+					<IonRouterOutlet>
+						{/* Define routes for each tab */}
+						<Route path="/home" component={Home} exact={true} />
+						<Route path="/camera" component={CameraPage} exact={true} />
+						<Route path="/settings" component={Settings} exact={true} />
+						<Route exact path="/" render={() => <Redirect to="/home" />} />
+					</IonRouterOutlet>
+
+					{/* Tab Bar for navigation */}
+					<IonTabBar slot="bottom">
+						<IonTabButton tab="home" href="/home">
+							<IonIcon icon={home} />
+							<IonLabel>Home</IonLabel>
+						</IonTabButton>
+
+						<IonTabButton tab="camera" href="/camera">
+							<IonIcon icon={camera} />
+							<IonLabel>Camera</IonLabel>
+						</IonTabButton>
+
+						<IonTabButton tab="settings" href="/settings">
+							<IonIcon icon={settings} />
+							<IonLabel>Settings</IonLabel>
+						</IonTabButton>
+					</IonTabBar>
+				</IonTabs>
+			</IonReactRouter>
+		</IonApp>
 	);
-}
+};
+
+export default App;
