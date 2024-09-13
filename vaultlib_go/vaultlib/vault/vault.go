@@ -60,9 +60,8 @@ func VaultFromJSON(js string) (*Vault, error) {
 	return &obj, nil
 }
 
-
-//Serializes a vault to a Gob byte string.
-func (v Vault) Gob() (string, error){
+// Serializes a vault to a Gob byte string.
+func (v Vault) Gob() (string, error) {
 	gs := ""
 	if err := io.Obj2GString(&gs, &v); err != nil {
 		return "", err
@@ -77,4 +76,13 @@ func (v Vault) JSON() (string, error) {
 		return "", err
 	}
 	return string(jb), nil
+}
+
+// Implements the stringer interface; serialization to JSON.
+func (v Vault) String() string {
+	js, err := v.JSON()
+	if err != nil {
+		panic(err)
+	}
+	return js
 }

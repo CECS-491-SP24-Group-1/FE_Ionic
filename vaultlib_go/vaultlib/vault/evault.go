@@ -45,8 +45,8 @@ func EVaultFromJSON(js string) (*EVault, error) {
 	return &obj, nil
 }
 
-//Serializes an encrypted vault to a Gob byte string.
-func (ev EVault) Gob() (string, error){
+// Serializes an encrypted vault to a Gob byte string.
+func (ev EVault) Gob() (string, error) {
 	gs := ""
 	if err := io.Obj2GString(&gs, &ev); err != nil {
 		return "", err
@@ -61,4 +61,13 @@ func (ev EVault) JSON() (string, error) {
 		return "", err
 	}
 	return string(jb), nil
+}
+
+// Implements the stringer interface; serialization to JSON.
+func (ev EVault) String() string {
+	js, err := ev.JSON()
+	if err != nil {
+		panic(err)
+	}
+	return js
 }
