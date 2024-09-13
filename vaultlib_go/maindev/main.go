@@ -11,6 +11,11 @@ func main() {
 	uuid := util.MustNewUUID7()
 	v := vault.New(uuid, "no_ident")
 
-	fmt.Printf("v = %v\n", v)
-	v.EncryptPassphrase("password")
+	fmt.Printf("v = %v\n\n", v)
+	ev, _ := v.EncryptPassphrase("password")
+
+	g, _ := ev.Gob()
+	j, _ := ev.JSON()
+	fmt.Printf("gob: %s\n\n", g)
+	fmt.Printf("json: %s\n\n", j)
 }

@@ -1,6 +1,9 @@
 package vault
 
 import (
+	"encoding/json"
+
+	"wraith.me/vaultlib/vaultlib/io"
 	"wraith.me/vaultlib/vaultlib/util"
 	"wraith.me/vaultlib/vaultlib/vault/sectype"
 )
@@ -22,4 +25,40 @@ type EVault struct {
 
 	PayloadSize uint64 `json:"payload_size"` //The size of the encrypted payload in bytes
 	Payload     []byte `json:"payload"`      //The actual contents of the encrypted vault, encoded as a Base64 string.
+}
+
+// Creates an encrypted vault object from a GOB byte string.
+func EVaultFromGob(gob string) (*EVault, error) {
+	obj := EVault{}
+	if err := io.GString2Obj(&obj, &gob); err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+
+// Creates an encrypted vault object from a JSON string.
+func EVaultFromJSON(js string) (*EVault, error) {
+	obj := EVault{}
+	if err := json.Unmarshal([]byte(js), &obj); err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+
+//Serializes an encrypted vault to a Gob byte string.
+func (ev EVault) Gob() (string, error){
+	gs := ""
+	if err := io.Obj2GString(&gs, &ev); err != nil {
+		return "", err
+	}
+	return gs, nil
+}
+
+// Serializes an encrypted vault to JSON.
+func (ev EVault) JSON() (string, error) {
+	jb, err := json.Marshal(ev)
+	if err != nil {
+		return "", err
+	}
+	return string(jb), nil
 }

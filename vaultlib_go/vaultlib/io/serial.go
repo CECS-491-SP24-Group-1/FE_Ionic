@@ -2,6 +2,7 @@ package io
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/gob"
 )
 
@@ -15,4 +16,24 @@ func Bytes2Obj[T any](obj *T, buf *bytes.Buffer) error {
 func Obj2Bytes[T any](buf *bytes.Buffer, obj *T) error {
 	enc := gob.NewEncoder(buf)
 	return enc.Encode(obj)
+}
+
+// Deserializes a given object from a base64 GOB string.
+func GString2Obj[T any](obj *T, gs *string) error {
+	byt, err := base64.StdEncoding.DecodeString(*gs)
+	if err != nil {
+		return err
+	}
+	buf := bytes.NewBuffer(byt)
+	return Bytes2Obj(obj, buf)
+}
+
+// Serializes a given object to a base64 GOB string.
+func Obj2GString[T any](gs *string, obj *T) error {
+	buf := bytes.Buffer{}
+	if err := Obj2Bytes(&buf, obj); err != nil {
+		return err
+	}
+	*gs = base64.StdEncoding.EncodeToString(buf.Bytes())
+	return nil
 }

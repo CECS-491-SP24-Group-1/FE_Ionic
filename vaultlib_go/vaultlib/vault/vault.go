@@ -1,8 +1,10 @@
 package vault
 
 import (
+	"encoding/json"
 	"time"
 
+	"wraith.me/vaultlib/vaultlib/io"
 	"wraith.me/vaultlib/vaultlib/keystore"
 	"wraith.me/vaultlib/vaultlib/util"
 )
@@ -38,4 +40,41 @@ func New(sub util.UUID, devIdent string) *Vault {
 		Note:     "",
 		KStore:   kstore,
 	}
+}
+
+// Creates a vault object from a GOB byte string.
+func VaultFromGob(gob string) (*Vault, error) {
+	obj := Vault{}
+	if err := io.GString2Obj(&obj, &gob); err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+
+// Creates a vault object from a JSON string.
+func VaultFromJSON(js string) (*Vault, error) {
+	obj := Vault{}
+	if err := json.Unmarshal([]byte(js), &obj); err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+
+
+//Serializes a vault to a Gob byte string.
+func (v Vault) Gob() (string, error){
+	gs := ""
+	if err := io.Obj2GString(&gs, &v); err != nil {
+		return "", err
+	}
+	return gs, nil
+}
+
+// Serializes a vault to JSON.
+func (v Vault) JSON() (string, error) {
+	jb, err := json.Marshal(v)
+	if err != nil {
+		return "", err
+	}
+	return string(jb), nil
 }

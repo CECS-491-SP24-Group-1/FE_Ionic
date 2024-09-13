@@ -24,6 +24,7 @@ GO_BUILD := $(GO) build
 TINYGO_BUILD := tinygo build
 GO_DEV := $(GO) run
 WASMOPT := wasm-opt --enable-bulk-memory -Oz
+TYGO := tygo generate
 #MAKE := $(MAKE) -s
 
 #Flags
@@ -165,3 +166,8 @@ install:
 optim:
 	@echo $(WASMOPT) -o optim.wasm $(BIN_NORM)
 	@$(WASMOPT) -o optim.wasm $(BIN_NORM)
+
+#Generates TypeScript headers for the vault structs
+.PHONY: ts
+ts:
+	$(TYGO)

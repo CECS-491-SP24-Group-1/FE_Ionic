@@ -1,9 +1,20 @@
 packages:
+  # keystore.go
   - path: "wraith.me/vaultlib/vaultlib/keystore"
-    output_path: "dist/keystore"
+    output_path: "dist/keystore.ts"
     indent: "\t"
     type_mappings:
-      KeyStore: "KeyStore"
-      ccrypto.PUBKEY_SIZE: 32
-      ccrypto.Privseed: "Uint8Array"
-      ccrypto.Pubkey: "Uint8Array"
+      crypto.PUBKEY_SIZE: 32
+      crypto.Privseed: "Uint8Array"
+      crypto.Pubkey: "Uint8Array"
+
+  # evault.go & vault.go
+  - path: "wraith.me/vaultlib/vaultlib/vault"
+    output_path: "dist/vault.ts"
+    indent: "\t"
+    frontmatter: 'import { KeyStore } from "./keystore.ts"'
+    type_mappings:
+      util.UUID: "string"
+      time.Time: "string"
+      keystore.KeyStore: "KeyStore"
+      sectype.SecType: '"NONE" | "ENC_KEY" | "PASSPHRASE" | "QR" | "BIOMETRICS" | "HW_KEY"'
