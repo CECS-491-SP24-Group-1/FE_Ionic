@@ -30,6 +30,7 @@
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 	/* Optional shadow for a subtle 3D effect */
 	cursor: pointer;
+	transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .capture-button:before {
