@@ -11,6 +11,9 @@ const Settings: React.FC = () => (
 			<div style={{ padding: "1em" }}>
 				<h1>Vaultlib sanity check</h1>
 				<code>{vaultlib.Ed25519Keygen()}</code>
+				<p>
+					FE URL: <code>{import.meta.env.VITE_API_URL}</code>
+				</p>
 			</div>
 		</IonContent>
 	</IonPage>

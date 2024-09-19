@@ -6,7 +6,7 @@ import {
 	IonTitle,
 	IonContent,
 	IonButton,
-	IonIcon,
+	IonIcon
 } from "@ionic/react";
 import "./Camera.scss"; // Custom styling
 
@@ -22,7 +22,7 @@ const Camera: React.FC = () => {
 			navigator.mediaDevices
 				.getUserMedia({ video: true })
 				.then((stream) => {
-					setStream(stream);  // Store the stream in the state
+					setStream(stream); // Store the stream in the state
 					if (videoRef.current) {
 						videoRef.current.srcObject = stream;
 					}
@@ -65,7 +65,7 @@ const Camera: React.FC = () => {
 	// Function to reset the photo and restart the camera
 	const retakePicture = () => {
 		setPhoto(null);
-		startCamera();  // Restart the camera stream when retaking the picture
+		startCamera(); // Restart the camera stream when retaking the picture
 	};
 
 	return (

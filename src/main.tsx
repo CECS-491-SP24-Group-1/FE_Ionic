@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { IonApp, IonRouterOutlet, setupIonicReact, IonSpinner } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Route } from "react-router";
+
+import App from "./App";
 import useWasm from "./wasm_util/use_wasm";
 
 import "./index.scss";
@@ -70,9 +71,7 @@ export function Root() {
 
 	//Render the component when vaultlib loads successfully
 	//TODO: add registration and login stuff here
-	return (
-		<App />
-	);
+	return <App />;
 }
 
 //Creates the root element in the HTML DOM.
