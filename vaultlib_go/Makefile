@@ -28,15 +28,10 @@ TYGO := tygo generate
 #MAKE := $(MAKE) -s
 
 #Flags
+GO_OS_ARCH := GOARCH=wasm GOOS=js
 GO_LD := -ldflags "-s -w"
 TINYGO_ARCH := -target wasm
 TINYGO_LD := -gc leaking -no-debug
-
-ifeq ($(OS), Windows_NT)
-	GO_OS_ARCH := set "GOARCH=wasm" && set "GOOS=js" &&
-else
-	GO_OS_ARCH := GOARCH=wasm GOOS=js
-endif
 
 #Define common commands
 ifeq ($(OS), Windows_NT)
