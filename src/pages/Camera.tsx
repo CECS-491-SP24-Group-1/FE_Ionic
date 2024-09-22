@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
-import { IonIcon } from "@ionic/react";
+import { IonContent, IonPage, IonIcon } from "@ionic/react";
 import { syncOutline, ellipseOutline, closeOutline } from "ionicons/icons";
 import "./Camera.scss";
 
@@ -32,25 +32,29 @@ const CameraPage: React.FC = () => {
 	};
 
 	return (
-		<div className="camera-container">
-			{photo ? (
-				<div className="photo-container">
-					<img src={photo} alt="Captured" className="photo" />
-					<button className="no-outline close-button" onClick={retakePicture}>
-						<IonIcon icon={closeOutline} />
-					</button>
+		<IonPage>
+			<IonContent>
+				<div className="camera-container">
+					{photo ? (
+						<div className="photo-container">
+							<img src={photo} alt="Captured" className="photo" />
+							<button className="no-outline close-button" onClick={retakePicture}>
+								<IonIcon icon={closeOutline} />
+							</button>
+						</div>
+					) : (
+						<div className="camera-view">
+							<button className="no-outline flip-button" onClick={toggleCamera}>
+								<IonIcon icon={syncOutline} />
+							</button>
+							<button className="no-outline snap-button" onClick={takePicture}>
+								<IonIcon icon={ellipseOutline} />
+							</button>
+						</div>
+					)}
 				</div>
-			) : (
-				<div className="camera-view">
-					<button className="no-outline flip-button" onClick={toggleCamera}>
-						<IonIcon icon={syncOutline} />
-					</button>
-					<button className="no-outline snap-button" onClick={takePicture}>
-						<IonIcon icon={ellipseOutline} />
-					</button>
-				</div>
-			)}
-		</div>
+			</IonContent>
+		</IonPage>
 	);
 };
 
