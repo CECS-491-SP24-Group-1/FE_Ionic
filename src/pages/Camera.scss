@@ -16,7 +16,8 @@
 	}
 
 	.flip-button,
-	.snap-button {
+	.snap-button,
+	.close-button {
 		position: absolute;
 		background: transparent;
 		border: none;
@@ -30,8 +31,10 @@
 		}
 	}
 
+	.flip-button,
 	.close-button {
-		background: transparent;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.6);
 		border: none;
 		color: white;
 		position: absolute;
@@ -40,7 +43,11 @@
 	.flip-button {
 		bottom: 30px;
 		right: 30px;
-		font-size: 30px;
+
+		$size: 30px;
+		font-size: $size;
+		width: $size;
+		height: $size;
 	}
 
 	.snap-button {
@@ -64,7 +71,11 @@
 		.close-button {
 			top: 20px;
 			left: 15px;
-			font-size: 40px;
+
+			$size: 40px;
+			font-size: $size;
+			width: $size;
+			height: $size;
 		}
 	}
 }
