@@ -9,8 +9,27 @@
 		height: 100%;
 	}
 
+	.no-outline {
+		&:focus {
+			outline: none;
+		}
+	}
+
 	.flip-button,
-	.snap-button,
+	.snap-button {
+		position: absolute;
+		background: transparent;
+		border: none;
+		color: white;
+		z-index: 10;
+		transition: filter 0.3s ease; // Add transition for smooth effect
+
+		&:hover {
+			filter: brightness(80%); // Darken the button on hover
+			cursor: pointer; // Change cursor to pointer on hover
+		}
+	}
+
 	.close-button {
 		background: transparent;
 		border: none;

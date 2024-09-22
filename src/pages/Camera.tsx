@@ -36,16 +36,16 @@ const CameraPage: React.FC = () => {
 			{photo ? (
 				<div className="photo-container">
 					<img src={photo} alt="Captured" className="photo" />
-					<button className="close-button" onClick={retakePicture}>
+					<button className="no-outline close-button" onClick={retakePicture}>
 						<IonIcon icon={closeOutline} />
 					</button>
 				</div>
 			) : (
 				<div className="camera-view">
-					<button className="flip-button" onClick={toggleCamera}>
+					<button className="no-outline flip-button" onClick={toggleCamera}>
 						<IonIcon icon={syncOutline} />
 					</button>
-					<button className="snap-button" onClick={takePicture}>
+					<button className="no-outline snap-button" onClick={takePicture}>
 						<IonIcon icon={ellipseOutline} />
 					</button>
 				</div>
