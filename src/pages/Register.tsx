@@ -12,7 +12,6 @@ import {
 } from "@ionic/react";
 import "./LoginRegister.scss";
 import logo from "../assets/images/glock_primary.svg";
-import backgroundImage from "../assets/images/registration-background.jpg";
 import { IonRouterLink } from "@ionic/react";
 const Register: React.FC = () => {
 	const [email, setEmail] = useState("");

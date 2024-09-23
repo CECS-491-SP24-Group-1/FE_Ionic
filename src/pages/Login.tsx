@@ -5,7 +5,7 @@ import {
 	IonInput,
 	IonButton,
 	IonItem,
-	IonLabel,
+	IonLabel
 } from "@ionic/react";
 import { IonRouterLink } from "@ionic/react";
 import "./LoginRegister.scss";
