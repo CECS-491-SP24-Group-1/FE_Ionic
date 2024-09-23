@@ -32,11 +32,11 @@ const App: React.FC = () => {
 					</IonRouterOutlet>
 
 					{/* Temporary registration page */}
-					<IonTabBar slot="bottom"> 
-					<IonTabButton tab="register" href="/register">
-						<IonIcon icon={settings} />
-						<IonLabel>Register</IonLabel>
-					</IonTabButton>
+					<IonTabBar slot="bottom">
+						<IonTabButton tab="register" href="/register">
+							<IonIcon icon={settings} />
+							<IonLabel>Register</IonLabel>
+						</IonTabButton>
 
 						<IonTabButton tab="home" href="/home">
 							<IonIcon icon={home} />

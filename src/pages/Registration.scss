@@ -1,120 +1,119 @@
 .registration-page {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 // Background Image
 ion-content::part(scroll) {
-    background-image: url('../assets/images/registration-background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+	background-image: url("../assets/images/registration-background.jpg");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 }
 
 // Registration Container
 .registration-container {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    margin: 100px auto 0 auto;
-    font-family: 'Poppins', sans-serif;
+	background-color: white;
+	padding: 2rem;
+	border-radius: 20px;
+	width: 100%;
+	max-width: 400px;
+	box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+	text-align: center;
+	margin: 100px auto 0 auto;
+	font-family: "Poppins", sans-serif;
 }
 
 .registration-container h2 {
-    color: #323030;
-    font-weight: bold;
-    font-family: 'Poppins', sans-serif;
-    margin-top: -10px;
-    margin-bottom: 22px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+	color: #323030;
+	font-weight: bold;
+	font-family: "Poppins", sans-serif;
+	margin-top: -10px;
+	margin-bottom: 22px;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .registration-container .terms-text {
-    margin-top: -5px;
+	margin-top: -5px;
 }
 
 // Form
 .registration-container ion-item {
-    --background: #373737;
-    --color: white;
-    margin-bottom: 16px;
-    border-radius: 4px;
-    font-family: 'Poppins', sans-serif;
+	--background: #373737;
+	--color: white;
+	margin-bottom: 16px;
+	border-radius: 4px;
+	font-family: "Poppins", sans-serif;
 }
 
 .ion-item {
-    --highlight-color-focused: #8f9bba;
-    margin-bottom: 1rem;
+	--highlight-color-focused: #8f9bba;
+	margin-bottom: 1rem;
 }
 
 .dob-section {
-    margin-bottom: 1rem;
-    text-align: left;
-    color: #323030;
-    font-weight: bold;
-    font-family: 'Poppins', sans-serif;
+	margin-bottom: 1rem;
+	text-align: left;
+	color: #323030;
+	font-weight: bold;
+	font-family: "Poppins", sans-serif;
 }
 
 .dob-inputs {
-    display: flex;
-    gap: 10px;
+	display: flex;
+	gap: 10px;
 }
 
 .dob-inputs ion-select {
-    flex: 1;
-    font-weight: bold;
-    --padding-start: 10px;
-    color: #ffffff;
-    --background: #373737;
-    --border-radius: 4px;
+	flex: 1;
+	font-weight: bold;
+	--padding-start: 10px;
+	color: #ffffff;
+	--background: #373737;
+	--border-radius: 4px;
 }
 
-
 .continue-button {
-    font-weight: bold;
-    padding: 6px 0;
-    --background: #1f1f6d;
-    --border-radius: 4px;
-    height: 55px;
+	font-weight: bold;
+	padding: 6px 0;
+	--background: #1f1f6d;
+	--border-radius: 4px;
+	height: 55px;
 }
 
 .terms-text,
 .login-text {
-    font-size: 0.8rem;
-    color: #555;
-    margin-top: 1rem;
+	font-size: 0.8rem;
+	color: #555;
+	margin-top: 1rem;
 }
 
 .terms-text ion-text,
 .login-text ion-text {
-    color: #3b82f6;
-    cursor: pointer;
+	color: #3b82f6;
+	cursor: pointer;
 }
 
 // Logo
 .logo-container {
-    position: absolute;
-    top: 20px;
-    left: 35px;
-    z-index: 10;
+	position: absolute;
+	top: 20px;
+	left: 35px;
+	z-index: 10;
 }
 
 .logo {
-    width: 60px;
-    height: auto;
+	width: 60px;
+	height: auto;
 }
 
 .logo-text {
-    font-size: 1rem;
-    color: white;
-    margin-top: -2px;
-    margin-left: 6px;
-    font-weight: bold;
+	font-size: 1rem;
+	color: white;
+	margin-top: -2px;
+	margin-left: 6px;
+	font-weight: bold;
 }
