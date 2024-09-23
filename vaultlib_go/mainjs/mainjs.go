@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"wraith.me/vaultlib/jsbind"
+	"wraith.me/vaultlib/jsutil"
 )
 
 func main() {
@@ -20,12 +21,15 @@ func main() {
 	// PUT ALL JS FUNCTIONS & VARS TO EXPORT BELOW THIS BLOCK
 	//
 
-	jsbind.ExportF(
+	jsutil.ExportF("",
 		jsbind.Ed25519Keygen,
 		jsbind.HKDF,
 	)
-	jsbind.ExportV(
-		jsbind.NV("HKDF_SALT", jsbind.HKDF_SALT),
+	jsutil.ExportV("",
+		jsutil.NV("HKDF_SALT", jsbind.HKDF_SALT),
+	)
+	jsutil.ExportF("vault",
+		jsbind.Test,
 	)
 
 	//

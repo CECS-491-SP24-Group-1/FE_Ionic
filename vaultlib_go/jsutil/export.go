@@ -1,6 +1,6 @@
 //go:build js && wasm
 
-package jsbind
+package jsutil
 
 import (
 	"reflect"
@@ -24,9 +24,12 @@ func NV(n string, v interface{}) V {
 }
 
 // Utility function to export Go functions to JS.
-func ExportF(targets ...func(this js.Value, args []js.Value) any) {
+func ExportF(namespace string, targets ...func(this js.Value, args []js.Value) any) {
 	//Get the namespace to export to
-	ns := exportLoc(PackageName)
+	if namespace == "" {
+		namespace = PackageName
+	}
+	ns := exportLoc(namespace)
 
 	//Loop over the functions to export
 	for _, target := range targets {
@@ -41,9 +44,12 @@ func ExportF(targets ...func(this js.Value, args []js.Value) any) {
 }
 
 // Utility function to export Go values to JS.
-func ExportV(targets ...V) {
+func ExportV(namespace string, targets ...V) {
 	//Get the namespace to export to
-	ns := exportLoc(PackageName)
+	if namespace == "" {
+		namespace = PackageName
+	}
+	ns := exportLoc(namespace)
 
 	//Loop over the variables to export
 	for _, target := range targets {
@@ -58,13 +64,25 @@ func exportLoc(packageName string) js.Value {
 		return js.Global()
 	}
 
-	//Check if the namespace exists
-	ns := js.Global().Get(packageName)
-	if ns.IsUndefined() {
-		//Create a new object for the namespace
-		js.Global().Set(packageName, js.Global().Get("Object").New())
-		ns = js.Global().Get(packageName) //Re-fetch the newly created object
+	//Split the package name by periods
+	parts := strings.Split(packageName, ".")
+
+	//Start with the global object
+	current := js.Global()
+
+	//Iterate through each part of the package name
+	for _, part := range parts {
+		//Check if this part of the namespace exists
+		next := current.Get(part)
+		if next.IsUndefined() {
+			//Create a new object for this part of the namespace
+			current.Set(part, js.Global().Get("Object").New())
+			next = current.Get(part) //Re-fetch the newly created object
+		}
+		//Move to the next level
+		current = next
 	}
 
-	return ns
+	//Return the built path
+	return current
 }

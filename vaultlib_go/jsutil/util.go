@@ -1,6 +1,6 @@
 //go:build js && wasm
 
-package jsbind
+package jsutil
 
 import (
 	"fmt"

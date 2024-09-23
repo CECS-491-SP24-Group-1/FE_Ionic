@@ -5,7 +5,7 @@
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
 		"allowJs": false,
 		"skipLibCheck": true,
-		"esModuleInterop": false,
+		"esModuleInterop": true, // Set to true for better interop with CommonJS modules
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
@@ -20,10 +20,13 @@
 			"@/*": ["./*"]
 		}
 	},
-	"include": ["./src", "./types"],
+	"include": [
+		"./src/**/*", // Include all files in the src directory
+		"./types/**/*" // Ensure to include your types directory if it exists
+	],
 	"references": [
 		{
-			"path": "./tsconfig.node.json"
+			"path": "./tsconfig.node.json" // Keep this if you're using it for Node references
 		}
 	]
 }

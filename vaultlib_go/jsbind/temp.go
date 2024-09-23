@@ -8,6 +8,7 @@ import (
 	"strings"
 	"syscall/js"
 
+	"wraith.me/vaultlib/jsutil"
 	"wraith.me/vaultlib/vaultlib"
 	"wraith.me/vaultlib/vaultlib/crypto"
 )
@@ -28,11 +29,11 @@ func Ed25519Keygen(_ js.Value, _ []js.Value) interface{} {
 
 // HKDF(password: string): string
 func HKDF(this js.Value, args []js.Value) interface{} {
-	password := strings.TrimSpace(Val2Any[string](args[0]))
+	password := strings.TrimSpace(jsutil.Val2Any[string](args[0]))
 	salt, _ := base64.StdEncoding.DecodeString(HKDF_SALT)
 	key, err := crypto.Ed25519Argon(password, salt)
 	if err != nil {
-		JSErr(err)
+		jsutil.JSErr(err)
 		return nil
 	}
 	return base64.StdEncoding.EncodeToString(key[:])

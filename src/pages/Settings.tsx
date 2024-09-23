@@ -13,6 +13,8 @@ const Settings: React.FC = () => (
 				<code>{vaultlib.Ed25519Keygen()}</code>
 				<p>
 					FE URL: <code>{import.meta.env.VITE_API_URL}</code>
+					<br></br>
+					Test: <code>{vault.Test()}</code>
 				</p>
 			</div>
 		</IonContent>

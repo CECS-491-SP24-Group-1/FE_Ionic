@@ -1,11 +1,15 @@
 declare global {
-	namespace vaultlib {
+	export namespace vaultlib {
 		const HKDF_SALT: string;
 		function Ed25519Keygen(): string;
 		function HKDF(password: string): string;
 		// Add any other functions exported by your WASM module here
 		// For example:
 		// function someOtherFunction(arg: number): boolean;
+	}
+
+	export namespace vault {
+		function Test(): string;
 	}
 }
 
