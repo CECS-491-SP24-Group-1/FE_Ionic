@@ -13,6 +13,7 @@ import { home, camera, settings } from "ionicons/icons";
 
 // Import pages
 import Home from "./pages/Home";
+import Login from "./pages/Login";
 import CameraPage from "./pages/Camera";
 import Settings from "./pages/Settings";
 import Registration from "./pages/Registration";
@@ -26,6 +27,7 @@ const App: React.FC = () => {
 						{/* Define routes for each tab */}
 						<Route path="/register" component={Registration} exact={true} />
 						<Route path="/home" component={Home} exact={true} />
+						<Route path="/login" component = {Login} exact = {true} />
 						<Route path="/camera" component={CameraPage} exact={true} />
 						<Route path="/settings" component={Settings} exact={true} />
 						<Route exact path="/" render={() => <Redirect to="/home" />} />
@@ -41,6 +43,11 @@ const App: React.FC = () => {
 						<IonTabButton tab="home" href="/home">
 							<IonIcon icon={home} />
 							<IonLabel>Home</IonLabel>
+						</IonTabButton>
+
+						<IonTabButton tab="login" href="/login">
+							<IonIcon icon={home} />
+							<IonLabel>Login</IonLabel>
 						</IonTabButton>
 
 						<IonTabButton tab="camera" href="/camera">

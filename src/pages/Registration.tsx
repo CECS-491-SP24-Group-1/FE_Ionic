@@ -16,7 +16,7 @@ import {
 import "./Registration.scss";
 import logo from "../assets/images/glock_primary.svg";
 import backgroundImage from "../assets/images/registration-background.jpg";
-
+import { IonRouterLink } from "@ionic/react";
 const Registration: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
@@ -144,7 +144,10 @@ const Registration: React.FC = () => {
 							<IonText color="primary">Privacy Policy</IonText>.
 						</p>
 						<p className="login-text">
-							Already have an account? <IonText color="primary">Log in</IonText>.
+							Already have an account?
+							<IonRouterLink color="primary" routerLink="/login" style={{ textDecoration: 'none' }}>
+								Login Now
+                            </IonRouterLink>.
 						</p>
 					</form>
 				</div>
