@@ -14,6 +14,9 @@ import {
   IonText
 } from "@ionic/react";
 import "./Registration.scss"; 
+import logo from "../assets/images/glock_primary.svg";
+import backgroundImage from "../assets/images/registration-background.jpg";
+
 
 const Registration: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +32,12 @@ const Registration: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent className="ion-padding registration-page">
+      <IonContent className="registration-page">
+        <div className = "logo-container">
+            <img src={logo} alt="Wraith Logo" className="logo" />
+            <p className="logo-text">Wraith</p> 
+        </div>
+
         <div className="registration-container">
           <h2>Create An Account</h2>
           
