@@ -5,6 +5,7 @@
     align-items: center;
 }
 
+// Background Image
 ion-content::part(scroll) {
     background-image: url('../assets/images/registration-background.jpg');
     background-size: cover;
@@ -13,7 +14,7 @@ ion-content::part(scroll) {
     background-attachment: fixed;
 }
 
-
+// Registration Container
 .registration-container {
     background-color: white;
     padding: 2rem;
@@ -23,11 +24,29 @@ ion-content::part(scroll) {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
     text-align: center;
     margin: 100px auto 0 auto;
+    font-family: 'Poppins', sans-serif;
 }
+
 
 .registration-container h2 {
     color: #323030;
     font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    margin-top: -10px;
+    margin-bottom: 22px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.registration-container .terms-text {
+    margin-top: -5px;
+}
+
+// Form
+.registration-container ion-item {
+    --background: #373737;
+    --color: white;
+    margin-bottom: 16px;
+    border-radius: 4px;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -39,6 +58,9 @@ ion-content::part(scroll) {
 .dob-section {
     margin-bottom: 1rem;
     text-align: left;
+    color: #323030;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
 }
 
 .dob-inputs {
@@ -48,12 +70,20 @@ ion-content::part(scroll) {
 
 .dob-inputs ion-select {
     flex: 1;
+    font-weight: bold;
+    --padding-start: 10px;
+    color: #ffffff;
+    --background: #373737;
+    --border-radius: 4px;
 }
 
+
 .continue-button {
-    background-color: #3b82f6;
-    color: white;
-    margin-top: 1rem;
+    font-weight: bold;
+    padding: 6px 0;
+    --background: #1f1f6d;
+    --border-radius: 4px;
+    height: 55px;
 }
 
 .terms-text,
@@ -69,6 +99,7 @@ ion-content::part(scroll) {
     cursor: pointer;
 }
 
+// Logo
 .logo-container {
     position: absolute;
     top: 20px;

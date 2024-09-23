@@ -39,13 +39,15 @@ const Registration: React.FC = () => {
         </div>
 
         <div className="registration-container">
-          <h2>Create An Account</h2>
+          <h2>Create an account</h2>
           
           {/* Registration Form */}
           <form onSubmit={handleSubmit}>
             {/* Email Input */}
             <IonItem>
-              <IonLabel position="floating">Email *</IonLabel>
+              <IonLabel position="stacked">
+              Email {email === "" && <span style={{ color: "red" }}>*</span>}
+                </IonLabel>
               <IonInput
                 type="email"
                 value={email}
@@ -56,7 +58,9 @@ const Registration: React.FC = () => {
 
             {/* Username Input */}
             <IonItem>
-              <IonLabel position="floating">Username *</IonLabel>
+              <IonLabel position="stacked">
+              Username {username === "" && <span style={{ color: "red" }}>*</span>}
+                </IonLabel>
               <IonInput
                 value={username}
                 onIonChange={(e:CustomEvent) => setUsername(e.detail.value!)}
@@ -66,9 +70,15 @@ const Registration: React.FC = () => {
 
             {/* Date of Birth - Month, Day, Year */}
             <div className="dob-section">
-              <IonLabel>Date of Birth *</IonLabel>
+            <IonLabel>
+                Date of Birth{" "}
+                {(month === null || day === null || year === null) && (
+                <span style={{ color: "red" }}>*</span>
+                )}
+            </IonLabel>
               <div className="dob-inputs">
                 <IonSelect
+                  shape="round"
                   placeholder="Month"
                   value={month}
                   onIonChange={(e:CustomEvent) => setMonth(e.detail.value)}
@@ -79,6 +89,7 @@ const Registration: React.FC = () => {
                 </IonSelect>
 
                 <IonSelect
+                 shape="round"
                   placeholder="Day"
                   value={day}
                   onIonChange={(e:CustomEvent) => setDay(e.detail.value)}
@@ -91,6 +102,7 @@ const Registration: React.FC = () => {
                 </IonSelect>
 
                 <IonSelect
+                  shape="round"
                   placeholder="Year"
                   value={year}
                   onIonChange={(e:CustomEvent) => setYear(e.detail.value)}
@@ -105,7 +117,7 @@ const Registration: React.FC = () => {
             </div>
 
             {/* Continue Button */}
-            <IonButton expand="full" type="submit" className="continue-button">
+            <IonButton shape="round" expand="full" type="submit" className="continue-button">
               Continue
             </IonButton>
 
