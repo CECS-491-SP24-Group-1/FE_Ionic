@@ -6,15 +6,8 @@ ion-content::part(scroll) {
 	background-repeat: no-repeat;
 }
 
-.registration-wrapper {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-}
-
-// Registration Container
+// Login and registration Containers
+.login-container,
 .registration-container {
 	// Position
 	position: fixed;
@@ -45,15 +38,15 @@ ion-content::part(scroll) {
 	.terms-text {
 		margin-top: -5px;
 	}
-}
 
-// Form
-.registration-container ion-item {
-	--background: #373737;
-	--color: white;
-	margin-bottom: 16px;
-	border-radius: 4px;
-	font-family: "Poppins", sans-serif;
+	// Form
+	ion-item {
+		--background: #373737;
+		--color: white;
+		margin-bottom: 16px;
+		border-radius: 4px;
+		font-family: "Poppins", sans-serif;
+	}
 }
 
 .ion-item {
@@ -92,16 +85,18 @@ ion-content::part(scroll) {
 }
 
 .terms-text,
-.login-text {
+.login-text,
+.required-text,
+.forgot-text {
 	font-size: 0.8rem;
 	color: #555;
 	margin-top: 1rem;
-}
+	text-align: left;
 
-.terms-text ion-text,
-.login-text ion-text {
-	color: #3b82f6;
-	cursor: pointer;
+	ion-text {
+		color: #3b82f6;
+		cursor: pointer;
+	}
 }
 
 // Logo

@@ -1,32 +1,26 @@
 import { useState } from "react";
 import {
 	IonPage,
-	IonHeader,
-	IonToolbar,
-	IonTitle,
 	IonContent,
 	IonInput,
 	IonButton,
 	IonItem,
 	IonLabel,
-	IonSelect,
-	IonSelectOption,
-	IonText
 } from "@ionic/react";
 import { IonRouterLink } from "@ionic/react";
-import "./Login.scss";
+import "./LoginRegister.scss";
 import logo from "../assets/images/glock_primary.svg";
 
 const Login: React.FC = () => {
-    const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("");
+	const [email, setEmail] = useState("");
+	const [pass, setPass] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		// Handle the form submission logic
 	};
 
-    return (
+	return (
 		<IonPage>
 			<IonContent className="login-page">
 				<div className="logo-container">
@@ -39,7 +33,6 @@ const Login: React.FC = () => {
 
 					{/* Login Form */}
 					<form onSubmit={handleSubmit}>
-
 						{/* Email Input */}
 						<IonItem>
 							<IonLabel position="stacked">
@@ -65,8 +58,8 @@ const Login: React.FC = () => {
 							/>
 						</IonItem>
 
-                        <p className="required-text">
-                            <span style={{ color: "red" }}>*</span> Required.
+						<p className="required-text">
+							<span style={{ color: "red" }}>*</span> Required.
 						</p>
 						{/* Continue Button */}
 						<IonButton
@@ -77,19 +70,21 @@ const Login: React.FC = () => {
 							Continue
 						</IonButton>
 
-						
 						<p className="forgot-text">
-                            No account? 
-                            <IonRouterLink color="primary" routerLink="/register" style={{ textDecoration: 'none' }}>
-                                Register now
-                            </IonRouterLink>.
+							No account?&nbsp;
+							<IonRouterLink
+								color="primary"
+								routerLink="/register"
+								style={{ textDecoration: "none" }}>
+								Register now
+							</IonRouterLink>
+							.
 						</p>
-                        
 					</form>
 				</div>
 			</IonContent>
 		</IonPage>
 	);
-}
+};
 
-export default Login
+export default Login;

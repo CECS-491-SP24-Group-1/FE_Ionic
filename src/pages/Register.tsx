@@ -1,9 +1,6 @@
 import { useState } from "react";
 import {
 	IonPage,
-	IonHeader,
-	IonToolbar,
-	IonTitle,
 	IonContent,
 	IonInput,
 	IonButton,
@@ -13,11 +10,11 @@ import {
 	IonSelectOption,
 	IonText
 } from "@ionic/react";
-import "./Registration.scss";
+import "./LoginRegister.scss";
 import logo from "../assets/images/glock_primary.svg";
 import backgroundImage from "../assets/images/registration-background.jpg";
 import { IonRouterLink } from "@ionic/react";
-const Registration: React.FC = () => {
+const Register: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
 	const [month, setMonth] = useState<string | null>(null);
@@ -144,10 +141,14 @@ const Registration: React.FC = () => {
 							<IonText color="primary">Privacy Policy</IonText>.
 						</p>
 						<p className="login-text">
-							Already have an account?
-							<IonRouterLink color="primary" routerLink="/login" style={{ textDecoration: 'none' }}>
+							Already have an account?&nbsp;
+							<IonRouterLink
+								color="primary"
+								routerLink="/login"
+								style={{ textDecoration: "none" }}>
 								Login Now
-                            </IonRouterLink>.
+							</IonRouterLink>
+							.
 						</p>
 					</form>
 				</div>
@@ -156,4 +157,4 @@ const Registration: React.FC = () => {
 	);
 };
 
-export default Registration;
+export default Register;
