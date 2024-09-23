@@ -13,7 +13,7 @@ import {
 	IonSelectOption,
 	IonText
 } from "@ionic/react";
-
+import { IonRouterLink } from "@ionic/react";
 import "./Login.scss";
 import logo from "../assets/images/glock_primary.svg";
 
@@ -79,9 +79,10 @@ const Login: React.FC = () => {
 
 						
 						<p className="forgot-text">
-                            No account? <IonText color="primary">
-        <                       a href="/register" style={{ textDecoration: "none", color: "inherit" }}>Register now</a>
-                                </IonText>.
+                            No account? 
+                            <IonRouterLink color="primary" routerLink="/register" style={{ textDecoration: 'none' }}>
+                                Register now
+                            </IonRouterLink>.
 						</p>
                         
 					</form>
