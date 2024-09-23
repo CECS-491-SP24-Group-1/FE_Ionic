@@ -10,12 +10,6 @@ import {
 
 const Home: React.FC = () => (
 	<IonPage>
-		<IonHeader>
-			<IonToolbar>
-				<IonTitle>Home</IonTitle>
-			</IonToolbar>
-		</IonHeader>
-
 		<IonContent className="ion-padding">
 			{/* Welcome Message */}
 			<IonText color="primary">

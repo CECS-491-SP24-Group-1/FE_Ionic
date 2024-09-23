@@ -2,11 +2,6 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/rea
 
 const Settings: React.FC = () => (
 	<IonPage>
-		<IonHeader>
-			<IonToolbar>
-				<IonTitle>Settings</IonTitle>
-			</IonToolbar>
-		</IonHeader>
 		<IonContent>
 			<div style={{ padding: "1em" }}>
 				<h1>Vaultlib sanity check</h1>

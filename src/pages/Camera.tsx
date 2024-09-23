@@ -70,11 +70,6 @@ const Camera: React.FC = () => {
 
 	return (
 		<IonPage>
-			<IonHeader>
-				<IonToolbar>
-					<IonTitle>Camera</IonTitle>
-				</IonToolbar>
-			</IonHeader>
 			<IonContent className="ion-padding">
 				<div className="camera-container">
 					{/* Video element for displaying the camera stream */}
