@@ -24,6 +24,10 @@ const Registration: React.FC = () => {
   const [month, setMonth] = useState<string | null>(null);
   const [day, setDay] = useState<string | null>(null);
   const [year, setYear] = useState<string | null>(null);
+  const months = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,9 +87,11 @@ const Registration: React.FC = () => {
                   value={month}
                   onIonChange={(e:CustomEvent) => setMonth(e.detail.value)}
                 >
-                  <IonSelectOption value="January">January</IonSelectOption>
-                  <IonSelectOption value="February">February</IonSelectOption>
-                  {/* Add more months */}
+                 {months.map((monthName) => (
+                    <IonSelectOption key={monthName} value={monthName}>
+                    {monthName}
+                    </IonSelectOption>
+                ))}
                 </IonSelect>
 
                 <IonSelect
