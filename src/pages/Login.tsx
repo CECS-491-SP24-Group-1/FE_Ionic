@@ -79,8 +79,11 @@ const Login: React.FC = () => {
 
 						
 						<p className="forgot-text">
-							Forgot email? <IonText color="primary">Find email</IonText>.
+                            No account? <IonText color="primary">
+        <                       a href="/register" style={{ textDecoration: "none", color: "inherit" }}>Register now</a>
+                                </IonText>.
 						</p>
+                        
 					</form>
 				</div>
 			</IonContent>
