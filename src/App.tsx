@@ -9,7 +9,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
-import { home, camera, settings } from "ionicons/icons";
+import { home, camera, settings, logIn } from "ionicons/icons";
 
 // Import pages
 import Home from "./pages/Home";
@@ -35,20 +35,22 @@ const App: React.FC = () => {
 
 					{/* Temporary registration page */}
 					<IonTabBar slot="bottom">
-						<IonTabButton tab="register" href="/register">
+						{/* <IonTabButton tab="register" href="/register">
 							<IonIcon icon={settings} />
 							<IonLabel>Register</IonLabel>
-						</IonTabButton>
+						</IonTabButton> */}
 
+						<IonTabButton tab="login" href="/login">
+							<IonIcon icon={logIn} />
+							<IonLabel>Login</IonLabel>
+						</IonTabButton>
+						
 						<IonTabButton tab="home" href="/home">
 							<IonIcon icon={home} />
 							<IonLabel>Home</IonLabel>
 						</IonTabButton>
 
-						<IonTabButton tab="login" href="/login">
-							<IonIcon icon={home} />
-							<IonLabel>Login</IonLabel>
-						</IonTabButton>
+						
 
 						<IonTabButton tab="camera" href="/camera">
 							<IonIcon icon={camera} />
