@@ -79,22 +79,16 @@ func JSWarn(warns ...string) {
 
 // Returns a JSON object, given a generic object.
 func RetJObj[T any](v T) js.Value {
-	//1st pass: marshal to JSON
+	//Marshal to JSON
 	jsonb, err := json.Marshal(v)
 	if err != nil {
 		JSErr(err)
 		return js.ValueOf(nil)
 	}
 
-	//2nd pass: unmarshal to map[string]interface{}
-	mp := make(map[string]interface{})
-	if err := json.Unmarshal(jsonb, &mp); err != nil {
-		JSErr(err)
-		return js.ValueOf(nil)
-	}
-
-	//Return the map as a JSONObject
-	return js.ValueOf(mp)
+	//Parse to a JSON object
+	jsons := string(jsonb)
+    return js.Global().Get("JSON").Call("parse", jsons)
 }
 
 // Converts a JS object to a Go object using Vert.
