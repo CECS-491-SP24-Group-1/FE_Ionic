@@ -12,7 +12,7 @@ packages:
   - path: "wraith.me/vaultlib/vaultlib/vault"
     output_path: "dist/vault.ts"
     indent: "\t"
-    frontmatter: 'import { KeyStore } from "./keystore"'
+    frontmatter: 'import { KeyStore } from "./keystore";'
     type_mappings:
       util.UUID: "string"
       time.Time: "string"
