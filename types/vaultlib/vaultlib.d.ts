@@ -3,7 +3,7 @@ import { KeyStore } from "./keystore";
 declare global {
 	export namespace vaultlib {
 		const HKDF_SALT: string;
-		function Ed25519Keygen(): KeyStore;
+		function NewKeyStore(): KeyStore;
 		function HKDF(password: string): string;
 		// Add any other functions exported by your WASM module here
 		// For example:

@@ -88,7 +88,7 @@ func RetJObj[T any](v T) js.Value {
 
 	//Parse to a JSON object
 	jsons := string(jsonb)
-    return js.Global().Get("JSON").Call("parse", jsons)
+	return js.Global().Get("JSON").Call("parse", jsons)
 }
 
 // Converts a JS object to a Go object using Vert.

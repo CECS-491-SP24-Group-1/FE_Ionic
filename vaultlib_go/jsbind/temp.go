@@ -4,28 +4,14 @@ package jsbind
 
 import (
 	"encoding/base64"
-	"fmt"
 	"strings"
 	"syscall/js"
 
 	"wraith.me/vaultlib/jsutil"
 	"wraith.me/vaultlib/vaultlib/crypto"
-	"wraith.me/vaultlib/vaultlib/keystore"
 )
 
 const HKDF_SALT = "0UsWeiCtpBO3N1sNnCyR/Q=="
-
-// Ed25519Keygen(): KeyStore
-func Ed25519Keygen(_ js.Value, _ []js.Value) interface{} {
-	//Create the Go object and marshal to JSON
-	///json :=
-
-	//Call `JSON.parse()` on the string to derive an object usable in JS
-	//return js.Global().Get("JSON").Call("parse", json)
-
-	fmt.Println("running the jsbind.Ed25519Keygen file")
-	return jsutil.RetJObj(keystore.New())
-}
 
 // HKDF(password: string): string
 func HKDF(this js.Value, args []js.Value) interface{} {

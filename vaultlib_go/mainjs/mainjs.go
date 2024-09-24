@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"syscall/js"
 
 	"wraith.me/vaultlib/jsbind"
 	"wraith.me/vaultlib/jsutil"
@@ -22,13 +23,16 @@ func main() {
 	//
 
 	jsutil.ExportF("",
-		jsbind.Ed25519Keygen,
+		jsbind.NewKeyStore,
 		jsbind.HKDF,
 	)
 	jsutil.ExportV("",
 		jsutil.NV("HKDF_SALT", jsbind.HKDF_SALT),
 	)
 	//jsutil.ExportF("vault",)
+
+	//Testing
+	js.Global().Set("NewMyObject", js.FuncOf(jsbind.NewMyObject))
 
 	//
 	// PUT ALL JS FUNCTIONS & VARS TO EXPORT ABOVE THIS BLOCK
