@@ -23,6 +23,7 @@ func New() *KeyStore {
 	//Generate a new keypair
 	pk, sk, err := crypto.NewKeypair(nil)
 	if err != nil {
+		fmt.Printf("error while generating keystore: %s\n", err)
 		panic(err)
 	}
 

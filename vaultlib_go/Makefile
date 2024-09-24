@@ -18,6 +18,11 @@ BIN_MIN := $(BIN_NAME).min.$(BIN_EXT)
 STATIC_DIR := ../public
 OUT_DIR := $(STATIC_DIR)/
 
+#Denotes the output directory of tygo; this must match what is in tygo.yml
+TYGO_DIR := ./dist
+TYGO_OUT := $(TYGO_DIR)/*.ts
+TYPES_DIR := ../types/vaultlib
+
 # Tools
 GO := go
 GO_BUILD := $(GO) build
@@ -35,19 +40,19 @@ TINYGO_LD := -gc leaking -no-debug
 
 #Define common commands
 ifeq ($(OS), Windows_NT)
-	CP := @copy /y
-	MV := @move /y
-	MKDIR := @mkdir
-	RMDIR := @rmdir /S /Q
-	RMFILE := @del /S /Q
+	CP := copy /y
+	MV := move /y
+	MKDIR := mkdir
+	RMDIR := rmdir /S /Q
+	RMFILE := del /S /Q
 	WHICH := where
 	TOUCH := type nul >
 else 
-	CP := @cp
-	MV := @mv
-	MKDIR := @mkdir
-	RMDIR := @rm -rf
-	RMFILE := @rm -f
+	CP := cp
+	MV := mv
+	MKDIR := mkdir
+	RMDIR := rm -rf
+	RMFILE := rm -f
 	WHICH := which
 	TOUCH := touch
 endif
@@ -63,7 +68,7 @@ endif
 __mkdir__:
 ifeq ($(wildcard ./$(TARGET)/.),) #Test if target directory is nonexistant
 	@echo MKDIR $(TARGET)
-	$(MKDIR) $(TARGET)
+	@$(MKDIR) $(TARGET)
 endif
 
 #Removes a directory recursively if it exists. Call via `$(MAKE) -s __rmdir__ TARGET=<dirname>`
@@ -71,7 +76,7 @@ endif
 __rmdir__:
 ifneq ($(wildcard ./$(TARGET)/.),) #Test if target directory is existant
 	@echo RM -RF $(TARGET)
-	$(RMDIR) $(TARGET)
+	@$(RMDIR) $(TARGET)
 endif
 
 #Removes a file if it exists. Call via `$(MAKE) -s __rmfile__ TARGET=<filename>`
@@ -79,7 +84,7 @@ endif
 __rmfile__:
 ifneq ($(wildcard $(TARGET)),) # Test if target file is existant
 	@echo RM -F $(TARGET)
-	$(RMFILE) $(TARGET)
+	@$(RMFILE) $(TARGET)
 endif
 
 #Copies a file to a destination if it exists. Call via `$(MAKE) -s __cpfile__ SRC=<source> DEST=<destination>`
@@ -87,7 +92,7 @@ endif
 __cpfile__:
 ifneq ($(wildcard $(SRC)),) # Test if target file is existant
 	@echo CP $(SRC) $(DEST)
-	$(CP) "$(SRC)" "$(DEST)"
+	@$(CP) "$(SRC)" "$(DEST)"
 endif
 
 #Moves a file to a destination if it exists. Call via `$(MAKE) -s __mvfile__ SRC=<source> DEST=<destination>`
@@ -95,7 +100,7 @@ endif
 __mvfile__:
 ifneq ($(wildcard $(SRC)),) # Test if target file is existant
 	@echo MV $(SRC) $(DEST)
-	$(MV) "$(SRC)" "$(DEST)"
+	@$(MV) "$(SRC)" "$(DEST)"
 endif
 
 ####################################
@@ -121,6 +126,7 @@ buildtiny:
 clean:
 	@echo CLEAN *.wasm
 	@$(MAKE) -s __rmfile__ TARGET=*.wasm
+	@$(MAKE) -s __rmdir__ TARGET=$(TYGO_DIR)
 
 #Runs the development main file (distinct from JS)
 .PHONY: dev
@@ -152,14 +158,16 @@ checkfmt:
 		echo "All files are formatted."; \
 	fi
 
-
-#Copies the generated WASM files to the static site folder for testing
+#Copies the generated WASM files and TS headers to the static site folder for testing
 .PHONY: install
 install:
 	@echo INSTALL $(BIN_NORM) $(BIN_MIN)
-	$(MAKE) build
+	@$(MAKE) build
+	@$(MAKE) ts
+	@$(SLEEP)
 	@$(MAKE) -s __cpfile__ SRC=$(BIN_NORM) DEST=$(OUT_DIR)
 	@$(MAKE) -s __cpfile__ SRC=$(BIN_MIN) DEST=$(OUT_DIR)
+	$(CP) $(TYGO_OUT) $(TYPES_DIR)
 
 #Optimizes WASM binaries with `binaryen`; not necessarily needed but nice to have
 .PHONY: optim

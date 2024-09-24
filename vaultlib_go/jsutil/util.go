@@ -3,6 +3,7 @@
 package jsutil
 
 import (
+	"encoding/json"
 	"fmt"
 	"runtime"
 	"strings"
@@ -74,6 +75,26 @@ func jsLog(typ string, msgs ...string) {
 // Emits warnings to the JS console if any occur.
 func JSWarn(warns ...string) {
 	jsLog("warn", warns...)
+}
+
+// Returns a JSON object, given a generic object.
+func RetJObj[T any](v T) js.Value {
+	//1st pass: marshal to JSON
+	jsonb, err := json.Marshal(v)
+	if err != nil {
+		JSErr(err)
+		return js.ValueOf(nil)
+	}
+
+	//2nd pass: unmarshal to map[string]interface{}
+	mp := make(map[string]interface{})
+	if err := json.Unmarshal(jsonb, &mp); err != nil {
+		JSErr(err)
+		return js.ValueOf(nil)
+	}
+
+	//Return the map as a JSONObject
+	return js.ValueOf(mp)
 }
 
 // Converts a JS object to a Go object using Vert.

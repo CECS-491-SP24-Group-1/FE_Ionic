@@ -28,9 +28,7 @@ func main() {
 	jsutil.ExportV("",
 		jsutil.NV("HKDF_SALT", jsbind.HKDF_SALT),
 	)
-	jsutil.ExportF("vault",
-		jsbind.Test,
-	)
+	//jsutil.ExportF("vault",)
 
 	//
 	// PUT ALL JS FUNCTIONS & VARS TO EXPORT ABOVE THIS BLOCK

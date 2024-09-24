@@ -3,7 +3,6 @@
 //////////
 // source: keystore.go
 
-export const ED25519_LEN = 32;
 /**
  * Represents an Ed25519 keypair inside a keystore.
  */
@@ -12,3 +11,6 @@ export interface KeyStore {
 	pk: Uint8Array; // Holds the public key.
 	fingerprint: string; // Holds the fingerprint of the public key as a SHA-256 hash.
 }
+/**
+ * Create an intermediate struct
+ */
