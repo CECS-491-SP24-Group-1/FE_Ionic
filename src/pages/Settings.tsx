@@ -12,6 +12,8 @@ const Settings: React.FC = () => {
 					<p>
 						FE URL: <code>{import.meta.env.VITE_API_URL}</code>
 						<br></br>
+						<code>{myobj.foo}</code>
+						<br></br>
 						<code>{myobj.getFoo()}</code>
 					</p>
 				</div>
