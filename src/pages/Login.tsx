@@ -9,7 +9,7 @@ import {
 } from "@ionic/react";
 import { IonRouterLink } from "@ionic/react";
 import "./LoginRegister.scss";
-import logo from "../assets/images/glock_primary.svg";
+import LRLogo from "./LRLogo";
 
 const Login: React.FC = () => {
 	const [email, setEmail] = useState("");
@@ -23,11 +23,7 @@ const Login: React.FC = () => {
 	return (
 		<IonPage>
 			<IonContent className="login-page">
-				<div className="logo-container">
-					<img src={logo} alt="Wraith Logo" className="logo" />
-					<p className="logo-text">Wraith</p>
-				</div>
-
+				<LRLogo></LRLogo>
 				<div className="login-container">
 					<h2>Login</h2>
 
