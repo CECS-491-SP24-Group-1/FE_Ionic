@@ -48,7 +48,7 @@ type (
 	Setter[T any] func(*T, js.Value) error
 
 	// Defines the expected structure of a setter function.
-	Method[T any] func(*T, []js.Value) (js.Value, error)
+	Method[T any] func(*T, js.Value, []js.Value) (js.Value, error)
 )
 
 // Helper functions to create specific function wrappers.
@@ -129,13 +129,13 @@ func (fw FWrapper[T]) CallSetter(instance *T, value js.Value) error {
 }
 
 // CallMethod calls a method function
-func (fw FWrapper[T]) CallMethod(instance *T, args []js.Value) (js.Value, error) {
+func (fw FWrapper[T]) CallMethod(instance *T, this js.Value, args []js.Value) (js.Value, error) {
 	if fw.Type != MethodFunc {
 		return js.Undefined(), fmt.Errorf("expected MethodFunc, got %v", fw.Type)
 	}
 
 	if m, ok := fw.Func.(Method[T]); ok {
-		return m(instance, args)
+		return m(instance, this, args)
 	}
 
 	return js.Undefined(), fmt.Errorf("invalid method function")

@@ -7,6 +7,8 @@
 package jsutil
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -28,6 +30,10 @@ var (
 	TJsonName = "toJson"
 	FGobName  = "fromGob64"
 	TGobName  = "toGob64"
+
+	EqualsName   = "equals"
+	HashcodeName = "hashcode"
+	ToStringName = "toString"
 )
 
 // Acts as a NOP for a setter that isn't necessary.
@@ -143,7 +149,7 @@ func (se StructExporter[T]) Export(name string) {
 	}
 	js.Global().Set(name, js.FuncOf(se.exportBackend))
 
-	//Add the custom factory functions to the list
+	//Add the built-in factory functions to the list
 	se.factories = append(se.factories,
 		NewFactory(FJsonName, se.jsonDeserial),
 		NewFactory(FGobName, se.gobDeserial),
@@ -247,10 +253,13 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 		wrapper.Set(setterName, js.FuncOf(setter))
 	}
 
-	//Add the custom instance methods to the list
+	//Add the built-in instance methods to the list
 	se.methods = append(se.methods,
 		NewMethod(TJsonName, se.jsonSerial),
 		NewMethod(TGobName, se.gobSerial),
+		NewMethod(EqualsName, se.equals),
+		NewMethod(HashcodeName, se.hashcode),
+		NewMethod(ToStringName, se.toString),
 	)
 
 	//Register every instance method
@@ -259,9 +268,9 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 		method := m
 
 		//Create a wrapper function for the instance function
-		methWrapper := func(_ js.Value, args []js.Value) interface{} {
+		methWrapper := func(this js.Value, args []js.Value) interface{} {
 			//Call the instance function
-			val, err := method.CallMethod(obj, args)
+			val, err := method.CallMethod(obj, this, args)
 			if err != nil {
 				JSFatal(fmt.Errorf("error while running %s.%s(); %s", se.name, method.Name, err))
 				return nil
@@ -280,6 +289,8 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 //-- Private utilities and types
 
 // Defines a method for deserializing a struct from JSON
+//
+// Type: built-in factory; takes `string`, returns `object`
 func (se StructExporter[T]) jsonDeserial(args []js.Value) (*T, error) {
 	//Get the 1st and only argument as a string
 	jsons := args[0].String()
@@ -291,7 +302,9 @@ func (se StructExporter[T]) jsonDeserial(args []js.Value) (*T, error) {
 }
 
 // Defines a method for serializing a struct to JSON
-func (se StructExporter[T]) jsonSerial(obj *T, _ []js.Value) (js.Value, error) {
+//
+// Type: built-in method; returns `string`
+func (se StructExporter[T]) jsonSerial(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
 	//Marshal the target object to JSON
 	jsons, err := json.Marshal(obj)
 	if err != nil {
@@ -303,6 +316,8 @@ func (se StructExporter[T]) jsonSerial(obj *T, _ []js.Value) (js.Value, error) {
 }
 
 // Defines a method for deserializing a struct from GOB base64.
+//
+// Type: built-in factory; takes `string`, returns `object`
 func (se StructExporter[T]) gobDeserial(args []js.Value) (*T, error) {
 	str := args[0].String()
 	obj := new(T)
@@ -311,10 +326,77 @@ func (se StructExporter[T]) gobDeserial(args []js.Value) (*T, error) {
 }
 
 // Defines a method for serializing a struct to GOB base64.
-func (se StructExporter[T]) gobSerial(obj *T, _ []js.Value) (js.Value, error) {
+//
+// Type: built-in method; returns `string`
+func (se StructExporter[T]) gobSerial(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
 	str := ""
 	err := io.Obj2GString(&str, obj)
 	return js.ValueOf(str), err
+}
+
+// Checks if this object is equal to another.
+//
+// Type: built-in method; takes `object`, returns `boolean`
+func (se StructExporter[T]) equals(_ *T, this js.Value, args []js.Value) (val js.Value, err error) {
+	//Catch any panic() that may occur
+	defer func() {
+		if r := recover(); r != nil {
+			//Simply return false instead of panicking
+			val, err = js.ValueOf(false), nil
+			//log.Println("Recovered from panic:", r)
+		}
+	}()
+
+	//Get the other item from the args
+	other := args[0]
+
+	//Immediately return false if this is not an object
+	if other.Type() != js.TypeObject {
+		val, err = js.ValueOf(false), nil
+		return
+	}
+
+	//Attempt to serialize the incoming object to JSON
+	//If this fails, then a `panic()` will be thrown, but caught by `defer()`
+	//This converts the failing state to a falsy output
+	jsonUs := this.Call(TJsonName).String()
+	jsonThem := args[0].Call(TJsonName).String()
+
+	//Do a string comparison to determine the equality of the 2 objects
+	equals := jsonUs == jsonThem
+	val, err = js.ValueOf(equals), nil
+	return
+}
+
+// Generates the SHA256 hash equivalent of this object via digesting its JSON.
+//
+// Type: built-in method; returns `string`
+func (se StructExporter[T]) hashcode(_ *T, this js.Value, _ []js.Value) (js.Value, error) {
+	//Serialize this object to JSON
+	jsons := this.Call(TJsonName).String()
+
+	//Digest the JSON with SHA256
+	h := sha256.New()
+	_, err := h.Write([]byte(jsons))
+	if err != nil {
+		return js.ValueOf(""), err
+	}
+
+	//Get the final hash as a hex string
+	hash := hex.EncodeToString(h.Sum(nil))
+	return js.ValueOf(hash), nil
+}
+
+// Generates the string equivalent of this object.
+//
+// Type: built-in method; returns `string`
+func (se StructExporter[T]) toString(_ *T, this js.Value, _ []js.Value) (js.Value, error) {
+	//Serialize this object to JSON
+	jsons := this.Call(TJsonName).String()
+
+	//Add extra stuff and return the final string
+	jsons = se.name + jsons
+	return js.ValueOf(jsons), nil
 }
 
 // Defines a single struct field.
