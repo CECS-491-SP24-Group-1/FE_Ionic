@@ -3,6 +3,8 @@ packages:
   - path: "wraith.me/vaultlib/vaultlib/keystore"
     output_path: "dist/keystore.ts"
     indent: "\t"
+    extends: "ExportedGo"
+    frontmatter: 'import { ExportedGo } from "./exported_go";'
     type_mappings:
       crypto.PUBKEY_SIZE: 32
       crypto.Privseed: "Uint8Array"
@@ -12,7 +14,10 @@ packages:
   - path: "wraith.me/vaultlib/vaultlib/vault"
     output_path: "dist/vault.ts"
     indent: "\t"
-    frontmatter: 'import { KeyStore } from "./keystore";'
+    extends: "ExportedGo"
+    frontmatter: |
+      import { KeyStore } from "./keystore";
+      import { ExportedGo } from "./exported_go";
     type_mappings:
       util.UUID: "string"
       time.Time: "string"
