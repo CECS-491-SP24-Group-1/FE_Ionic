@@ -47,8 +47,7 @@ func main() {
 		jsutil.SNOP,
 		jsutil.SNOP,
 	).WithMethods(
-		//jsutil.NewMethod("equals", jsbind.KS_equals),
-		jsutil.NewMethod("toString", jsbind.KS_toString),
+	//jsutil.NewMethod("equals", jsbind.KS_equals),
 	)
 	exp.Export("KeyStore")
 

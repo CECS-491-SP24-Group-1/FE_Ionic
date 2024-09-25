@@ -58,9 +58,4 @@ func KS_sign(obj *keystore.KeyStore, args []js.Value) (js.Value, error) {
 	return js.ValueOf(obj.String()), nil
 }
 
-// toString(): string
-func KS_toString(obj *keystore.KeyStore, _ js.Value, args []js.Value) (js.Value, error) {
-	return js.ValueOf(obj.String()), nil
-}
-
 //-- Static functions
