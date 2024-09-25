@@ -4,10 +4,10 @@ package main
 
 import (
 	"fmt"
-	"syscall/js"
 
 	"wraith.me/vaultlib/jsbind"
 	"wraith.me/vaultlib/jsutil"
+	"wraith.me/vaultlib/vaultlib/keystore"
 )
 
 func main() {
@@ -23,7 +23,6 @@ func main() {
 	//
 
 	jsutil.ExportF("",
-		jsbind.NewKeyStore,
 		jsbind.HKDF,
 	)
 	jsutil.ExportV("",
@@ -32,7 +31,33 @@ func main() {
 	//jsutil.ExportF("vault",)
 
 	//Testing
-	js.Global().Set("NewMyObject", js.FuncOf(jsbind.NewMyObject))
+	//js.Global().Set("NewMyObject", js.FuncOf(jsbind.NewMyObject))
+
+	//Export keystore
+	exp := jsutil.NewStructExporter(
+		keystore.KeyStore{}, jsbind.KS_new,
+	).WithGetters(
+		jsbind.KS_getSK,
+		jsbind.KS_getPK,
+		jsbind.KS_getFingerprint,
+	).WithFactories(
+		jsutil.NewFactory("fromSK", jsbind.KS_fromSK),
+	).WithSetters(
+		jsbind.KS_setSK,
+		jsutil.SNOP,
+		jsutil.SNOP,
+	).WithMethods(
+		jsutil.NewMethod("equals", jsbind.KS_equals),
+		jsutil.NewMethod("toString", jsbind.KS_toString),
+	)
+	exp.Export("KeyStore")
+
+	/*
+		jsutil.ExportObj(,
+			jsbind.MakeNewUser,
+			//[]jsutil.Factory[jsbind.User]{jsbind.UserFromString},
+		)
+	*/
 
 	//
 	// PUT ALL JS FUNCTIONS & VARS TO EXPORT ABOVE THIS BLOCK

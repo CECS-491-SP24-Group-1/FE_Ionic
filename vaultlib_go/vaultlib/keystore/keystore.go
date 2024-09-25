@@ -13,9 +13,14 @@ import (
 
 // Represents an Ed25519 keypair inside a keystore.
 type KeyStore struct {
-	SK          crypto.Privseed `json:"sk"`          //Holds the private key.
-	PK          crypto.Pubkey   `json:"pk"`          //Holds the public key.
-	Fingerprint string          `json:"fingerprint"` //Holds the fingerprint of the public key as a SHA-256 hash.
+	//Holds the private key.
+	SK crypto.Privseed `json:"sk" js:"sk"`
+
+	//Holds the public key.
+	PK crypto.Pubkey `json:"pk" js:"pk"`
+
+	//Holds the fingerprint of the public key as a SHA-256 hash.
+	Fingerprint string `json:"fingerprint" js:"fingerprint"`
 }
 
 // Generates a new keystore.
@@ -82,14 +87,6 @@ func FromSK(sk []byte) *KeyStore {
 	return FromBytes(sk, pubSmult[:])
 }
 
-// Derives a `Privkey` object from this object.
-func (kp KeyStore) Amalgamate() crypto.Privkey {
-	bytes := [crypto.PRIVKEY_SIZE]byte{}
-	copy(bytes[:crypto.PRIVKEY_SEED_SIZE], kp.SK[:])
-	copy(bytes[crypto.PRIVKEY_SEED_SIZE:], kp.PK[:])
-	return bytes
-}
-
 // Checks if this keystore object is equal to another.
 func (kp KeyStore) Equal(other KeyStore) bool {
 	return subtle.ConstantTimeCompare(kp.SK[:], other.SK[:]) == 1 &&
@@ -103,9 +100,17 @@ func (kp KeyStore) JSON() string {
 	return string(json)
 }
 
+// Derives a `Privkey` object from this object.
+func (kp KeyStore) Privkey() crypto.Privkey {
+	bytes := [crypto.PRIVKEY_SIZE]byte{}
+	copy(bytes[:crypto.PRIVKEY_SEED_SIZE], kp.SK[:])
+	copy(bytes[crypto.PRIVKEY_SEED_SIZE:], kp.PK[:])
+	return bytes
+}
+
 // Signs a message with this key store's private key.
 func (kp KeyStore) Sign(msg []byte) crypto.Signature {
-	return crypto.Sign(kp.Amalgamate(), msg)
+	return crypto.Sign(kp.Privkey(), msg)
 }
 
 // Returns the string representation of the object.

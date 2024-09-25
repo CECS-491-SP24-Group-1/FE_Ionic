@@ -12,6 +12,9 @@ import (
 // Controls the namespace of the exported JS functions and variables.
 var PackageName = "vaultlib"
 
+// Defines the expected structure of an exportable JS bridge function.
+type Func func(this js.Value, args []js.Value) any
+
 // Contains a value to export and its name.
 type V struct {
 	N string
@@ -24,7 +27,7 @@ func NV(n string, v interface{}) V {
 }
 
 // Utility function to export Go functions to JS.
-func ExportF(namespace string, targets ...func(this js.Value, args []js.Value) any) {
+func ExportF(namespace string, targets ...Func) {
 	//Get the namespace to export to
 	if namespace == "" {
 		namespace = PackageName
@@ -33,13 +36,7 @@ func ExportF(namespace string, targets ...func(this js.Value, args []js.Value) a
 
 	//Loop over the functions to export
 	for _, target := range targets {
-		//Get the name of the target function, sans the package
-		pc := reflect.ValueOf(target).Pointer()
-		parts := strings.Split(runtime.FuncForPC(pc).Name(), ".")
-		fname := parts[len(parts)-1]
-
-		//Export the function
-		ns.Set(fname, js.FuncOf(target))
+		ns.Set(getFunctionName(target), js.FuncOf(target))
 	}
 }
 
@@ -85,4 +82,13 @@ func exportLoc(packageName string) js.Value {
 
 	//Return the built path
 	return current
+}
+
+// Gets the name of a function.
+func getFunctionName(f interface{}) string {
+	//Get the name of the target function, sans the package
+	pc := reflect.ValueOf(f).Pointer()
+	parts := strings.Split(runtime.FuncForPC(pc).Name(), ".")
+	fname := parts[len(parts)-1]
+	return fname
 }

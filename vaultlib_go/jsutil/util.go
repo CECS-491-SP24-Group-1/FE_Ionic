@@ -49,6 +49,16 @@ func JSErr(errs ...error) {
 	jsLog("error", strErrs...)
 }
 
+// Emits errors to the JS console if any occur and calls `panic()` after.
+func JSFatal(errs ...error) {
+	strErrs := make([]string, len(errs))
+	for i, err := range errs {
+		strErrs[i] = err.Error()
+	}
+	jsLog("error", strErrs...)
+	panic(strErrs)
+}
+
 // Emits a string or series of strings to the console.
 func jsLog(typ string, msgs ...string) {
 	//Get the name of the caller
