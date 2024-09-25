@@ -2,11 +2,11 @@
 
 //TODO: make variant of this that supports marshalling via TextMarshaller or function mapper
 //TODO: static functions
-//TODO: json serial/deserial as built-in method and static factory respectively
 
 package jsutil
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"reflect"
@@ -21,8 +21,8 @@ var (
 	GetterPrefix          = "get"
 	SetterPrefix          = "get"
 
-	TJsoName  = "fromJson"
-	FJsonName = "toJson"
+	FJsonName = "fromJson"
+	TJsonName = "toJson"
 )
 
 // Acts as a NOP for a setter that isn't necessary.
@@ -138,7 +138,12 @@ func (se StructExporter[T]) Export(name string) {
 	}
 	js.Global().Set(name, js.FuncOf(se.exportBackend))
 
-	//Register every static factory method
+	//Add the custom factory functions to the list
+	se.factories = append(se.factories, FWrapper[T](
+		NewFactory(FJsonName, se.jsonDeserial),
+	))
+
+	//Register every static factory functions
 	for _, f := range se.factories {
 		//Capture current field information for closure
 		factory := f
@@ -174,8 +179,6 @@ func (se *StructExporter[T]) exportBackend(_ js.Value, args []js.Value) any {
 
 	//Acquire a backend wrapper
 	wrapper := se.wrapperBackend(obj)
-
-	//Add instance methods here
 
 	//Return the wrapper
 	return wrapper
@@ -239,7 +242,9 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 	}
 
 	//Add the custom instance methods to the list
-	//se.methods = append(se.methods)
+	se.methods = append(se.methods, FWrapper[T](
+		NewMethod(TJsonName, se.jsonSerial),
+	))
 
 	//Register every instance method
 	for _, m := range se.methods {
@@ -266,6 +271,29 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 }
 
 //-- Private utilities and types
+
+// Defines a method for deserializing a struct to JSON
+func (se StructExporter[T]) jsonDeserial(args []js.Value) (*T, error) {
+	//Get the 1st and only argument as a string
+	jsons := args[0].String()
+
+	//Unmarshal the target object from JSON
+	obj := new(T)
+	err := json.Unmarshal([]byte(jsons), obj)
+	return obj, err
+}
+
+// Defines a method for serializing a struct to JSON
+func (se StructExporter[T]) jsonSerial(obj *T, _ []js.Value) (js.Value, error) {
+	//Marshal the target object to JSON
+	jsons, err := json.Marshal(obj)
+	if err != nil {
+		return js.ValueOf(nil), err
+	}
+
+	//Emit the JSON as a string
+	return js.ValueOf(string(jsons)), nil
+}
 
 // Defines a single struct field.
 type structfield struct {

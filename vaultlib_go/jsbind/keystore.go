@@ -56,7 +56,7 @@ func KS_setSK(obj *keystore.KeyStore, arg js.Value) error {
 //-- Methods
 
 // equals(other: KeyStore): boolean
-//TODO: equals but first serialize to json; then deserialize in here and compare
+// TODO: equals but first serialize to json; then deserialize in here and compare
 func KS_equals(obj *keystore.KeyStore, args []js.Value) (js.Value, error) {
 	fmt.Println("inside of equals")
 	other := jsutil.Val2Any[keystore.KeyStore](args[0])
