@@ -2,6 +2,7 @@
 
 //TODO: make variant of this that supports marshalling via TextMarshaller or function mapper
 //TODO: static functions
+//TODO: json serial/deserial as built-in method and static factory respectively
 
 package jsutil
 
