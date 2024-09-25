@@ -2,6 +2,7 @@
 
 //TODO: make variant of this that supports marshalling via TextMarshaller or function mapper
 //TODO: static functions
+//TODO: attempt localstorage saving/loading
 
 package jsutil
 
@@ -12,6 +13,8 @@ import (
 	"reflect"
 	"syscall/js"
 	"unicode"
+
+	"wraith.me/vaultlib/vaultlib/io"
 )
 
 var (
@@ -23,6 +26,8 @@ var (
 
 	FJsonName = "fromJson"
 	TJsonName = "toJson"
+	FGobName  = "fromGob64"
+	TGobName  = "toGob64"
 )
 
 // Acts as a NOP for a setter that isn't necessary.
@@ -139,9 +144,10 @@ func (se StructExporter[T]) Export(name string) {
 	js.Global().Set(name, js.FuncOf(se.exportBackend))
 
 	//Add the custom factory functions to the list
-	se.factories = append(se.factories, FWrapper[T](
+	se.factories = append(se.factories,
 		NewFactory(FJsonName, se.jsonDeserial),
-	))
+		NewFactory(FGobName, se.gobDeserial),
+	)
 
 	//Register every static factory functions
 	for _, f := range se.factories {
@@ -242,9 +248,10 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 	}
 
 	//Add the custom instance methods to the list
-	se.methods = append(se.methods, FWrapper[T](
+	se.methods = append(se.methods,
 		NewMethod(TJsonName, se.jsonSerial),
-	))
+		NewMethod(TGobName, se.gobSerial),
+	)
 
 	//Register every instance method
 	for _, m := range se.methods {
@@ -272,7 +279,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 
 //-- Private utilities and types
 
-// Defines a method for deserializing a struct to JSON
+// Defines a method for deserializing a struct from JSON
 func (se StructExporter[T]) jsonDeserial(args []js.Value) (*T, error) {
 	//Get the 1st and only argument as a string
 	jsons := args[0].String()
@@ -293,6 +300,21 @@ func (se StructExporter[T]) jsonSerial(obj *T, _ []js.Value) (js.Value, error) {
 
 	//Emit the JSON as a string
 	return js.ValueOf(string(jsons)), nil
+}
+
+// Defines a method for deserializing a struct from GOB base64.
+func (se StructExporter[T]) gobDeserial(args []js.Value) (*T, error) {
+	str := args[0].String()
+	obj := new(T)
+	err := io.GString2Obj(obj, &str)
+	return obj, err
+}
+
+// Defines a method for serializing a struct to GOB base64.
+func (se StructExporter[T]) gobSerial(obj *T, _ []js.Value) (js.Value, error) {
+	str := ""
+	err := io.Obj2GString(&str, obj)
+	return js.ValueOf(str), err
 }
 
 // Defines a single struct field.

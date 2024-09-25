@@ -59,6 +59,8 @@ func main() {
 		)
 	*/
 
+	//wasm.Alert("eee")
+
 	//
 	// PUT ALL JS FUNCTIONS & VARS TO EXPORT ABOVE THIS BLOCK
 	//
