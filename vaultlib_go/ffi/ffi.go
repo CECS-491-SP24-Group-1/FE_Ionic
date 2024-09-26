@@ -239,7 +239,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 				val, err = se.getters[idx](obj)
 			} else {
 				//Marshal the current field to JSON and emit it as a JSONObject via `JSON.parse()`
-				fmt.Printf("using built-in getter for symbol %s\n", fname)
+				//fmt.Printf("using built-in getter for symbol %s\n", fname)
 				var jsonb []byte
 				jsonb, err = json.Marshal(fvalue.Interface())
 				val = js.Global().Get("JSON").Call("parse", string(jsonb))
@@ -263,7 +263,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 				err = se.setters[idx](obj, input)
 			} else {
 				//Serialize the input value to JSON via `JSON.stringify()`
-				fmt.Printf("using built-in setter for symbol %s\n", fname)
+				//fmt.Printf("using built-in setter for symbol %s\n", fname)
 				jsons := js.Global().Get("JSON").Call("stringify", input).String()
 
 				//Using reflection, derive the "zero value" of the field at index i in the struct

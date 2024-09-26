@@ -29,7 +29,8 @@ func ExportKS() {
 	).WithFactories(
 		ffi.NewFactory("fromSK", ks_fromSK),
 	).WithMethods(
-	//jsutil.NewMethod("equals", jsbind.KS_equals),
+		ffi.NewMethod("sign", ks_sign),
+		ffi.NewMethod("verify", ks_verify),
 	).WithFlags(
 		ffi.Flags{
 			EmitGetterSetterFuncs: true,
@@ -94,8 +95,30 @@ func ks_setFingerprint(obj *keystore.KeyStore, arg js.Value) error {
 //-- Methods
 
 // sign(message: string): string
-func ks_sign(obj *keystore.KeyStore, args []js.Value) (js.Value, error) {
-	return js.ValueOf(obj.String()), nil
+func ks_sign(obj *keystore.KeyStore, _ js.Value, args []js.Value) (js.Value, error) {
+	//Get the target message to sign as a string
+	msg := args[0].String()
+
+	//Sign with the keystore's private key and emit the signature as a b64 string
+	signature := obj.Sign([]byte(msg))
+	return js.ValueOf(signature.String()), nil
+}
+
+// verify(message: string, signature: string): boolean
+func ks_verify(obj *keystore.KeyStore, _ js.Value, args []js.Value) (js.Value, error) {
+	//Get the target message to verify and the signature as strings
+	msg := args[0].String()
+	sig := args[1].String()
+
+	//Derive a signature object from the signature string
+	sigObj, err := crypto.ParseSignature(sig)
+	if err != nil {
+		return js.ValueOf(nil), err
+	}
+
+	//Verify that the message was signed with the signature using the keystore's public key
+	valid := obj.Verify([]byte(msg), sigObj)
+	return js.ValueOf(valid), nil
 }
 
 //-- Static functions
