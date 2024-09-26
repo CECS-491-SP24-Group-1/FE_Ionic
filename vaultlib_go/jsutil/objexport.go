@@ -53,8 +53,8 @@ type StructExporter[T any] struct {
 	//The options flags for this struct wrapper.
 	flags SEFlags
 
-	//The names of the struct's fields.
-	fieldNames []structfield
+	//The struct's fields, including name and kind.
+	fields []structfield
 
 	//The struct's primary constructor.
 	constructor Factory[T]
@@ -87,6 +87,7 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 		//Get the current field and its name
 		field := val.Type().Field(i)
 		name := field.Name
+		kind := field.Type.Kind()
 
 		//Check if the field has a `js` tag; overwrite the name if so
 		tagValue := field.Tag.Get(GSTagName)
@@ -95,7 +96,7 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 		}
 
 		//Add the field to the list
-		fields[i] = structfield{n: name, v: val.Field(i).Interface()}
+		fields[i] = structfield{n: name, t: kind}
 	}
 
 	//Set the flags of the exporter
@@ -107,7 +108,7 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 		v:           v,
 		name:        val.Type().Name(),
 		flags:       flags,
-		fieldNames:  fields,
+		fields:      fields,
 		constructor: constructor,
 	}
 }
@@ -127,8 +128,8 @@ func (se *StructExporter[T]) WithFactories(factories ...FWrapper[T]) *StructExpo
 // Adds getters to the struct.
 func (se *StructExporter[T]) WithGetters(getters ...Getter[T]) *StructExporter[T] {
 	//Ensure there are enough getters available to cover all fields
-	if len(getters) != len(se.fieldNames) {
-		JSFatal(fmt.Errorf("%w %d", NotEnoughGettersError, len(se.fieldNames)))
+	if len(getters) != len(se.fields) {
+		JSFatal(fmt.Errorf("%w %d", NotEnoughGettersError, len(se.fields)))
 		return nil
 	}
 
@@ -146,8 +147,8 @@ func (se *StructExporter[T]) WithMethods(methods ...FWrapper[T]) *StructExporter
 // Adds setters to the struct.
 func (se *StructExporter[T]) WithSetters(setters ...Setter[T]) *StructExporter[T] {
 	//Ensure there are enough setters available to cover all fields
-	if len(setters) != len(se.fieldNames) {
-		JSFatal(fmt.Errorf("%w %d", NotEnoughSettersError, len(se.fieldNames)))
+	if len(setters) != len(se.fields) {
+		JSFatal(fmt.Errorf("%w %d", NotEnoughSettersError, len(se.fields)))
 		return nil
 	}
 
@@ -219,10 +220,15 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 	//Create a new JS wrapper object
 	wrapper := js.Global().Get("Object").New()
 
+	//Get the struct info using reflection
+	//reflected := reflect.ValueOf(*obj)
+
 	//Loop over the fields of the struct
-	for i, f := range se.fieldNames {
+	for i, f := range se.fields {
 		//Capture current field information for closure
 		fname := f.n
+		//fval := reflected.Field(i).Interface()
+		//fkind := f.t
 		idx := i
 
 		//Generate the getter and setter names
@@ -231,27 +237,50 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 
 		//Define the getter and setter functions; temp
 		getter := func(this js.Value, args []js.Value) interface{} {
-			//Ensure the getter array has the necessary function before continuing
-			if len(se.getters) >= idx {
-				v, err := se.getters[idx](obj)
-				// This code snippet is handling an error scenario in a getter function.
-				if err != nil {
-					JSFatal(fmt.Errorf("error while running %s() getter for symbol %s: %s", getterName, se.name, err))
-				}
-				return v
+			//Check if the getter array has the necessary function
+			var val js.Value
+			var err error
+			if !se.flags.IgnoreGettersSetters && len(se.getters) >= idx {
+				//Call the getter
+				val, err = se.getters[idx](obj)
+			} else {
+				val = js.ValueOf(nil)
+
+				/*
+					jsonb, err := json.Marshal(fval)
+					if err != nil {
+						JSFatal(fmt.Errorf("error while running %s() getter for symbol %s: %s", getterName, se.name, err))
+						return js.ValueOf(nil)
+					}
+					fmt.Printf("json out: '%s'\n", string(jsonb))
+				*/
 			}
-			return nil
+
+			//Handle any errors that occurred
+			if err != nil {
+				JSFatal(fmt.Errorf("error while running %s() getter for symbol %s: %s", getterName, se.name, err))
+				return js.ValueOf(nil)
+			}
+
+			//Emit the value as a JS type
+			return js.ValueOf(val)
 		}
 		setter := func(this js.Value, args []js.Value) interface{} {
-			//Ensure the setter array has the necessary function before continuing
-			if len(se.setters) >= idx {
-				err := se.setters[idx](obj, args[0])
-				if err != nil {
-					JSFatal(fmt.Errorf("error while running %s() setter for symbol %s: %s", setterName, se.name, err))
-					return nil
-				}
+			//Check if the setter array has the necessary function
+			var err error
+			input := args[0]
+			if !se.flags.IgnoreGettersSetters && len(se.setters) >= idx {
+				//Call the setter
+				err = se.setters[idx](obj, input)
 			}
-			return nil
+
+			//Handle any errors that occurred
+			if err != nil {
+				JSFatal(fmt.Errorf("error while running %s() setter for symbol %s: %s", setterName, se.name, err))
+				return js.ValueOf(nil)
+			}
+
+			return js.ValueOf(nil)
 		}
 
 		//Add property-style getter and setter
@@ -418,8 +447,8 @@ func (se StructExporter[T]) toString(_ *T, this js.Value, _ []js.Value) (js.Valu
 
 // Defines a single struct field.
 type structfield struct {
-	n string
-	v interface{}
+	n string       //The name of the field.
+	t reflect.Kind //The type of the field.
 }
 
 // Uppercases the first letter in a string.

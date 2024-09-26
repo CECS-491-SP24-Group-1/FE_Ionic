@@ -40,12 +40,12 @@ func main() {
 		jsbind.KS_getSK,
 		jsbind.KS_getPK,
 		jsbind.KS_getFingerprint,
-	).WithFactories(
-		jsutil.NewFactory("fromSK", jsbind.KS_fromSK),
 	).WithSetters(
 		jsbind.KS_setSK,
 		jsutil.SNOP,
 		jsutil.SNOP,
+	).WithFactories(
+		jsutil.NewFactory("fromSK", jsbind.KS_fromSK),
 	).WithMethods(
 	//jsutil.NewMethod("equals", jsbind.KS_equals),
 	)
