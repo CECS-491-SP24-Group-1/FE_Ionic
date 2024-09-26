@@ -1,6 +1,6 @@
 //go:build js && wasm
 
-package jsutil
+package ffi
 
 // Contains the options for the struct exporter.
 type SEFlags struct {
@@ -8,5 +8,5 @@ type SEFlags struct {
 	EmitGetterSetterFuncs bool `default:"false"`
 
 	//Whether user provided getters and setters should be ignored when generating them.
-	IgnoreGettersSetters bool `default:"false"`
+	IgnoreGettersSetters bool `default:"true"`
 }

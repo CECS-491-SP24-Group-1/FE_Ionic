@@ -51,6 +51,12 @@ func KS_setSK(obj *keystore.KeyStore, arg js.Value) error {
 	return nil
 }
 
+// tmp
+func KS_setFingerprint(obj *keystore.KeyStore, arg js.Value) error {
+	obj.Fingerprint = arg.String()
+	return nil
+}
+
 //-- Methods
 
 // sign(message: string): string

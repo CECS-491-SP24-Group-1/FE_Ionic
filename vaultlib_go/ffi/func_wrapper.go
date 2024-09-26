@@ -1,10 +1,12 @@
 //go:build js && wasm
 
-package jsutil
+package ffi
 
 import (
 	"fmt"
 	"syscall/js"
+
+	"wraith.me/vaultlib/vaultlib/io"
 )
 
 // GenericFunc represents any function type.
@@ -57,7 +59,7 @@ type (
 func NewFactory[T any](n string, f Factory[T]) FWrapper[T] {
 	fname := n
 	if fname == "" {
-		fname = getFunctionName(f)
+		fname = io.GetFunctionName(f)
 	}
 	return NewFunc[T](fname, f, FactoryFunc)
 }
@@ -66,7 +68,7 @@ func NewFactory[T any](n string, f Factory[T]) FWrapper[T] {
 func NewGetter[T any](n string, f Getter[T]) FWrapper[T] {
 	fname := n
 	if fname == "" {
-		fname = getFunctionName(f)
+		fname = io.GetFunctionName(f)
 	}
 	return NewFunc[T](fname, f, GetterFunc)
 }
@@ -75,7 +77,7 @@ func NewGetter[T any](n string, f Getter[T]) FWrapper[T] {
 func NewSetter[T any](n string, f Setter[T]) FWrapper[T] {
 	fname := n
 	if fname == "" {
-		fname = getFunctionName(f)
+		fname = io.GetFunctionName(f)
 	}
 	return NewFunc[T](fname, f, SetterFunc)
 }
@@ -84,7 +86,7 @@ func NewSetter[T any](n string, f Setter[T]) FWrapper[T] {
 func NewMethod[T any](n string, f Method[T]) FWrapper[T] {
 	fname := n
 	if fname == "" {
-		fname = getFunctionName(f)
+		fname = io.GetFunctionName(f)
 	}
 	return NewFunc[T](fname, f, MethodFunc)
 }

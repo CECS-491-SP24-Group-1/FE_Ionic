@@ -1,5 +1,20 @@
 package io
 
+import (
+	"reflect"
+	"runtime"
+	"strings"
+)
+
+// Gets the name of a function.
+func GetFunctionName(f interface{}) string {
+	//Get the name of the target function, sans the package
+	pc := reflect.ValueOf(f).Pointer()
+	parts := strings.Split(runtime.FuncForPC(pc).Name(), ".")
+	fname := parts[len(parts)-1]
+	return fname
+}
+
 /*
 Checks if 2 slices have the same underlying array. See:
 https://www.willem.dev/code-snippets/check-slices-share-same-backing-array/

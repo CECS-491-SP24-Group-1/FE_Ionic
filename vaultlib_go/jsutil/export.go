@@ -3,10 +3,10 @@
 package jsutil
 
 import (
-	"reflect"
-	"runtime"
 	"strings"
 	"syscall/js"
+
+	"wraith.me/vaultlib/vaultlib/io"
 )
 
 // Controls the namespace of the exported JS functions and variables.
@@ -36,7 +36,7 @@ func ExportF(namespace string, targets ...Func) {
 
 	//Loop over the functions to export
 	for _, target := range targets {
-		ns.Set(getFunctionName(target), js.FuncOf(target))
+		ns.Set(io.GetFunctionName(target), js.FuncOf(target))
 	}
 }
 
@@ -82,13 +82,4 @@ func exportLoc(packageName string) js.Value {
 
 	//Return the built path
 	return current
-}
-
-// Gets the name of a function.
-func getFunctionName(f interface{}) string {
-	//Get the name of the target function, sans the package
-	pc := reflect.ValueOf(f).Pointer()
-	parts := strings.Split(runtime.FuncForPC(pc).Name(), ".")
-	fname := parts[len(parts)-1]
-	return fname
 }

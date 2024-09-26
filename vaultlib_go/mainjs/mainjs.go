@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 
+	"wraith.me/vaultlib/ffi"
 	"wraith.me/vaultlib/jsbind"
 	"wraith.me/vaultlib/jsutil"
 	"wraith.me/vaultlib/vaultlib/keystore"
@@ -34,7 +35,7 @@ func main() {
 	//js.Global().Set("NewMyObject", js.FuncOf(jsbind.NewMyObject))
 
 	//Export keystore
-	exp := jsutil.NewStructExporter(
+	exp := ffi.NewStructExporter(
 		keystore.KeyStore{}, jsbind.KS_new,
 	).WithGetters(
 		jsbind.KS_getSK,
@@ -42,10 +43,10 @@ func main() {
 		jsbind.KS_getFingerprint,
 	).WithSetters(
 		jsbind.KS_setSK,
-		jsutil.SNOP,
-		jsutil.SNOP,
+		ffi.SNOP,
+		jsbind.KS_setFingerprint,
 	).WithFactories(
-		jsutil.NewFactory("fromSK", jsbind.KS_fromSK),
+		ffi.NewFactory("fromSK", jsbind.KS_fromSK),
 	).WithMethods(
 	//jsutil.NewMethod("equals", jsbind.KS_equals),
 	)
