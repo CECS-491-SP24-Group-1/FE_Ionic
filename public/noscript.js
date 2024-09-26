@@ -7,7 +7,7 @@
 		// Check for ES6+ features
 		try {
 			eval(
-				"var test = function() {}; function Test() {}; var x = 0; new Promise(function() {});"
+				"const test = function() {}; function Test() {}; let x = 0; new Promise(function() {});"
 			);
 			eval("import('data:text/javascript;base64,Cg==')");
 		} catch (e) {
