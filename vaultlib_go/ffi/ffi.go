@@ -19,7 +19,7 @@ import (
 var (
 	GSTagName    = "js"
 	GetterPrefix = "get"
-	SetterPrefix = "get"
+	SetterPrefix = "set"
 
 	FJsonName = "fromJson"
 	TJsonName = "toJson"
@@ -48,7 +48,8 @@ type StructExporter[T any] struct {
 	flags Flags
 
 	//The struct's fields, including name and kind.
-	fields []structfield
+	//fields []structfield
+	fields []string
 
 	//The struct's primary constructor.
 	constructor Factory[T]
@@ -76,12 +77,13 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 	}
 
 	//Get the struct's exported fields
-	fields := make([]structfield, val.NumField())
+	//fields := make([]structfield, val.NumField())
+	fields := make([]string, val.NumField())
 	for i := 0; i < val.NumField(); i++ {
 		//Get the current field and its name
 		field := val.Type().Field(i)
 		name := field.Name
-		kind := field.Type.Kind()
+		//kind := field.Type.Kind()
 
 		//Check if the field has a `js` tag; overwrite the name if so
 		tagValue := field.Tag.Get(GSTagName)
@@ -90,7 +92,8 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 		}
 
 		//Add the field to the list
-		fields[i] = structfield{n: name, t: kind}
+		//fields[i] = structfield{n: name, t: kind}
+		fields[i] = name
 	}
 
 	//Set the flags of the exporter
@@ -215,41 +218,36 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 	wrapper := js.Global().Get("Object").New()
 
 	//Get the struct info using reflection
-	reflected := reflect.ValueOf(*obj)
+	//A pointer to original is fetched and dereferenced
+	reflectStruct := reflect.ValueOf(obj).Elem()
 
 	//Loop over the fields of the struct
 	for i, f := range se.fields {
 		//Capture current field information for closure
-		fname := f.n
-		fval := reflected.Field(i).Interface()
-		//fkind := f.t
 		idx := i
-
-		//Generate the getter and setter names
-		getterName := GetterPrefix + upperFirst(fname)
-		setterName := SetterPrefix + upperFirst(fname)
+		fname := f
+		fvalue := reflectStruct.Field(idx)
+		ftype := fvalue.Type()
 
 		//Define the getter and setter functions; temp
 		getter := func(this js.Value, args []js.Value) interface{} {
-			//Check if the getter array has the necessary function
+			//Check if the getter array has the necessary function and it's non-nil
 			var val js.Value = js.ValueOf(nil)
 			var err error
-			if !se.flags.IgnoreGettersSetters && len(se.getters) >= idx {
+			if !se.flags.IgnoreGettersSetters && len(se.getters) >= idx && se.getters[idx] != nil {
 				//Call the getter
 				val, err = se.getters[idx](obj)
 			} else {
-				//Marshal the current field to JSON
+				//Marshal the current field to JSON and emit it as a JSONObject via `JSON.parse()`
+				fmt.Printf("using built-in getter for symbol %s\n", fname)
 				var jsonb []byte
-				jsonb, err = json.Marshal(fval)
-
-				//If the kind of the field is not struct, then strip away quotes
-
-				fmt.Printf("json out: '%s'\n", string(jsonb))
+				jsonb, err = json.Marshal(fvalue.Interface())
+				val = js.Global().Get("JSON").Call("parse", string(jsonb))
 			}
 
 			//Handle any errors that occurred
 			if err != nil {
-				jsutil.JSFatal(fmt.Errorf("error while running %s() getter for symbol %s: %s", getterName, se.name, err))
+				jsutil.JSFatal(fmt.Errorf("error while running %s getter for symbol %s: %s", fname, se.name, err))
 				return js.ValueOf(nil)
 			}
 
@@ -257,18 +255,32 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 			return js.ValueOf(val)
 		}
 		setter := func(this js.Value, args []js.Value) interface{} {
-			//Check if the setter array has the necessary function
+			//Check if the setter array has the necessary function and it's non-nil
 			var err error
 			input := args[0]
-			if !se.flags.IgnoreGettersSetters && len(se.setters) >= idx {
+			if !se.flags.IgnoreGettersSetters && len(se.setters) >= idx && se.setters[idx] != nil {
 				//Call the setter
 				err = se.setters[idx](obj, input)
+			} else {
+				//Serialize the input value to JSON via `JSON.stringify()`
+				fmt.Printf("using built-in setter for symbol %s\n", fname)
+				jsons := js.Global().Get("JSON").Call("stringify", input).String()
+
+				//Using reflection, derive the "zero value" of the field at index i in the struct
+				//A new instance is created and dereferenced
+				newFVal := reflect.New(ftype).Elem()
+
+				//Unmarshal the value to a generic interface
+				err = json.Unmarshal([]byte(jsons), newFVal.Addr().Interface())
+
+				//Set the new value in-place into the original struct's field
+				//The value is deserialized and set in-place
+				fvalue.Set(newFVal)
 			}
-			//TODO: handle assignment here
 
 			//Handle any errors that occurred
 			if err != nil {
-				jsutil.JSFatal(fmt.Errorf("error while running %s() setter for symbol %s: %s", setterName, se.name, err))
+				jsutil.JSFatal(fmt.Errorf("error while running %s setter for symbol %s: %s", fname, se.name, err))
 				return js.ValueOf(nil)
 			}
 
@@ -286,6 +298,11 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 
 		//Add function-style getter and setter, if enabled
 		if se.flags.EmitGetterSetterFuncs {
+			//Generate the getter and setter names
+			getterName := GetterPrefix + upperFirst(fname)
+			setterName := SetterPrefix + upperFirst(fname)
+
+			//Create the necessary functions
 			wrapper.Set(getterName, js.FuncOf(getter))
 			wrapper.Set(setterName, js.FuncOf(setter))
 		}

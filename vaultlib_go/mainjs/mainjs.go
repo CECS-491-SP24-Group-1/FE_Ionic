@@ -5,11 +5,9 @@ package main
 import (
 	"fmt"
 
-	"wraith.me/vaultlib/ffi"
 	"wraith.me/vaultlib/ffi/ffiexample"
 	"wraith.me/vaultlib/jsbind"
 	"wraith.me/vaultlib/jsutil"
-	"wraith.me/vaultlib/vaultlib/keystore"
 )
 
 func main() {
@@ -35,25 +33,8 @@ func main() {
 	//Testing
 	//js.Global().Set("NewMyObject", js.FuncOf(jsbind.NewMyObject))
 
-	//Export keystore
-	exp := ffi.NewStructExporter(
-		keystore.KeyStore{}, jsbind.KS_new,
-	).WithGetters(
-		jsbind.KS_getSK,
-		jsbind.KS_getPK,
-		jsbind.KS_getFingerprint,
-	).WithSetters(
-		jsbind.KS_setSK,
-		ffi.SNOP,
-		jsbind.KS_setFingerprint,
-	).WithFactories(
-		ffi.NewFactory("fromSK", jsbind.KS_fromSK),
-	).WithMethods(
-	//jsutil.NewMethod("equals", jsbind.KS_equals),
-	)
-	exp.Export("KeyStore")
-
-	ffiexample.Export()
+	ffiexample.ExportUser()
+	ffiexample.ExportKS()
 
 	/*
 		jsutil.ExportObj(,

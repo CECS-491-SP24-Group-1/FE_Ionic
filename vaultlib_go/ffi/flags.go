@@ -8,5 +8,5 @@ type Flags struct {
 	EmitGetterSetterFuncs bool `default:"false"`
 
 	//Whether user provided getters and setters should be ignored when generating them.
-	IgnoreGettersSetters bool `default:"true"`
+	IgnoreGettersSetters bool `default:"false"`
 }

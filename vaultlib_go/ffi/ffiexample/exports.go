@@ -9,7 +9,7 @@ import (
 )
 
 // Exports the user object for use in JS.
-func Export() {
+func ExportUser() {
 	//No getters, setters, factories, or methods
 	exp := ffi.NewStructExporter(
 		User{}, construct,

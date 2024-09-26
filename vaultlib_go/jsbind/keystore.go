@@ -26,42 +26,9 @@ func KS_fromSK(args []js.Value) (*keystore.KeyStore, error) {
 	return keystore.FromSK(sk[:]), nil
 }
 
-//-- Getters
-
-func KS_getSK(obj *keystore.KeyStore) (js.Value, error) {
-	return js.ValueOf(obj.SK.String()), nil
-}
-
-func KS_getPK(obj *keystore.KeyStore) (js.Value, error) {
-	return js.ValueOf(obj.PK.String()), nil
-}
-
-func KS_getFingerprint(obj *keystore.KeyStore) (js.Value, error) {
-	return js.ValueOf(obj.Fingerprint), nil
-}
-
-//-- Setters
-
-func KS_setSK(obj *keystore.KeyStore, arg js.Value) error {
-	sk, err := crypto.ParsePrivkey(arg.String())
-	if err != nil {
-		return err
-	}
-	obj = keystore.FromSK(sk[:])
-	return nil
-}
-
-// tmp
-func KS_setFingerprint(obj *keystore.KeyStore, arg js.Value) error {
-	obj.Fingerprint = arg.String()
-	return nil
-}
-
 //-- Methods
 
 // sign(message: string): string
 func KS_sign(obj *keystore.KeyStore, args []js.Value) (js.Value, error) {
 	return js.ValueOf(obj.String()), nil
 }
-
-//-- Static functions
