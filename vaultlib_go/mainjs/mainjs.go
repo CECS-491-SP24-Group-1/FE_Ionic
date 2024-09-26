@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"wraith.me/vaultlib/ffi"
+	"wraith.me/vaultlib/ffi/ffiexample"
 	"wraith.me/vaultlib/jsbind"
 	"wraith.me/vaultlib/jsutil"
 	"wraith.me/vaultlib/vaultlib/keystore"
@@ -51,6 +52,8 @@ func main() {
 	//jsutil.NewMethod("equals", jsbind.KS_equals),
 	)
 	exp.Export("KeyStore")
+
+	ffiexample.Export()
 
 	/*
 		jsutil.ExportObj(,

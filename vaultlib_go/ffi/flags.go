@@ -3,7 +3,7 @@
 package ffi
 
 // Contains the options for the struct exporter.
-type SEFlags struct {
+type Flags struct {
 	//Whether getter/setter functions should be generated.
 	EmitGetterSetterFuncs bool `default:"false"`
 

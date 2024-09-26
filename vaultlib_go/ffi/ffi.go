@@ -45,7 +45,7 @@ type StructExporter[T any] struct {
 	name string
 
 	//The options flags for this struct wrapper.
-	flags SEFlags
+	flags Flags
 
 	//The struct's fields, including name and kind.
 	fields []structfield
@@ -94,7 +94,7 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 	}
 
 	//Set the flags of the exporter
-	flags := SEFlags{}
+	flags := Flags{}
 	defaults.Set(&flags)
 
 	//Construct and return the struct exporter
@@ -108,7 +108,7 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 }
 
 // Overrides the current settings of the exporter.
-func (se *StructExporter[T]) WithFlags(flags SEFlags) *StructExporter[T] {
+func (se *StructExporter[T]) WithFlags(flags Flags) *StructExporter[T] {
 	se.flags = flags
 	return se
 }
