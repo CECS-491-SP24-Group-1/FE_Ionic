@@ -15,7 +15,10 @@
 		}
 
 		// Check for WebAssembly
-		if (typeof WebAssembly === "undefined") {
+		if (
+			typeof WebAssembly === "undefined" ||
+			typeof WebAssembly.instantiateStreaming === "undefined"
+		) {
 			missingFeatures.push("WebAssembly");
 		}
 
