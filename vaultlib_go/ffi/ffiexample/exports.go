@@ -18,7 +18,7 @@ func Export() {
 			IgnoreGettersSetters: true,
 		},
 	)
-	exp.Export("KeyStore")
+	exp.Export("User")
 }
 
 func construct([]js.Value) (*User, error) {
