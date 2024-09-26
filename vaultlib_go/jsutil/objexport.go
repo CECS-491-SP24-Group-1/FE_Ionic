@@ -16,6 +16,7 @@ import (
 	"syscall/js"
 	"unicode"
 
+	"github.com/creasty/defaults"
 	"wraith.me/vaultlib/vaultlib/io"
 )
 
@@ -48,6 +49,9 @@ type StructExporter[T any] struct {
 
 	//The export name of the struct. By default, this will be the name of the struct itself.
 	name string
+
+	//The options flags for this struct wrapper.
+	flags SEFlags
 
 	//The names of the struct's fields.
 	fieldNames []structfield
@@ -94,13 +98,24 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 		fields[i] = structfield{n: name, v: val.Field(i).Interface()}
 	}
 
+	//Set the flags of the exporter
+	flags := SEFlags{}
+	defaults.Set(&flags)
+
 	//Construct and return the struct exporter
 	return &StructExporter[T]{
 		v:           v,
 		name:        val.Type().Name(),
+		flags:       flags,
 		fieldNames:  fields,
 		constructor: constructor,
 	}
+}
+
+// Overrides the current settings of the exporter.
+func (se *StructExporter[T]) WithFlags(flags SEFlags) *StructExporter[T] {
+	se.flags = flags
+	return se
 }
 
 // Adds static factory functions to the struct.
@@ -248,9 +263,11 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 			}),
 		)
 
-		//Add function-style getter and setter
-		wrapper.Set(getterName, js.FuncOf(getter))
-		wrapper.Set(setterName, js.FuncOf(setter))
+		//Add function-style getter and setter, if enabled
+		if se.flags.EmitGetterSetterFuncs {
+			wrapper.Set(getterName, js.FuncOf(getter))
+			wrapper.Set(setterName, js.FuncOf(setter))
+		}
 	}
 
 	//Add the built-in instance methods to the list

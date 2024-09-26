@@ -4,7 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 const Settings: React.FC = () => {
 	const ks1 = useMemo(() => new KeyStore(), []);
 	const ks2 = useMemo(() => new KeyStore(), []);
-	const [areEqual, setAreEqual] = useState(null);
+	const [areEqual, setAreEqual] = useState<boolean>(false);
+
+	/*
+	const x = new KeyStore();
+	x.sk;
+	x.
+	*/
 
 	useEffect(() => {
 		setAreEqual(ks1.equals(ks2));
@@ -19,8 +25,11 @@ const Settings: React.FC = () => {
 					<p>
 						FE URL: <code>{import.meta.env.VITE_API_URL}</code>
 						<br></br>
-						eq: <code>{areEqual !== null ? areEqual.toString() : "<wait>"}</code>
+						eq: <code>{areEqual.toString()}</code>
 						<br></br>
+						ks1 fp: <code>{ks1.fingerprint}</code>
+						<br></br>
+						ks2 fp: <code>{ks2.pk}</code>
 						<br></br>
 					</p>
 				</div>

@@ -167,7 +167,7 @@ install:
 	@$(SLEEP)
 	@$(MAKE) -s __cpfile__ SRC=$(BIN_NORM) DEST=$(OUT_DIR)
 	@$(MAKE) -s __cpfile__ SRC=$(BIN_MIN) DEST=$(OUT_DIR)
-#$(CP) $(TYGO_OUT) $(TYPES_DIR)
+	$(CP) $(TYGO_OUT) $(TYPES_DIR)
 
 #Optimizes WASM binaries with `binaryen`; not necessarily needed but nice to have
 .PHONY: optim
