@@ -1,4 +1,4 @@
-//Thanks Perplexity for this :))))
+// Thanks Perplexity for this :))))
 
 (function () {
 	function checkFeatures() {
@@ -40,8 +40,9 @@
 		warningHtml +=
 			'<div style="background-color: #ffeeee; border: 1px solid #ff0000; padding: 15px; margin: 10px 0;">';
 		warningHtml +=
-			'<h2 style="color: #ff0000; margin-top: 0;">Browser Compatibility Warning</h2>';
-		warningHtml += "<p>Your browser is missing support for the following features:</p>";
+			'<h2 style="color: #ff0000; margin-top: 0;">Browser Compatibility Error</h2>';
+		warningHtml +=
+			"<p>Your web browser is missing support for the following features:</p>";
 		warningHtml += "<ul>";
 
 		for (var i = 0; i < missingFeatures.length; i++) {
@@ -50,7 +51,7 @@
 
 		warningHtml += "</ul>";
 		warningHtml +=
-			"<p>Some parts of this application may not work correctly. Please consider upgrading your browser.</p>";
+			"<p>This application will not work correctly, and has been terminated as a result (check your console for more information).</p><p>Please upgrade your web browser to use this application (we recommend Google Chrome).</p>";
 		warningHtml += "</div>";
 
 		var tempDiv = document.createElement("div");
