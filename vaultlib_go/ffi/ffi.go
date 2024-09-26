@@ -1,6 +1,5 @@
 //go:build js && wasm
 
-//TODO: make variant of this that supports marshalling via TextMarshaller or function mapper
 //TODO: static functions
 //TODO: attempt localstorage saving/loading
 
