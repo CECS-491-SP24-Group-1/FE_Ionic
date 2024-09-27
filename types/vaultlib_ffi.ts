@@ -3,24 +3,26 @@
  *
  * Example usage:
  * ```typescript
- * interface KeyStoreFunctions extends FactoryFuncs<KeyStore> {
+ * interface KeyStoreFunctions extends FFIFactories<KeyStore> {
  * 	new(): KeyStore; //This is the default constructor
  * }
  * ```
  */
-export interface FactoryFuncs<T> {
-	fromGob64(json: string): T;
+export interface FFIFactories<T> {
+	fromGob64(gob64: string): T;
 	fromJson(json: string): T;
+
+	fromLStore(key: string): string;
 }
 
 /**
  * Contains the built-methods of every exported Go type.
  */
-export interface ExportedGo {
-	equals<T extends ExportedGo>(other: T): boolean;
-	hashcode(): string;
-	toString(): string;
-
+export interface FFIMethods {
 	toGob64(): string;
 	toJson(): string;
+
+	equals<T extends FFIMethods>(other: T): boolean;
+	hashcode(): string;
+	toString(): string;
 }

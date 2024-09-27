@@ -153,8 +153,21 @@ func (se StructExporter[T]) Export(name string) {
 
 	//Add the built-in factory functions to the list
 	se.factories = append(se.factories,
-		NewFactory(FJsonName, se.jsonDeserial),
-		NewFactory(FGobName, se.gobDeserial),
+		//Basic deserializers
+		NewFactory(FJsonName, se.fromJson),
+		NewFactory(FGobName, se.fromGob64),
+		//Webstorage deserializers: localStorage GOB
+		NewFactory(FLSName, se.fromLStore),
+		//NewFactory(ISSName, se.inLStore),
+		//Webstorage deserializers: sessionStorage GOB
+		//NewFactory(FSSName, se.fromSStore),
+		//NewFactory(ISSName, se.inSStore),
+		//Webstorage deserializers: localStorage JSON
+		//NewFactory(FJLSName, se.fromJLStore),
+		//NewFactory(IJSSName, se.inJLStore),
+		//Webstorage deserializers: sessionStorage JSON
+		//NewFactory(FJSSName, se.fromJSStore),
+		//NewFactory(IJSSName, se.inJSStore),
 	)
 
 	//Register every static factory functions
@@ -299,11 +312,18 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 
 	//Add the built-in instance methods to the list
 	se.methods = append(se.methods,
-		NewMethod(TJsonName, se.jsonSerial),
-		NewMethod(TGobName, se.gobSerial),
+		//Serializers
+		NewMethod(TJsonName, se.toJson),
+		NewMethod(TGobName, se.toGob64),
+		//Essential object methods
 		NewMethod(EqualsName, se.equals),
 		NewMethod(HashcodeName, se.hashcode),
 		NewMethod(ToStringName, se.toString),
+		//Webstorage serializers
+		//NewMethod(TLSName, se.toLStore),
+		//NewMethod(TSSName, se.toSStore),
+		//NewMethod(TJLSName, se.toJLStore),
+		//NewMethod(TJSSName, se.toJSStore),
 	)
 
 	//Register every instance method

@@ -15,10 +15,10 @@ import (
 //TODO: test to see if the item is in local/session storage
 
 var (
-	FJsonName = "fromJson"
-	TJsonName = "toJson"
 	FGobName  = "fromGob64"
 	TGobName  = "toGob64"
+	FJsonName = "fromJson"
+	TJsonName = "toJson"
 
 	EqualsName   = "equals"
 	HashcodeName = "hashcode"
@@ -46,11 +46,34 @@ var (
 	sessionstorage = jsutil.NewSessionStorage()
 )
 
+//-- Basic (de)serializers
+
+// Deserializes a struct from GOB base64.
+//
+// SigN: fromGob64(gob64: string): T
+// Type: built-in factory; takes `string`, returns `object`
+func (se StructExporter[T]) fromGob64(args []js.Value) (*T, error) {
+	str := args[0].String()
+	obj := new(T)
+	err := io.GString2Obj(obj, &str)
+	return obj, err
+}
+
+// Serializes a struct to GOB base64.
+//
+// SigN: toGob64(): string
+// Type: built-in method; returns `string`
+func (se StructExporter[T]) toGob64(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
+	str := ""
+	err := io.Obj2GString(&str, obj)
+	return js.ValueOf(str), err
+}
+
 // Deserializes a struct from JSON
 //
-// Name: fromJson()
+// SigN: fromJson(json: string): T
 // Type: built-in factory; takes `string`, returns `object`
-func (se StructExporter[T]) jsonDeserial(args []js.Value) (*T, error) {
+func (se StructExporter[T]) fromJson(args []js.Value) (*T, error) {
 	//Get the 1st and only argument as a string
 	jsons := args[0].String()
 
@@ -62,9 +85,9 @@ func (se StructExporter[T]) jsonDeserial(args []js.Value) (*T, error) {
 
 // Serializes a struct to JSON
 //
-// Name: toJson()
+// SigN: toJson(): string
 // Type: built-in method; returns `string`
-func (se StructExporter[T]) jsonSerial(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
+func (se StructExporter[T]) toJson(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
 	//Marshal the target object to JSON
 	jsons, err := json.Marshal(obj)
 	if err != nil {
@@ -75,29 +98,11 @@ func (se StructExporter[T]) jsonSerial(obj *T, _ js.Value, _ []js.Value) (js.Val
 	return js.ValueOf(string(jsons)), nil
 }
 
-// Deserializes a struct from GOB base64.
-//
-// Name: fromGob64()
-// Type: built-in factory; takes `string`, returns `object`
-func (se StructExporter[T]) gobDeserial(args []js.Value) (*T, error) {
-	str := args[0].String()
-	obj := new(T)
-	err := io.GString2Obj(obj, &str)
-	return obj, err
-}
-
-// Serializes a struct to GOB base64.
-//
-// Name: toGob64()
-// Type: built-in method; returns `string`
-func (se StructExporter[T]) gobSerial(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
-	str := ""
-	err := io.Obj2GString(&str, obj)
-	return js.ValueOf(str), err
-}
+//-- Object essential methods
 
 // Checks if this object is equal to another.
 //
+// SigN: equals(other: T): boolean
 // Type: built-in method; takes `object`, returns `boolean`
 func (se StructExporter[T]) equals(_ *T, this js.Value, args []js.Value) (val js.Value, err error) {
 	//Catch any panic() that may occur
@@ -132,6 +137,7 @@ func (se StructExporter[T]) equals(_ *T, this js.Value, args []js.Value) (val js
 
 // Generates the SHA256 hash equivalent of this object via digesting its JSON.
 //
+// SigN: hashcode(): string
 // Type: built-in method; returns `string`
 func (se StructExporter[T]) hashcode(_ *T, this js.Value, _ []js.Value) (js.Value, error) {
 	//Serialize this object to JSON
@@ -151,6 +157,7 @@ func (se StructExporter[T]) hashcode(_ *T, this js.Value, _ []js.Value) (js.Valu
 
 // Generates the string equivalent of this object.
 //
+// SigN: toString(): string
 // Type: built-in method; returns `string`
 func (se StructExporter[T]) toString(_ *T, this js.Value, _ []js.Value) (js.Value, error) {
 	//Serialize this object to JSON
@@ -161,6 +168,32 @@ func (se StructExporter[T]) toString(_ *T, this js.Value, _ []js.Value) (js.Valu
 	return js.ValueOf(jsons), nil
 }
 
+//-- Web storage (de)serializers
+
+// Deserializes a struct from `localStorage` that was encoded using Gob64.
+//
+// SigN: fromLStore(key: string): T
+// Type: built-in factory; takes `string`, returns `object`
+func (se StructExporter[T]) fromLStore(args []js.Value) (*T, error) {
+	key := args[0].String()
+	return se.fromWebStorage(localstorage, key)
+}
+
 //
 //-- Backends for webstorage stuff
 //
+
+func (se StructExporter[T]) fromWebStorage(engine *jsutil.Storage, key string) (*T, error) {
+	//Ensure the vault exists in storage
+	/*
+		if !engine.Has(key){
+			return nil, fmt.Errorf("%w; key: %s", NotInWebStorageError, key)
+		}
+	*/
+
+	return new(T), nil
+}
+
+func (se StructExporter[T]) toWebStorage(engine *jsutil.Storage, target *T, key string) error {
+	return nil
+}

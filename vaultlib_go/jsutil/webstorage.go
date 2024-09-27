@@ -7,17 +7,18 @@ import "syscall/js"
 // Storage represents a Web Storage object (either localStorage or sessionStorage).
 // See: https://html.spec.whatwg.org/multipage/webstorage.html#the-storage-interface
 type Storage struct {
-	jsStorage js.Value
+	jsStorage  js.Value
+	engineName string
 }
 
 // NewLocalStorage creates and returns a new Storage instance for localStorage.
 func NewLocalStorage() *Storage {
-	return &Storage{jsStorage: getLocalstorage()}
+	return &Storage{jsStorage: getLocalstorage(), engineName: "localStorage"}
 }
 
 // NewSessionStorage creates and returns a new Storage instance for sessionStorage.
 func NewSessionStorage() *Storage {
-	return &Storage{jsStorage: getSessionstorage()}
+	return &Storage{jsStorage: getSessionstorage(), engineName: "sessionStorage"}
 }
 
 // Tests if the selected web storage API can be used to persist data.

@@ -1,5 +1,5 @@
 import { KeyStore } from "./keystore";
-import { FactoryFuncs } from "../exported_go";
+import { FFIFactories } from "../vaultlib_ffi";
 
 declare global {
 	/*
@@ -19,11 +19,11 @@ declare global {
 	}
 	*/
 
-	interface KeyStoreFunctions extends FactoryFuncs<KeyStore> {
-		new (): KeyStore;
+	interface KeyStoreFunctions extends FFIFactories<KeyStore> {
+		new(): KeyStore;
 	}
 	const KeyStore: KeyStoreFunctions;
 }
 
 //This empty export is necessary to make this a module
-export {};
+export { };
