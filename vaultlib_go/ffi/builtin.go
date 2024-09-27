@@ -31,10 +31,18 @@ var (
 	FSSName = "fromSStore"
 	ISSName = "inSStore"
 	TSSName = "toSStore"
+
+	FJLSName = "fromJLStore"
+	IJLSName = "inJLStore"
+	TJLSName = "toJLStore"
+
+	FJSSName = "fromJSStore"
+	IJSSName = "inJSStore"
+	TJSSName = "toJSStore"
 )
 
 var (
-	localstorage = jsutil.NewLocalStorage()
+	localstorage   = jsutil.NewLocalStorage()
 	sessionstorage = jsutil.NewSessionStorage()
 )
 
@@ -152,7 +160,6 @@ func (se StructExporter[T]) toString(_ *T, this js.Value, _ []js.Value) (js.Valu
 	jsons = se.name + jsons
 	return js.ValueOf(jsons), nil
 }
-
 
 //
 //-- Backends for webstorage stuff
