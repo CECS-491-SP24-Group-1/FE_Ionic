@@ -45,7 +45,7 @@ func New(sub util.UUID, devIdent string) *Vault {
 // Creates a vault object from a GOB byte string.
 func VaultFromGob(gob string) (*Vault, error) {
 	obj := Vault{}
-	if err := io.GString2Obj(&obj, &gob); err != nil {
+	if err := io.GString2Obj([]byte(gob), &obj); err != nil {
 		return nil, err
 	}
 	return &obj, nil
@@ -62,11 +62,11 @@ func VaultFromJSON(js string) (*Vault, error) {
 
 // Serializes a vault to a Gob byte string.
 func (v Vault) Gob() (string, error) {
-	gs := ""
-	if err := io.Obj2GString(&gs, &v); err != nil {
+	gs, err := io.Obj2GString(&v)
+	if err != nil {
 		return "", err
 	}
-	return gs, nil
+	return string(gs), nil
 }
 
 // Serializes a vault to JSON.

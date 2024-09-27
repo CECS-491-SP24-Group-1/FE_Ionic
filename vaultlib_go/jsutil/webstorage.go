@@ -51,6 +51,11 @@ func (s *Storage) Clear() {
 	s.jsStorage.Call("clear")
 }
 
+// Returns the name of the web storage engine in use.
+func (s Storage) EngineName() string {
+	return s.engineName
+}
+
 // GetItem returns the current value associated with the given key.
 // If the given key does not exist, an empty string is returned.
 func (s *Storage) Get(key string) string {

@@ -30,7 +30,7 @@ type EVault struct {
 // Creates an encrypted vault object from a GOB byte string.
 func EVaultFromGob(gob string) (*EVault, error) {
 	obj := EVault{}
-	if err := io.GString2Obj(&obj, &gob); err != nil {
+	if err := io.GString2Obj([]byte(gob), &obj); err != nil {
 		return nil, err
 	}
 	return &obj, nil
@@ -47,11 +47,11 @@ func EVaultFromJSON(js string) (*EVault, error) {
 
 // Serializes an encrypted vault to a Gob byte string.
 func (ev EVault) Gob() (string, error) {
-	gs := ""
-	if err := io.Obj2GString(&gs, &ev); err != nil {
+	gs, err := io.Obj2GString(&ev)
+	if err != nil {
 		return "", err
 	}
-	return gs, nil
+	return string(gs), nil
 }
 
 // Serializes an encrypted vault to JSON.

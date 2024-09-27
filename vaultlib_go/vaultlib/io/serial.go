@@ -19,8 +19,8 @@ func Obj2Bytes[T any](buf *bytes.Buffer, obj *T) error {
 }
 
 // Deserializes a given object from a base64 GOB string.
-func GString2Obj[T any](obj *T, gs *string) error {
-	byt, err := base64.StdEncoding.DecodeString(*gs)
+func GString2Obj[T any](gs []byte, obj *T) error {
+	byt, err := base64.StdEncoding.DecodeString(string(gs))
 	if err != nil {
 		return err
 	}
@@ -29,11 +29,11 @@ func GString2Obj[T any](obj *T, gs *string) error {
 }
 
 // Serializes a given object to a base64 GOB string.
-func Obj2GString[T any](gs *string, obj *T) error {
+func Obj2GString[T any](obj *T) ([]byte, error) {
 	buf := bytes.Buffer{}
 	if err := Obj2Bytes(&buf, obj); err != nil {
-		return err
+		return nil, err
 	}
-	*gs = base64.StdEncoding.EncodeToString(buf.Bytes())
-	return nil
+	gs := base64.StdEncoding.EncodeToString(buf.Bytes())
+	return []byte(gs), nil
 }
