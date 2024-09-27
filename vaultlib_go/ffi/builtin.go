@@ -8,11 +8,39 @@ import (
 	"encoding/json"
 	"syscall/js"
 
+	"wraith.me/vaultlib/jsutil"
 	"wraith.me/vaultlib/vaultlib/io"
 )
 
-// Defines a method for deserializing a struct from JSON
+//TODO: test to see if the item is in local/session storage
+
+var (
+	FJsonName = "fromJson"
+	TJsonName = "toJson"
+	FGobName  = "fromGob64"
+	TGobName  = "toGob64"
+
+	EqualsName   = "equals"
+	HashcodeName = "hashcode"
+	ToStringName = "toString"
+
+	FLSName = "fromLStore"
+	ILSName = "inLStore"
+	TLSName = "toLStore"
+
+	FSSName = "fromSStore"
+	ISSName = "inSStore"
+	TSSName = "toSStore"
+)
+
+var (
+	localstorage = jsutil.NewLocalStorage()
+	sessionstorage = jsutil.NewSessionStorage()
+)
+
+// Deserializes a struct from JSON
 //
+// Name: fromJson()
 // Type: built-in factory; takes `string`, returns `object`
 func (se StructExporter[T]) jsonDeserial(args []js.Value) (*T, error) {
 	//Get the 1st and only argument as a string
@@ -24,8 +52,9 @@ func (se StructExporter[T]) jsonDeserial(args []js.Value) (*T, error) {
 	return obj, err
 }
 
-// Defines a method for serializing a struct to JSON
+// Serializes a struct to JSON
 //
+// Name: toJson()
 // Type: built-in method; returns `string`
 func (se StructExporter[T]) jsonSerial(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
 	//Marshal the target object to JSON
@@ -38,8 +67,9 @@ func (se StructExporter[T]) jsonSerial(obj *T, _ js.Value, _ []js.Value) (js.Val
 	return js.ValueOf(string(jsons)), nil
 }
 
-// Defines a method for deserializing a struct from GOB base64.
+// Deserializes a struct from GOB base64.
 //
+// Name: fromGob64()
 // Type: built-in factory; takes `string`, returns `object`
 func (se StructExporter[T]) gobDeserial(args []js.Value) (*T, error) {
 	str := args[0].String()
@@ -48,8 +78,9 @@ func (se StructExporter[T]) gobDeserial(args []js.Value) (*T, error) {
 	return obj, err
 }
 
-// Defines a method for serializing a struct to GOB base64.
+// Serializes a struct to GOB base64.
 //
+// Name: toGob64()
 // Type: built-in method; returns `string`
 func (se StructExporter[T]) gobSerial(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
 	str := ""
@@ -121,3 +152,8 @@ func (se StructExporter[T]) toString(_ *T, this js.Value, _ []js.Value) (js.Valu
 	jsons = se.name + jsons
 	return js.ValueOf(jsons), nil
 }
+
+
+//
+//-- Backends for webstorage stuff
+//

@@ -1,7 +1,6 @@
 //go:build js && wasm
 
 //TODO: static functions
-//TODO: attempt localstorage saving/loading
 
 package ffi
 
@@ -19,15 +18,6 @@ var (
 	GSTagName    = "js"
 	GetterPrefix = "get"
 	SetterPrefix = "set"
-
-	FJsonName = "fromJson"
-	TJsonName = "toJson"
-	FGobName  = "fromGob64"
-	TGobName  = "toGob64"
-
-	EqualsName   = "equals"
-	HashcodeName = "hashcode"
-	ToStringName = "toString"
 )
 
 // Acts as a NOP for a setter that isn't necessary.

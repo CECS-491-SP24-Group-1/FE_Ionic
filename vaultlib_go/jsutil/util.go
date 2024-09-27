@@ -21,6 +21,22 @@ func GenerifyArray[T any](arr []T) []interface{} {
 	return out
 }
 
+// Checks if a JS value has a specific property.
+func HasProperty(obj js.Value, prop string) bool {
+	return !obj.Get(prop).IsUndefined()
+}
+
+// Checks if a JS value has a specific property, catching any panics that may occur.
+func HasPropertySafe(obj js.Value, prop string) (has bool, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic occurred: %v", r)
+		}
+	}()
+	has = !obj.Get(prop).IsUndefined()
+	return
+}
+
 // Creates a Golang array from a JS array.
 func JSArray2GoArray[T any](jsa js.Value, maxlen int, convFunc func(v js.Value) T) []T {
 	//Allocate the output array
