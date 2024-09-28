@@ -13,8 +13,6 @@ import (
 	"wraith.me/vaultlib/vaultlib/io"
 )
 
-//TODO: test to see if the item is in local/session storage
-
 var (
 	FGobName  = "fromGob64"
 	TGobName  = "toGob64"
@@ -248,6 +246,48 @@ func (se StructExporter[T]) toJSStore(obj *T, _ js.Value, args []js.Value) (js.V
 	return js.ValueOf(nil), err
 }
 
+//-- Web storage item presence detection
+
+// Checks if a Gob64-encoded struct is present in `localStorage`.
+//
+// SigN: inLStore(key: string): boolean
+// Type: built-in static; takes `string`, returns `boolean`
+func (se StructExporter[T]) inLStore(args []js.Value) (js.Value, error) {
+	key := args[0].String()
+	res := se.inWebStorage(localstorage, key, true)
+	return js.ValueOf(res), nil
+}
+
+// Checks if a Gob64-encoded struct is present in `sessionStorage`.
+//
+// SigN: inSStore(key: string): boolean
+// Type: built-in static; takes `string`, returns `boolean`
+func (se StructExporter[T]) inSStore(args []js.Value) (js.Value, error) {
+	key := args[0].String()
+	res := se.inWebStorage(sessionstorage, key, true)
+	return js.ValueOf(res), nil
+}
+
+// Checks if a JSON-encoded struct is present in `localStorage`.
+//
+// SigN: inJLStore(key: string): boolean
+// Type: built-in static; takes `string`, returns `boolean`
+func (se StructExporter[T]) inJLStore(args []js.Value) (js.Value, error) {
+	key := args[0].String()
+	res := se.inWebStorage(localstorage, key, false)
+	return js.ValueOf(res), nil
+}
+
+// Checks if a JSON-encoded struct is present in `sessionStorage`.
+//
+// SigN: inJSStore(key: string): boolean
+// Type: built-in static; takes `string`, returns `boolean`
+func (se StructExporter[T]) inJSStore(args []js.Value) (js.Value, error) {
+	key := args[0].String()
+	res := se.inWebStorage(sessionstorage, key, false)
+	return js.ValueOf(res), nil
+}
+
 //
 //-- Backends for webstorage stuff
 //
@@ -276,7 +316,7 @@ func (se StructExporter[T]) fromWebStorage(
 }
 
 // Checks if a struct object exists in webstorage by its key.
-func (se StructExporter[T]) inWebStorage(engine *jsutil.Storage, _ *T, key string, binary bool) bool {
+func (se StructExporter[T]) inWebStorage(engine *jsutil.Storage, key string, binary bool) bool {
 	//Ensure the object exists in storage
 	if !engine.Has(key) {
 		return false

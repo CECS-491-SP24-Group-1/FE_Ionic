@@ -8,7 +8,7 @@
  * }
  * ```
  */
-export interface FFIFactories<T> {
+export interface FFIFactories<T> extends FFIStatics {
 	/** Deserializes a struct from GOB base64. */
 	fromGob64(gob64: string): T;
 	/** Deserializes a struct from JSON. */
@@ -26,7 +26,7 @@ export interface FFIFactories<T> {
 }
 
 /**
- * Contains the built-methods of every exported Go type.
+ * Contains the built-in methods of every exported Go type.
  */
 export interface FFIMethods {
 	/** Serializes a struct to GOB base64. */
@@ -50,4 +50,20 @@ export interface FFIMethods {
 	toJLStore(key: string): void;
 	/** Serializes a struct to `sessionStorage` using JSON encoding. */
 	toJSStore(key: string): void;
+}
+
+/**
+ * Contains the built-in static functions of every exported Go type.
+ */
+export interface FFIStatics {
+	/** Checks if a Gob64-encoded struct is present in `localStorage`. */
+	inLStore(key: string): boolean;
+	/** Checks if a Gob64-encoded struct is present in `sessionStorage`. */
+	inSStore(key: string): boolean;
+
+	/** Checks if a JSON-encoded struct is present in `localStorage`. */
+	inJLStore(key: string): boolean;
+
+	/** Checks if a JSON-encoded struct is present in `sessionStorage`. */
+	inJSStore(key: string): boolean;
 }

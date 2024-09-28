@@ -172,12 +172,14 @@ func (se StructExporter[T]) Export(name string) {
 	)
 
 	//Add the built-in static functions to the list
-	se.statics = append(se.statics) //Webstorage checkers: GOB
-	//NewFactory(ILSName, se.inLStore),
-	//NewFactory(ISSName, se.inSStore),
-	//Webstorage checkers: JSON
-	//NewFactory(IJLSName, se.inJLStore),
-	//NewFactory(IJSSName, se.inJSStore),
+	se.statics = append(se.statics,
+		//Webstorage checkers: GOB
+		NewStatic[T](ILSName, se.inLStore),
+		NewStatic[T](ISSName, se.inSStore),
+		//Webstorage checkers: JSON
+		NewStatic[T](IJLSName, se.inJLStore),
+		NewStatic[T](IJSSName, se.inJSStore),
+	)
 
 	//Register every static factory function
 	for _, f := range se.factories {

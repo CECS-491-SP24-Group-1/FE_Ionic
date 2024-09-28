@@ -96,7 +96,7 @@ func NewMethod[T any](n string, f Method[T]) FWrapper[T] {
 }
 
 // Creates a new static function wrapper with name `n`.
-func NewStatic[T any](n string, f Method[T]) FWrapper[T] {
+func NewStatic[T any](n string, f Static[T]) FWrapper[T] {
 	fname := n
 	if fname == "" {
 		fname = io.GetFunctionName(f)
