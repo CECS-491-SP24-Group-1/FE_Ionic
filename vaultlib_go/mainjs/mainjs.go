@@ -5,7 +5,6 @@ package main
 import (
 	"fmt"
 
-	"wraith.me/vaultlib/ffi/ffiexample"
 	"wraith.me/vaultlib/jsbind"
 	"wraith.me/vaultlib/jsutil"
 )
@@ -28,20 +27,10 @@ func main() {
 	jsutil.ExportV("",
 		jsutil.NV("HKDF_SALT", jsbind.HKDF_SALT),
 	)
-	//jsutil.ExportF("vault",)
 
-	//Testing
-	//js.Global().Set("NewMyObject", js.FuncOf(jsbind.NewMyObject))
-
-	ffiexample.ExportUser()
-	ffiexample.ExportKS()
-
-	/*
-		jsutil.ExportObj(,
-			jsbind.MakeNewUser,
-			//[]jsutil.Factory[jsbind.User]{jsbind.UserFromString},
-		)
-	*/
+	//Vaultlib stuff
+	jsbind.ExportKS()
+	jsbind.ExportVault()
 
 	//wasm.Alert("eee")
 

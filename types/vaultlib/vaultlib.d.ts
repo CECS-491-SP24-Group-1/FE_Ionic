@@ -11,16 +11,14 @@ declare global {
 		// function someOtherFunction(arg: number): boolean;
 	}*/
 
-	/*
-	interface KeyStore {
-		sk: Uint8Array;
-		pk: Uint8Array;
-		fingerprint: string;
-	}
-	*/
-
+	/** Represents a keystore, which contains a public and private Ed25519 key. */
 	interface KeyStoreFunctions extends FFIFactories<KeyStore> {
+		/** Creates a new keystore object. */
 		new(): KeyStore;
+		/** Signs a given message with the private key of the keystore. */
+		sign(message: string): string;
+		/** Verifies that a given message and signature were signed by this keystore's private key. */
+		verify(message: string, signature: string): boolean;
 	}
 	const KeyStore: KeyStoreFunctions;
 }
