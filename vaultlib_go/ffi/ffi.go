@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	GSTagName    = "js"
+	TagName      = "js"
 	GetterPrefix = "get"
 	SetterPrefix = "set"
 )
@@ -76,7 +76,7 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 		//kind := field.Type.Kind()
 
 		//Check if the field has a `js` tag; overwrite the name if so
-		tagValue := field.Tag.Get(GSTagName)
+		tagValue := field.Tag.Get(TagName)
 		if tagValue != "" {
 			name = tagValue
 		}

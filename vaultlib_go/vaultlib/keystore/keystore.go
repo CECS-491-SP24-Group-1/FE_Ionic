@@ -14,13 +14,13 @@ import (
 // Represents an Ed25519 keypair inside a keystore.
 type KeyStore struct {
 	//Holds the private key.
-	SK crypto.Privseed `json:"sk" js:"sk"`
+	SK crypto.Privseed `json:"sk"`
 
 	//Holds the public key.
-	PK crypto.Pubkey `json:"pk" js:"pk"`
+	PK crypto.Pubkey `json:"pk"`
 
 	//Holds the fingerprint of the public key as a SHA-256 hash.
-	Fingerprint string `json:"fingerprint" js:"fingerprint"`
+	Fingerprint string `json:"fingerprint"`
 }
 
 // Generates a new keystore.

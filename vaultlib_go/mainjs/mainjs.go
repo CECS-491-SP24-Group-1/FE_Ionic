@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 
+	"wraith.me/vaultlib/ffi"
 	"wraith.me/vaultlib/ffi/ffiexample"
 	"wraith.me/vaultlib/jsbind"
 	"wraith.me/vaultlib/jsutil"
@@ -17,6 +18,9 @@ func main() {
 	//Quick sanity check
 	fmt.Println("heelo worl")
 	//js.Global().Call("alert", "Hello from Golang!")
+
+	//Configure the FFI
+	ffi.TagName = "json"
 
 	//
 	// PUT ALL JS FUNCTIONS & VARS TO EXPORT BELOW THIS BLOCK

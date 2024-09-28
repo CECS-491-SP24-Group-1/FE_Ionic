@@ -16,13 +16,13 @@ When not in use, objects of this struct should be encrypted to produce an
 `EVault` object.
 */
 type Vault struct {
-	ID       util.UUID `json:"id" js:"id"`              //The ID of this vault object.
-	Subject  util.UUID `json:"subject" js:"subject"`    //The ID of the user to whom this vault belongs.
-	LastMod  time.Time `json:"last_mod" js:"lastMod"`   //The at which this vault was last changed.
-	DevIdent string    `json:"dev_ident" js:"devIdent"` //The user agent of the user that created this vault.
-	Note     string    `json:"note" js:"note"`          //An optional note about the contents of the vault.
+	ID       util.UUID `json:"id"`        //The ID of this vault object.
+	Subject  util.UUID `json:"subject"`   //The ID of the user to whom this vault belongs.
+	LastMod  time.Time `json:"last_mod"`  //The at which this vault was last changed.
+	DevIdent string    `json:"dev_ident"` //The user agent of the user that created this vault.
+	Note     string    `json:"note"`      //An optional note about the contents of the vault.
 
-	KStore keystore.KeyStore `json:"kstore" js:"kstore"` //Holds the user's public and private keys.
+	KStore keystore.KeyStore `json:"kstore"` //Holds the user's public and private keys.
 	//MStore keystore.KeyStore `json:"mstore"` //Holds the user's conversations and associated states.
 }
 
