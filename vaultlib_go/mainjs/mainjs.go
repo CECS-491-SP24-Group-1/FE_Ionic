@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 
+	"wraith.me/vaultlib/ffi/ffiexample"
 	"wraith.me/vaultlib/jsbind"
 	"wraith.me/vaultlib/jsutil"
 )
@@ -31,6 +32,8 @@ func main() {
 	//Vaultlib stuff
 	jsbind.ExportKS()
 	jsbind.ExportVault()
+
+	ffiexample.ExportUser()
 
 	//wasm.Alert("eee")
 

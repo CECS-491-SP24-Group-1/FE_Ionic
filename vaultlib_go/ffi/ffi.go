@@ -295,9 +295,22 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 				//Call the setter
 				err = se.setters[idx](obj, input)
 			} else {
-				//Serialize the input value to JSON via `JSON.stringify()`
 				//fmt.Printf("using built-in setter for symbol %s\n", fname)
-				jsons := js.Global().Get("JSON").Call("stringify", input).String()
+				//Determine if initial JSON serialization can be skipped
+				//This is the case for the following types: `string`
+				skipJsonSerial := false
+				if input.Type() == js.TypeString {
+					fmt.Println("string type in")
+					skipJsonSerial = true
+				}
+				fmt.Printf("incoming type: %s\n", input.Type().String())
+
+				//Skip 1st pass serialization if requested
+				jsons := input.String()
+				if !skipJsonSerial {
+					//Serialize the input value to JSON via `JSON.stringify()`
+					jsons = js.Global().Get("JSON").Call("stringify", input).String()
+				}
 
 				//Using reflection, derive the "zero value" of the field at index i in the struct
 				//A new instance is created and dereferenced
