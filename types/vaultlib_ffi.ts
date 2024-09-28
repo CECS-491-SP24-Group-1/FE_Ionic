@@ -13,6 +13,8 @@ export interface FFIFactories<T> extends FFIStatics {
 	fromGob64(gob64: string): T;
 	/** Deserializes a struct from JSON. */
 	fromJson(json: string): T;
+	/** Deserializes a struct from a plain JS object. */
+	fromJSObject(jsobj: object): T;
 
 	/** Deserializes a struct from `localStorage` that was encoded using Gob64. */
 	fromLStore(key: string): T;
@@ -33,6 +35,8 @@ export interface FFIMethods {
 	toGob64(): string;
 	/** Serializes a struct to JSON. */
 	toJson(): string;
+	/** Serializes a struct to JSON and then creates a plain JS object. */
+	toJSObject(): object;
 
 	/** Checks if this object is equal to another. */
 	equals<T extends FFIMethods>(other: T): boolean;

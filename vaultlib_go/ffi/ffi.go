@@ -163,6 +163,7 @@ func (se StructExporter[T]) Export(name string) {
 		//Basic deserializers
 		NewFactory(FJsonName, se.fromJson),
 		NewFactory(FGobName, se.fromGob64),
+		NewFactory(FJSObjectName, se.fromJSObject),
 		//Webstorage deserializers: GOB
 		NewFactory(FLSName, se.fromLStore),
 		NewFactory(FSSName, se.fromSStore),
@@ -358,6 +359,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 		//Serializers
 		NewMethod(TJsonName, se.toJson),
 		NewMethod(TGobName, se.toGob64),
+		NewMethod(TJSObjectName, se.toJSObject),
 		//Essential object methods
 		NewMethod(EqualsName, se.equals),
 		NewMethod(HashcodeName, se.hashcode),

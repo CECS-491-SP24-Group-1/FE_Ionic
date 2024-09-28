@@ -14,10 +14,12 @@ import (
 )
 
 var (
-	FGobName  = "fromGob64"
-	TGobName  = "toGob64"
-	FJsonName = "fromJson"
-	TJsonName = "toJson"
+	FGobName      = "fromGob64"
+	TGobName      = "toGob64"
+	FJsonName     = "fromJson"
+	TJsonName     = "toJson"
+	TJSObjectName = "toJSObject"
+	FJSObjectName = "fromJSObject"
 
 	EqualsName   = "equals"
 	HashcodeName = "hashcode"
@@ -52,7 +54,7 @@ var (
 // Deserializes a struct from GOB base64.
 //
 // SigN: fromGob64(gob64: string): T
-// Type: built-in factory; takes `string`, returns `object`
+// Type: built-in factory; takes `string`, returns `T`
 func (se StructExporter[T]) fromGob64(args []js.Value) (*T, error) {
 	str := args[0].String()
 	obj := new(T)
@@ -72,7 +74,7 @@ func (se StructExporter[T]) toGob64(obj *T, _ js.Value, _ []js.Value) (js.Value,
 // Deserializes a struct from JSON.
 //
 // SigN: fromJson(json: string): T
-// Type: built-in factory; takes `string`, returns `object`
+// Type: built-in factory; takes `string`, returns `T`
 func (se StructExporter[T]) fromJson(args []js.Value) (*T, error) {
 	//Get the 1st and only argument as a string
 	jsons := args[0].String()
@@ -96,6 +98,33 @@ func (se StructExporter[T]) toJson(obj *T, _ js.Value, _ []js.Value) (js.Value, 
 
 	//Emit the JSON as a string
 	return js.ValueOf(string(jsons)), nil
+}
+
+// Serializes a struct to JSON and then creates a plain JS object.
+//
+// SigN: toJSObject(): object
+// Type: built-in method; returns `object`
+func (se StructExporter[T]) toJSObject(obj *T, this js.Value, args []js.Value) (js.Value, error) {
+	//Marshal the target object to JSON
+	jsons, err := se.toJson(obj, this, args)
+	if err != nil {
+		return js.ValueOf(nil), err
+	}
+
+	//Convert to a JS Object via `JSON.parse()`
+	return js.Global().Get("JSON").Call("parse", jsons), nil
+}
+
+// Deserializes a struct from a plain JS object.
+//
+// SigN: fromJSObject(jsobj: object): T
+// Type: built-in factory; takes `object`, returns `T`
+func (se StructExporter[T]) fromJSObject(args []js.Value) (*T, error) {
+	//Get the 1st and only argument as an object and derive its JSON string form with `JSON.stringify()`
+	jsobj := args[0]
+	jsons := js.Global().Get("JSON").Call("stringify", jsobj)
+
+	return se.fromJson([]js.Value{jsons})
 }
 
 //-- Object essential methods
