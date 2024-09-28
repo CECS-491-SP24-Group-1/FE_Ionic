@@ -1,0 +1,5 @@
+v = new Vault("7c1e2d3e-7f6b-4c8d-b1a5-3f8f0d1e2b7f", "test");
+console.log(v.toString())
+ks = new KeyStore()
+v.KStore = ks.toJson() 
+console.log(v.toString())

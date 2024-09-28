@@ -1,0 +1,14 @@
+a = new KeyStore();
+a.toLStore("w");
+w = KeyStore.fromLStore("w");
+a.toSStore("x");
+x = KeyStore.fromSStore("x");
+a.toJLStore("y");
+y = KeyStore.fromJLStore("y");
+a.toJSStore("z");
+z = KeyStore.fromJSStore("z");
+console.log("a:", a.toString());
+console.log("w:", w.toString());
+console.log("x:", x.toString());
+console.log("y:", y.toString());
+console.log("z:", z.toString());
