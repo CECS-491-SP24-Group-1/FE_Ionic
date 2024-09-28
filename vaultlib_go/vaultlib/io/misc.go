@@ -2,6 +2,7 @@ package io
 
 import (
 	"reflect"
+	"regexp"
 	"runtime"
 	"strings"
 )
@@ -31,4 +32,16 @@ func SameUnderlyingArray[T any](s1, s2 []T) bool {
 
 	//Compare the address of the last element in each backing array
 	return &s1[0:cap1][cap1-1] == &s2[0:cap2][cap2-1]
+}
+
+// Checks if a string is valid base64.
+func ValidB64(str string) bool {
+	//Define the regex pattern for Base64 validation
+	base64Regex := `^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$`
+
+	//Compile the regex
+	re := regexp.MustCompile(base64Regex)
+
+	//Test the string against the regex
+	return re.MatchString(str)
 }

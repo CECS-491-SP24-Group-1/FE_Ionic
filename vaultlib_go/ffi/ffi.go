@@ -1,7 +1,5 @@
 //go:build js && wasm
 
-//TODO: static functions
-
 package ffi
 
 import (
@@ -54,6 +52,9 @@ type StructExporter[T any] struct {
 
 	//Holds the setters for the struct; the length must match up with `fieldNames`.
 	setters []Setter[T]
+
+	//Holds the static functions for the struct.
+	statics []FWrapper[T] //static type
 }
 
 // Creates a new struct exporter around a given struct.
@@ -143,6 +144,12 @@ func (se *StructExporter[T]) WithSetters(setters ...Setter[T]) *StructExporter[T
 	return se
 }
 
+// Adds static functions to the struct.
+func (se *StructExporter[T]) WithStatics(statics ...FWrapper[T]) *StructExporter[T] {
+	se.statics = statics
+	return se
+}
+
 // Exports a struct for use in JS, given a name to bind it to.
 func (se StructExporter[T]) Export(name string) {
 	//Export the type for JS
@@ -156,21 +163,23 @@ func (se StructExporter[T]) Export(name string) {
 		//Basic deserializers
 		NewFactory(FJsonName, se.fromJson),
 		NewFactory(FGobName, se.fromGob64),
-		//Webstorage deserializers: localStorage GOB
+		//Webstorage deserializers: GOB
 		NewFactory(FLSName, se.fromLStore),
-		//NewFactory(ISSName, se.inLStore),
-		//Webstorage deserializers: sessionStorage GOB
-		//NewFactory(FSSName, se.fromSStore),
-		//NewFactory(ISSName, se.inSStore),
-		//Webstorage deserializers: localStorage JSON
-		//NewFactory(FJLSName, se.fromJLStore),
-		//NewFactory(IJSSName, se.inJLStore),
-		//Webstorage deserializers: sessionStorage JSON
-		//NewFactory(FJSSName, se.fromJSStore),
-		//NewFactory(IJSSName, se.inJSStore),
+		NewFactory(FSSName, se.fromSStore),
+		//Webstorage deserializers: JSON
+		NewFactory(FJLSName, se.fromJLStore),
+		NewFactory(FJSSName, se.fromJSStore),
 	)
 
-	//Register every static factory functions
+	//Add the built-in static functions to the list
+	se.statics = append(se.statics) //Webstorage checkers: GOB
+	//NewFactory(ILSName, se.inLStore),
+	//NewFactory(ISSName, se.inSStore),
+	//Webstorage checkers: JSON
+	//NewFactory(IJLSName, se.inJLStore),
+	//NewFactory(IJSSName, se.inJSStore),
+
+	//Register every static factory function
 	for _, f := range se.factories {
 		//Capture current field information for closure
 		factory := f
@@ -190,6 +199,26 @@ func (se StructExporter[T]) Export(name string) {
 
 		//Register the factory wrapper with the object
 		js.Global().Get(name).Set(factory.Name, js.FuncOf(factWrapper))
+	}
+
+	//Register every static function
+	for _, s := range se.statics {
+		//Capture current field information for closure
+		static := s
+
+		//Create a wrapper function for the static function
+		statWrapper := func(_ js.Value, args []js.Value) interface{} {
+			//Call the static function
+			ret, err := static.CallStatic(args)
+			if err != nil {
+				jsutil.JSFatal(fmt.Errorf("error while running %s::%s(); %s", se.name, static.Name, err))
+				return nil
+			}
+			return ret
+		}
+
+		//Register the factory wrapper with the object
+		js.Global().Get(name).Set(static.Name, js.FuncOf(statWrapper))
 	}
 }
 
@@ -320,10 +349,10 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 		NewMethod(HashcodeName, se.hashcode),
 		NewMethod(ToStringName, se.toString),
 		//Webstorage serializers
-		//NewMethod(TLSName, se.toLStore),
-		//NewMethod(TSSName, se.toSStore),
-		//NewMethod(TJLSName, se.toJLStore),
-		//NewMethod(TJSSName, se.toJSStore),
+		NewMethod(TLSName, se.toLStore),
+		NewMethod(TSSName, se.toSStore),
+		NewMethod(TJLSName, se.toJLStore),
+		NewMethod(TJSSName, se.toJSStore),
 	)
 
 	//Register every instance method

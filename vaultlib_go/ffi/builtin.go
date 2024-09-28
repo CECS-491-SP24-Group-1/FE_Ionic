@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"syscall/js"
 
 	"wraith.me/vaultlib/jsutil"
@@ -25,20 +26,22 @@ var (
 	ToStringName = "toString"
 
 	FLSName = "fromLStore"
-	ILSName = "inLStore"
 	TLSName = "toLStore"
 
 	FSSName = "fromSStore"
-	ISSName = "inSStore"
 	TSSName = "toSStore"
 
 	FJLSName = "fromJLStore"
-	IJLSName = "inJLStore"
 	TJLSName = "toJLStore"
 
 	FJSSName = "fromJSStore"
-	IJSSName = "inJSStore"
 	TJSSName = "toJSStore"
+
+	ILSName = "inLStore"
+	ISSName = "inSStore"
+
+	IJLSName = "inJLStore"
+	IJSSName = "inJSStore"
 )
 
 var (
@@ -55,7 +58,7 @@ var (
 func (se StructExporter[T]) fromGob64(args []js.Value) (*T, error) {
 	str := args[0].String()
 	obj := new(T)
-	err := io.GString2Obj(obj, &str)
+	err := io.GString2Obj([]byte(str), obj)
 	return obj, err
 }
 
@@ -64,12 +67,11 @@ func (se StructExporter[T]) fromGob64(args []js.Value) (*T, error) {
 // SigN: toGob64(): string
 // Type: built-in method; returns `string`
 func (se StructExporter[T]) toGob64(obj *T, _ js.Value, _ []js.Value) (js.Value, error) {
-	str := ""
-	err := io.Obj2GString(&str, obj)
-	return js.ValueOf(str), err
+	str, err := io.Obj2GString(obj)
+	return js.ValueOf(string(str)), err
 }
 
-// Deserializes a struct from JSON
+// Deserializes a struct from JSON.
 //
 // SigN: fromJson(json: string): T
 // Type: built-in factory; takes `string`, returns `object`
@@ -83,7 +85,7 @@ func (se StructExporter[T]) fromJson(args []js.Value) (*T, error) {
 	return obj, err
 }
 
-// Serializes a struct to JSON
+// Serializes a struct to JSON.
 //
 // SigN: toJson(): string
 // Type: built-in method; returns `string`
@@ -176,24 +178,141 @@ func (se StructExporter[T]) toString(_ *T, this js.Value, _ []js.Value) (js.Valu
 // Type: built-in factory; takes `string`, returns `object`
 func (se StructExporter[T]) fromLStore(args []js.Value) (*T, error) {
 	key := args[0].String()
-	return se.fromWebStorage(localstorage, key)
+	return se.fromWebStorage(localstorage, io.GStringUnmarshal[T], key)
+}
+
+// Serializes a struct to `localStorage` using Gob64 encoding.
+//
+// SigN: toLStore(key: string): void
+// Type: built-in method; takes `string`, returns `void`
+func (se StructExporter[T]) toLStore(obj *T, _ js.Value, args []js.Value) (js.Value, error) {
+	key := args[0].String()
+	err := se.toWebStorage(localstorage, obj, io.GStringMarshal[T], key)
+	return js.ValueOf(nil), err
+}
+
+// Deserializes a struct from `sessionStorage` that was encoded using Gob64.
+//
+// SigN: fromSStore(key: string): T
+// Type: built-in factory; takes `string`, returns `object`
+func (se StructExporter[T]) fromSStore(args []js.Value) (*T, error) {
+	key := args[0].String()
+	return se.fromWebStorage(sessionstorage, io.GStringUnmarshal[T], key)
+}
+
+// Serializes a struct to `sessionStorage` using Gob64 encoding.
+//
+// SigN: toSStore(key: string): void
+// Type: built-in method; takes `string`, returns `void`
+func (se StructExporter[T]) toSStore(obj *T, _ js.Value, args []js.Value) (js.Value, error) {
+	key := args[0].String()
+	err := se.toWebStorage(sessionstorage, obj, io.GStringMarshal[T], key)
+	return js.ValueOf(nil), err
+}
+
+// Deserializes a struct from `localStorage` that was encoded using JSON.
+//
+// SigN: fromJLStore(key: string): T
+// Type: built-in factory; takes `string`, returns `object`
+func (se StructExporter[T]) fromJLStore(args []js.Value) (*T, error) {
+	key := args[0].String()
+	return se.fromWebStorage(localstorage, json.Unmarshal, key)
+}
+
+// Serializes a struct to `localStorage` using JSON encoding.
+//
+// SigN: toJLStore(key: string): void
+// Type: built-in method; takes `string`, returns `void`
+func (se StructExporter[T]) toJLStore(obj *T, _ js.Value, args []js.Value) (js.Value, error) {
+	key := args[0].String()
+	err := se.toWebStorage(localstorage, obj, json.Marshal, key)
+	return js.ValueOf(nil), err
+}
+
+// Deserializes a struct from `sessionStorage` that was encoded using JSON.
+//
+// SigN: fromJSStore(key: string): T
+// Type: built-in factory; takes `string`, returns `object`
+func (se StructExporter[T]) fromJSStore(args []js.Value) (*T, error) {
+	key := args[0].String()
+	return se.fromWebStorage(sessionstorage, json.Unmarshal, key)
+}
+
+// Serializes a struct to `sessionStorage` using JSON encoding.
+//
+// SigN: toJSStore(key: string): void
+// Type: built-in method; takes `string`, returns `void`
+func (se StructExporter[T]) toJSStore(obj *T, _ js.Value, args []js.Value) (js.Value, error) {
+	key := args[0].String()
+	err := se.toWebStorage(sessionstorage, obj, json.Marshal, key)
+	return js.ValueOf(nil), err
 }
 
 //
 //-- Backends for webstorage stuff
 //
 
-func (se StructExporter[T]) fromWebStorage(engine *jsutil.Storage, key string) (*T, error) {
-	//Ensure the vault exists in storage
-	/*
-		if !engine.Has(key){
-			return nil, fmt.Errorf("%w; key: %s", NotInWebStorageError, key)
-		}
-	*/
+// Returns a struct object from webstorage by key using a given deserializer.
+func (se StructExporter[T]) fromWebStorage(
+	engine *jsutil.Storage,
+	deserializer func(data []byte, v any) error,
+	key string,
+) (*T, error) {
+	//Ensure the object exists in storage
+	if !engine.Has(key) {
+		return nil, fmt.Errorf("%w; key: %s", NotInWebStorageError, key)
+	}
 
-	return new(T), nil
+	//Retrieve the object from webstorage by its key
+	ser := engine.Get(key)
+
+	//Deserialize the object from a `[]byte`
+	obj := new(T)
+	if err := deserializer([]byte(ser), obj); err != nil {
+		return nil, err
+	}
+
+	return obj, nil
 }
 
-func (se StructExporter[T]) toWebStorage(engine *jsutil.Storage, target *T, key string) error {
+// Checks if a struct object exists in webstorage by its key.
+func (se StructExporter[T]) inWebStorage(engine *jsutil.Storage, _ *T, key string, binary bool) bool {
+	//Ensure the object exists in storage
+	if !engine.Has(key) {
+		return false
+	}
+
+	//Retrieve the object from webstorage by its key
+	ser := engine.Get(key)
+
+	//Determine if the data is valid, given the requirements
+	//`json.Valid()` is used for plain and `io.ValidB64()` is used for binary
+	if binary {
+		return io.ValidB64(ser)
+	} else {
+		return json.Valid([]byte(ser))
+	}
+}
+
+// Persists a struct object to webstorage by key using a given serializer.
+func (se StructExporter[T]) toWebStorage(
+	engine *jsutil.Storage,
+	target *T,
+	serializer func(v any) ([]byte, error),
+	key string,
+) error {
+	//Serialize the object to a `[]byte`
+	ser, err := serializer(target)
+	if err != nil {
+		return err
+	}
+
+	//Ensure the object can be stored before continuing
+	if !engine.CanStore() {
+		return fmt.Errorf("%w; engine: %s", jsutil.CannotStoreError, engine.EngineName())
+	}
+
+	//Persist the object in webstorage by its key
+	engine.Set(key, string(ser))
 	return nil
 }

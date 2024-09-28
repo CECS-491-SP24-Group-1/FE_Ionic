@@ -37,3 +37,27 @@ func Obj2GString[T any](obj *T) ([]byte, error) {
 	gs := base64.StdEncoding.EncodeToString(buf.Bytes())
 	return []byte(gs), nil
 }
+
+// Adapter for `GString2Obj()` that brings its signature to parity with `json.Unmarshal()`.
+func GStringUnmarshal[T any](data []byte, v any) error {
+	//Try to type assert as a generic pointer
+	resultPtr, ok := v.(*T)
+	if !ok {
+		//Type assert as a normal generic instead
+		result, _ := v.(T)
+		return GString2Obj(data, &result)
+	}
+	return GString2Obj(data, resultPtr)
+}
+
+// Adapter for `Obj2GString()` that brings its signature to parity with `json.Marshal()`.
+func GStringMarshal[T any](v any) ([]byte, error) {
+	//Try to type assert as a generic pointer
+	resultPtr, ok := v.(*T)
+	if !ok {
+		//Type assert as a normal generic instead
+		result, _ := v.(T)
+		return Obj2GString(&result)
+	}
+	return Obj2GString(resultPtr)
+}

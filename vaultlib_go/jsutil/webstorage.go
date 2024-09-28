@@ -2,7 +2,14 @@
 
 package jsutil
 
-import "syscall/js"
+import (
+	"errors"
+	"syscall/js"
+)
+
+var (
+	CannotStoreError = errors.New("the current webstorage engine cannot store object")
+)
 
 // Storage represents a Web Storage object (either localStorage or sessionStorage).
 // See: https://html.spec.whatwg.org/multipage/webstorage.html#the-storage-interface
@@ -98,7 +105,7 @@ func getLocalstorage() js.Value {
 
 // Gets the sessionStorage API from the browser.
 func getSessionstorage() js.Value {
-	return getWebStorageBackend("localStorage")
+	return getWebStorageBackend("sessionStorage")
 }
 
 // Gets the specified API for webStorage.

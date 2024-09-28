@@ -27,6 +27,7 @@ const (
 	GetterFunc
 	SetterFunc
 	MethodFunc
+	StaticFunc
 )
 
 // NewFunc creates a new FuncWrapper.
@@ -46,11 +47,14 @@ type (
 	// Defines the expected structure of a getter function.
 	Getter[T any] func(*T) (js.Value, error)
 
-	// Defines the expected structure of an instance function, aka: a method.
+	// Defines the expected structure of a setter function.
 	Setter[T any] func(*T, js.Value) error
 
-	// Defines the expected structure of a setter function.
+	// Defines the expected structure of an instance function, aka: a method.
 	Method[T any] func(*T, js.Value, []js.Value) (js.Value, error)
+
+	// Defines the expected structure of a static function.
+	Static[T any] func([]js.Value) (js.Value, error)
 )
 
 // Helper functions to create specific function wrappers.
@@ -91,6 +95,15 @@ func NewMethod[T any](n string, f Method[T]) FWrapper[T] {
 	return NewFunc[T](fname, f, MethodFunc)
 }
 
+// Creates a new static function wrapper with name `n`.
+func NewStatic[T any](n string, f Method[T]) FWrapper[T] {
+	fname := n
+	if fname == "" {
+		fname = io.GetFunctionName(f)
+	}
+	return NewFunc[T](fname, f, StaticFunc)
+}
+
 // CallFactory calls a factory function.
 func (fw FWrapper[T]) CallFactory(args []js.Value) (*T, error) {
 	if fw.Type != FactoryFunc {
@@ -117,7 +130,7 @@ func (fw FWrapper[T]) CallGetter(instance *T) (js.Value, error) {
 	return js.Undefined(), fmt.Errorf("invalid getter function")
 }
 
-// CallSetter calls a setter function
+// CallSetter calls a setter function.
 func (fw FWrapper[T]) CallSetter(instance *T, value js.Value) error {
 	if fw.Type != SetterFunc {
 		return fmt.Errorf("expected SetterFunc, got %v", fw.Type)
@@ -130,7 +143,7 @@ func (fw FWrapper[T]) CallSetter(instance *T, value js.Value) error {
 	return fmt.Errorf("invalid setter function")
 }
 
-// CallMethod calls a method function
+// CallMethod calls a method function.
 func (fw FWrapper[T]) CallMethod(instance *T, this js.Value, args []js.Value) (js.Value, error) {
 	if fw.Type != MethodFunc {
 		return js.Undefined(), fmt.Errorf("expected MethodFunc, got %v", fw.Type)
@@ -141,4 +154,17 @@ func (fw FWrapper[T]) CallMethod(instance *T, this js.Value, args []js.Value) (j
 	}
 
 	return js.Undefined(), fmt.Errorf("invalid method function")
+}
+
+// CallStatic calls a static function.
+func (fw FWrapper[T]) CallStatic(args []js.Value) (js.Value, error) {
+	if fw.Type != StaticFunc {
+		return js.Undefined(), fmt.Errorf("expected StaticFunc, got %v", fw.Type)
+	}
+
+	if m, ok := fw.Func.(Static[T]); ok {
+		return m(args)
+	}
+
+	return js.Undefined(), fmt.Errorf("invalid static function")
 }
