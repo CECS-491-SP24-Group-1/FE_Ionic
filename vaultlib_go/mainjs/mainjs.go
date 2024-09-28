@@ -33,8 +33,8 @@ func main() {
 	jsbind.ExportKS()
 	jsbind.ExportVault()
 
+	//TEMP: testing
 	ffiexample.ExportUser()
-
 	//wasm.Alert("eee")
 
 	//

@@ -300,10 +300,9 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 				//This is the case for the following types: `string`
 				skipJsonSerial := false
 				if input.Type() == js.TypeString {
-					fmt.Println("string type in")
 					skipJsonSerial = true
 				}
-				fmt.Printf("incoming type: %s\n", input.Type().String())
+				//fmt.Printf("incoming type: %s\n", input.Type().String())
 
 				//Skip 1st pass serialization if requested
 				jsons := input.String()
