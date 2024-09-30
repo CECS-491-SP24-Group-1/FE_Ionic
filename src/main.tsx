@@ -1,18 +1,14 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { IonApp, IonRouterOutlet, setupIonicReact, IonSpinner } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
-import { Route } from "react-router";
-
-import { ToastContainer, toast } from "react-toastify";
-
-import "react-toastify/dist/ReactToastify.css";
+import { IonApp, setupIonicReact, IonSpinner } from "@ionic/react";
+import { ToastContainer } from "react-toastify";
 
 import App from "./App";
 import useWasm from "./wasm_util/use_wasm";
 
 import "./index.scss";
 
+import "react-toastify/dist/ReactToastify.css";
 import "@ionic/react/css/core.css";
 /* Basic CSS for apps built with Ionic */
 import "@ionic/react/css/normalize.css";

@@ -13,10 +13,10 @@ import { home, camera, settings, logIn } from "ionicons/icons";
 
 // Import pages
 import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Login from "./pages/login_register/Login";
 import CameraPage from "./pages/Camera";
 import Settings from "./pages/Settings";
-import Register from "./pages/Register";
+import Register from "./pages/login_register/Register";
 
 const App: React.FC = () => {
 	return (

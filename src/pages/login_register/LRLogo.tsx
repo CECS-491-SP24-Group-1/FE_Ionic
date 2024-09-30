@@ -1,4 +1,4 @@
-import logo from "../assets/images/glock_primary.svg";
+import logo from "../../assets/images/glock_primary.svg";
 import "./LRLogo.scss";
 
 const LRLogo: React.FC = () => {
