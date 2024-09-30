@@ -78,6 +78,7 @@ export function Root() {
 	//TODO: add registration and login stuff here
 	return (
 		<IonApp>
+			<App />
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}
@@ -90,7 +91,6 @@ export function Root() {
 				pauseOnHover
 				theme="dark"
 			/>
-			<App />
 		</IonApp>
 	);
 }
