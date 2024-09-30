@@ -76,12 +76,19 @@ ion-content::part(scroll) {
 	}
 }
 
-.continue-button {
-	font-weight: bold;
-	padding: 6px 0;
-	--background: #1f1f6d;
-	--border-radius: 4px;
-	height: 55px;
+form {
+	ion-button {
+		font-weight: bold;
+		padding: 6px 0;
+		--background: #1f1f6d;
+		--border-radius: 4px;
+		height: 55px;
+	}
+
+	#ksFingerprint input {
+		font-size: 10px;
+		font-family: "Courier New", Courier, monospace;
+	}
 }
 
 .terms-text,

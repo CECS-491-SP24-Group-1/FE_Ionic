@@ -14,14 +14,15 @@ declare global {
 	/** Represents a keystore, which contains a public and private Ed25519 key. */
 	interface KeyStoreFunctions extends FFIFactories<KeyStore> {
 		/** Creates a new keystore object. */
-		new(): KeyStore;
+		new (): KeyStore;
 		/** Signs a given message with the private key of the keystore. */
 		sign(message: string): string;
 		/** Verifies that a given message and signature were signed by this keystore's private key. */
 		verify(message: string, signature: string): boolean;
 	}
+	/** Use `InstanceType<typeof KeyStore>` to use this as a type in TS. */
 	const KeyStore: KeyStoreFunctions;
 }
 
 //This empty export is necessary to make this a module
-export { };
+export {};

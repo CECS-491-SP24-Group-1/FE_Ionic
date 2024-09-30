@@ -6,38 +6,45 @@ import {
 	IonButton,
 	IonItem,
 	IonLabel,
-	IonSelect,
-	IonSelectOption,
 	IonText
 } from "@ionic/react";
 import "./LoginRegister.scss";
-import logo from "../assets/images/glock_primary.svg";
 import { IonRouterLink } from "@ionic/react";
 import LRLogo from "./LRLogo";
+import { toast } from "react-toastify";
+
 const Register: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
-	const [month, setMonth] = useState<string | null>(null);
-	const [day, setDay] = useState<string | null>(null);
-	const [year, setYear] = useState<string | null>(null);
-	const months = [
-		"January",
-		"February",
-		"March",
-		"April",
-		"May",
-		"June",
-		"July",
-		"August",
-		"September",
-		"October",
-		"November",
-		"December"
-	];
+	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null);
+	const [showFingerprint, setShowFingerprint] = useState(false);
+	const [isKGBtnDisabled, setIsKGBtnDisabled] = useState(false);
 
+	//Handles form submissions
 	const handleSubmit = (e: React.FormEvent) => {
+		//Prevent the default form submission behavior
 		e.preventDefault();
-		// Handle the form submission logic
+
+		//Check if there is a keystore present
+		if (keystore === null) {
+			toast.error("No keystore found. Please generate one before continuing.", {});
+			return;
+		}
+
+		console.log("form submission");
+	};
+
+	//Handles keystore generation
+	const handleKeygen = () => {
+		//Create a new keystore object
+		const ks = new KeyStore();
+
+		//Assign values and show the fingerprint
+		setKeyStore(ks);
+		setShowFingerprint(true);
+
+		//Disable the button
+		setIsKGBtnDisabled(true);
 	};
 
 	return (
@@ -49,6 +56,18 @@ const Register: React.FC = () => {
 
 					{/* Registration Form */}
 					<form onSubmit={handleSubmit}>
+						{/* Username Input */}
+						<IonItem>
+							<IonLabel position="stacked">
+								Username {username === "" && <span style={{ color: "red" }}>*</span>}
+							</IonLabel>
+							<IonInput
+								value={username}
+								onIonChange={(e: CustomEvent) => setUsername(e.detail.value!)}
+								required
+							/>
+						</IonItem>
+
 						{/* Email Input */}
 						<IonItem>
 							<IonLabel position="stacked">
@@ -62,64 +81,20 @@ const Register: React.FC = () => {
 							/>
 						</IonItem>
 
-						{/* Username Input */}
-						<IonItem>
-							<IonLabel position="stacked">
-								Username {username === "" && <span style={{ color: "red" }}>*</span>}
-							</IonLabel>
-							<IonInput
-								value={username}
-								onIonChange={(e: CustomEvent) => setUsername(e.detail.value!)}
-								required
-							/>
+						{/* Keystore generation */}
+						<IonButton
+							shape="round"
+							expand="full"
+							id="genKSBtn"
+							onClick={handleKeygen}
+							disabled={isKGBtnDisabled}>
+							Generate KeyStore
+						</IonButton>
+
+						<IonItem id="ksFingerprint" hidden={!showFingerprint}>
+							<IonLabel position="stacked">Fingerprint</IonLabel>
+							<IonInput type="text" value={keystore?.fingerprint} readonly={true} />
 						</IonItem>
-
-						{/* Date of Birth - Month, Day, Year */}
-						<div className="dob-section">
-							<IonLabel>
-								Date of Birth{" "}
-								{(month === null || day === null || year === null) && (
-									<span style={{ color: "red" }}>*</span>
-								)}
-							</IonLabel>
-							<div className="dob-inputs">
-								<IonSelect
-									shape="round"
-									placeholder="Month"
-									value={month}
-									onIonChange={(e: CustomEvent) => setMonth(e.detail.value)}>
-									{months.map((monthName) => (
-										<IonSelectOption key={monthName} value={monthName}>
-											{monthName}
-										</IonSelectOption>
-									))}
-								</IonSelect>
-
-								<IonSelect
-									shape="round"
-									placeholder="Day"
-									value={day}
-									onIonChange={(e: CustomEvent) => setDay(e.detail.value)}>
-									{Array.from({ length: 31 }, (_, i) => (
-										<IonSelectOption key={i} value={i + 1}>
-											{i + 1}
-										</IonSelectOption>
-									))}
-								</IonSelect>
-
-								<IonSelect
-									shape="round"
-									placeholder="Year"
-									value={year}
-									onIonChange={(e: CustomEvent) => setYear(e.detail.value)}>
-									{Array.from({ length: 100 }, (_, i) => (
-										<IonSelectOption key={i} value={2024 - i}>
-											{2024 - i}
-										</IonSelectOption>
-									))}
-								</IonSelect>
-							</div>
-						</div>
 
 						{/* Continue Button */}
 						<IonButton

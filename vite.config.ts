@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
-const maxCacheSize = 5 * 1000000; // Increased to ~5MB
+const maxCacheSize = 10 * 1000000; // Increased to ~10MB
 
 // https://vitejs.dev/config/
 export default defineConfig({

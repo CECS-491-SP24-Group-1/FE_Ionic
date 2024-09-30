@@ -11,7 +11,6 @@ const Settings: React.FC = () => {
 	/*
 	const x = new KeyStore();
 	x.sk;
-	x.
 	*/
 
 	/*

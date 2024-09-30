@@ -4,6 +4,10 @@ import { IonApp, IonRouterOutlet, setupIonicReact, IonSpinner } from "@ionic/rea
 import { IonReactRouter } from "@ionic/react-router";
 import { Route } from "react-router";
 
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+
 import App from "./App";
 import useWasm from "./wasm_util/use_wasm";
 
@@ -72,7 +76,23 @@ export function Root() {
 
 	//Render the component when vaultlib loads successfully
 	//TODO: add registration and login stuff here
-	return <App />;
+	return (
+		<IonApp>
+			<ToastContainer
+				position="top-right"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="dark"
+			/>
+			<App />
+		</IonApp>
+	);
 }
 
 //Creates the root element in the HTML DOM.
