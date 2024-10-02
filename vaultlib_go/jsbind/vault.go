@@ -41,8 +41,8 @@ func vault_new(args []js.Value) (*vault.Vault, error) {
 
 // fromKS(ks: KeyStore): Vault
 func vault_fromKS(args []js.Value) (*vault.Vault, error) {
-	//Get the arguments from the function
-	ks, err := keystore.FromJSON(jsutil.Stringify(args[0]))
+	//Get the argument from the function as a keystore
+	ks, err := ffi.Cast[keystore.KeyStore](args[0])
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func vault_fromKS(args []js.Value) (*vault.Vault, error) {
 	//Create a new vault from the keystore
 	//The other fields are intended to be filled later
 	return &vault.Vault{
-		ID: util.MustNewUUID7(),
+		ID:     util.MustNewUUID7(),
 		KStore: *ks,
 	}, nil
 }
