@@ -5,11 +5,11 @@ import {
 	IonTabBar,
 	IonTabButton,
 	IonLabel,
-	IonIcon
+	IonIcon,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
-import { home, camera, settings, logIn } from "ionicons/icons";
+import { home, camera, settings, logIn, chatbubble } from "ionicons/icons";
 
 // Import pages
 import Home from "./pages/Home";
@@ -17,6 +17,7 @@ import Login from "./pages/login_register/Login";
 import CameraPage from "./pages/Camera";
 import Settings from "./pages/Settings";
 import Register from "./pages/login_register/Register";
+import Chat from "./pages/Chats";
 
 const App: React.FC = () => {
 	return (
@@ -29,6 +30,7 @@ const App: React.FC = () => {
 					<Route path="/login" component={Login} exact={true} />
 					<Route path="/camera" component={CameraPage} exact={true} />
 					<Route path="/settings" component={Settings} exact={true} />
+					<Route path="/chat" component={Chat} exact={true} />
 					<Route exact path="/" render={() => <Redirect to="/home" />} />
 				</IonRouterOutlet>
 
@@ -42,6 +44,11 @@ const App: React.FC = () => {
 					<IonTabButton tab="login" href="/login">
 						<IonIcon icon={logIn} />
 						<IonLabel>Login</IonLabel>
+					</IonTabButton>
+
+					<IonTabButton tab="chat" href="/chat">
+						<IonIcon icon={chatbubble} />
+						<IonLabel>Chat</IonLabel>
 					</IonTabButton>
 
 					<IonTabButton tab="home" href="/home">

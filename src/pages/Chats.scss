@@ -1,0 +1,72 @@
+.chat-container {
+    display: flex;
+    height: 100vh;
+    /* Take up the full height of the view */
+}
+
+.chat-list {
+    width: 25%;
+    /* Sidebar takes up 25% of the width */
+    border-right: 1px solid #ccc;
+    /* Divider between chat list and chat view */
+    overflow-y: auto;
+    /* Allow scrolling if the chat list is long */
+}
+
+.chat-view {
+    width: 75%;
+    /* Chat view takes up 75% of the width */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.chat-header {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    /* This will expand to fill available space */
+    padding: 10px;
+    background-color: #f0f0f0;
+    overflow-y: auto;
+    /* Allow scrolling for messages */
+}
+
+.chat-bubble {
+    max-width: 70%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 20px;
+    position: relative;
+}
+
+.chat-bubble.from-me {
+    background-color: #4b8fea;
+    color: white;
+    margin-left: auto;
+}
+
+.chat-bubble.from-them {
+    background-color: #e5e5ea;
+    color: black;
+}
+
+.chat-bubble span {
+    display: block;
+    font-size: 0.8rem;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.ion-no-border {
+    border-top: none;
+}
+
+.ion-padding {
+    padding: 0;
+    /* Override Ionic default padding */
+}
