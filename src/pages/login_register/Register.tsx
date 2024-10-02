@@ -11,6 +11,7 @@ import {
 	IonText
 } from "@ionic/react";
 import "./LoginRegister.scss";
+import axios from "axios";
 import { IonRouterLink } from "@ionic/react";
 import LRLogo from "./LRLogo";
 import { toast } from "react-toastify";
@@ -23,7 +24,7 @@ const Register: React.FC = () => {
 	const [isKGBtnDisabled, setIsKGBtnDisabled] = useState(false);
 
 	//Handles form submissions
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
 
@@ -31,6 +32,23 @@ const Register: React.FC = () => {
 		if (keystore === null) {
 			toast.error("No keystore found. Please generate one before continuing.", {});
 			return;
+		}
+
+		const payload = {
+			username: username,
+			email: email,
+			pubkey: keystore.pk
+		};
+
+		try {
+			const response = await axios.post(
+				`${import.meta.env.VITE_API_URL}/auth/register`,
+				payload,
+				{ withCredentials: true }
+			);
+			console.log(response);
+		} catch (error) {
+			console.error("Error creating account:", error);
 		}
 
 		console.log("form submission");
