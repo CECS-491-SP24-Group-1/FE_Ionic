@@ -111,7 +111,7 @@ func JSWarn(warns ...string) {
 	jsLog("warn", warns...)
 }
 
-//Calls `JSON.parse()` on a given string.
+// Calls `JSON.parse()` on a given string.
 func Parse[T js.Value | string](val T) js.Value {
 	return js.Global().Get("JSON").Call("parse", val)
 }
@@ -130,7 +130,7 @@ func RetJObj[T any](v T) js.Value {
 	return Parse(jsons)
 }
 
-//Calls `JSON.stringify()` on a given JS val.
+// Calls `JSON.stringify()` on a given JS val.
 func Stringify(val js.Value) string {
 	return js.Global().Get("JSON").Call("stringify", val).String()
 }
