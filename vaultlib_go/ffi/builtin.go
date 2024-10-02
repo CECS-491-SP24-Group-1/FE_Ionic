@@ -112,7 +112,6 @@ func (se StructExporter[T]) toJSObject(obj *T, this js.Value, args []js.Value) (
 	}
 
 	//Convert to a JS Object via `JSON.parse()`
-
 	return jsutil.Parse(jsons), nil
 }
 
