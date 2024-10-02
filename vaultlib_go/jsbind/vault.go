@@ -50,6 +50,7 @@ func vault_fromKS(args []js.Value) (*vault.Vault, error) {
 	//Create a new vault from the keystore
 	//The other fields are intended to be filled later
 	return &vault.Vault{
+		ID: util.MustNewUUID7(),
 		KStore: *ks,
 	}, nil
 }
