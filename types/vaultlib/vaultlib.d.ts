@@ -14,7 +14,7 @@ declare global {
 	/** Represents a keystore, which contains a public and private Ed25519 key. */
 	interface KeyStoreFunctions extends FFIFactories<KeyStore> {
 		/** Creates a new keystore object. */
-		new(): KeyStore;
+		new (): KeyStore;
 		/** Signs a given message with the private key of the keystore. */
 		sign(message: string): string;
 		/** Verifies that a given message and signature were signed by this keystore's private key. */
@@ -26,7 +26,7 @@ declare global {
 	/** Represents a vault, which contains a keystore, conversations, sessions, etc. */
 	interface VaultFunctions extends FFIFactories<Vault> {
 		/** Creates a new vault object. */
-		new(): Vault;
+		new (): Vault;
 
 		/** Creates a new vault object out of an existing keystore. */
 		fromKS(ks: KeyStore): Vault;
@@ -36,4 +36,4 @@ declare global {
 }
 
 //This empty export is necessary to make this a module
-export { };
+export {};
