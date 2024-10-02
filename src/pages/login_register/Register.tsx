@@ -16,6 +16,8 @@ import { IonRouterLink } from "@ionic/react";
 import LRLogo from "./LRLogo";
 import { toast } from "react-toastify";
 
+import { prettyError } from "../../util/http_util";
+
 const Register: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
@@ -41,17 +43,21 @@ const Register: React.FC = () => {
 		};
 
 		try {
+			//Send the request
 			const response = await axios.post(
 				`${import.meta.env.VITE_API_URL}/auth/register`,
-				payload,
-				{ withCredentials: true }
+				payload
 			);
-			console.log(response);
-		} catch (error) {
-			console.error("Error creating account:", error);
-		}
 
-		console.log("form submission");
+			//Report the creation of the account
+			const user: any = response.data.payloads[0];
+			toast.info(`Successfully created user ${user.username} <${user.id}>`);
+			console.log(user);
+		} catch (error: any) {
+			const response: HttpResponse<any> = error.response.data;
+			console.error("Error creating account:", prettyError(response));
+			toast.error(`Failed to create account: ${prettyError(response)}`);
+		}
 	};
 
 	//Handles keystore generation

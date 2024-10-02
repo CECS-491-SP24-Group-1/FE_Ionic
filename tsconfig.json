@@ -22,7 +22,8 @@
 	},
 	"include": [
 		"./src/**/*", // Include all files in the src directory
-		"./types/**/*" // Ensure to include your types directory if it exists
+		"./types/**/*.d.ts",
+		"./types/**/*.ts"
 	],
 	"references": [
 		{
