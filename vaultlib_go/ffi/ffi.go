@@ -268,9 +268,11 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 			//Check if the getter array has the necessary function and it's non-nil
 			var val js.Value = js.ValueOf(nil)
 			var err error
-			if !se.flags.IgnoreGettersSetters && len(se.getters) >= idx && se.getters[idx] != nil {
-				//Call the getter
-				val, err = se.getters[idx](obj)
+			if !se.flags.IgnoreGettersSetters && len(se.getters) > idx {
+				//Call the getter if its non-nil
+				if se.getters[idx] != nil {
+					val, err = se.getters[idx](obj)
+				}
 			} else {
 				//Marshal the current field to JSON and emit it as a JSONObject via `JSON.parse()`
 				//fmt.Printf("using built-in getter for symbol %s\n", fname)
@@ -292,9 +294,11 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 			//Check if the setter array has the necessary function and it's non-nil
 			var err error
 			input := args[0]
-			if !se.flags.IgnoreGettersSetters && len(se.setters) >= idx && se.setters[idx] != nil {
-				//Call the setter
-				err = se.setters[idx](obj, input)
+			if !se.flags.IgnoreGettersSetters && len(se.setters) > idx {
+				//Call the setter if its non-nil
+				if se.setters[idx] != nil {
+					err = se.setters[idx](obj, input)
+				}
 			} else {
 				//fmt.Printf("using built-in setter for symbol %s\n", fname)
 				//Determine if initial JSON serialization can be skipped
