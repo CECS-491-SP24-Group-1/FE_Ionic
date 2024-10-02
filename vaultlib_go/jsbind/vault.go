@@ -19,7 +19,7 @@ func ExportVault() {
 	exp := ffi.NewStructExporter(
 		vault.Vault{}, vault_new,
 	).WithFactories(
-	ffi.NewFactory("fromKS", vault_fromKS),
+		ffi.NewFactory("fromKS", vault_fromKS),
 	).WithMethods(
 	//ffi.NewMethod("sign", ks_sign),
 	//ffi.NewMethod("verify", ks_verify),
