@@ -276,7 +276,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 				//fmt.Printf("using built-in getter for symbol %s\n", fname)
 				var jsonb []byte
 				jsonb, err = json.Marshal(fvalue.Interface())
-				val = js.Global().Get("JSON").Call("parse", string(jsonb))
+				val = jsutil.Parse(string(jsonb))
 			}
 
 			//Handle any errors that occurred
@@ -309,7 +309,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 				jsons := input.String()
 				if !skipJsonSerial {
 					//Serialize the input value to JSON via `JSON.stringify()`
-					jsons = js.Global().Get("JSON").Call("stringify", input).String()
+					jsons = jsutil.Stringify(input)
 				}
 
 				//Using reflection, derive the "zero value" of the field at index i in the struct
