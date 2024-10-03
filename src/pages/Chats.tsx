@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -26,6 +26,10 @@ const ChatPage: React.FC = () => {
     { from: 'Me', text: 'Hey, Mariana', time: '10:45 AM' },
     { from: 'Me', text: 'Sure, just give me a call!', time: '10:46 AM' },
   ]);
+  // Input 
+  const [input, setInput] = useState('');
+  // Socket initializaition
+  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -34,6 +38,31 @@ const ChatPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    // Open a WebSocket connection to the server
+    const newSocket = new WebSocket('ws://localhost:8080');
+
+    // Set the socket to state so that it can be accessed later
+    setSocket(newSocket);
+
+    // Handle incoming messages
+    newSocket.onmessage = (event) => {
+      setMessages((prevMessages) => [...prevMessages, event.data]);
+    };
+
+    // Clean up the socket when the component is unmounted
+    return () => {
+      newSocket.close();
+    };
+  }, []);
+
+  const sendMessage = () => {
+    if (socket && input.trim() !== '') {
+      socket.send(input);
+      setInput(''); // Clear the input field
+    }
+  };
+  
   return (
     <IonPage>
       <IonHeader>
