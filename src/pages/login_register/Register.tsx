@@ -56,7 +56,7 @@ const Register: React.FC = () => {
 
 			//Report the creation of the account
 			const user: any = response.data.payloads[0];
-			toast.info(`Successfully created user ${user.username} <${user.id}>`);
+			toast.success(`Successfully created user ${user.username} <${user.id}>`);
 			console.log(user);
 		} catch (error: any) {
 			//Check if the error has a response section
