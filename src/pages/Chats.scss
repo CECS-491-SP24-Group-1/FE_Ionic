@@ -1,9 +1,9 @@
+$primary-color: #4b8fea;
+
 .chat-container {
     display: flex;
     height: 100vh;
-    /* Full height of the viewport */
     width: 100vw;
-    /* Full width of the viewport */
 }
 
 .chat-list {
@@ -15,24 +15,16 @@
     position: relative;
 }
 
-.chat-view {
-    flex-grow: 2;
-    max-width: 70%;
+.chat-content {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    flex-grow: 2;
+    max-width: 70%;
     background: white;
-    /* Make sure the chat view has a background */
-    overflow-y: auto;
-    /* Ensure it can scroll if content exceeds the view */
 }
 
-
-
-
-.chat-messages {
+.chat-view {
     flex-grow: 1;
-    padding: 10px;
     background-color: #f0f0f0;
     overflow-y: auto;
     background-image: url('../assets/images/chat_background.jpg');
@@ -41,6 +33,21 @@
     opacity: 1;
     z-index: 1;
 }
+
+.chat-header {
+    position: relative;
+
+    .chat-header-icons {
+        font-size: 1.5rem;
+        position: absolute;
+        right: 10px;
+        display: flex;
+        gap: 15px;
+        z-index: 20;
+        color: $primary-color;
+    }
+}
+
 
 .chat-bubble {
     max-width: 70%;
@@ -51,7 +58,7 @@
 }
 
 .chat-bubble.from-me {
-    background-color: #4b8fea;
+    background-color: $primary-color;
     color: white;
     margin-left: auto;
 }
@@ -69,14 +76,17 @@
 }
 
 .chat-input {
-    border-top: none;
-    /* Remove border on the footer */
+    flex-shrink: 0;
+    max-width: 70%;
+    margin-left: auto;
+    background-color: white;
+
+    ion-input {
+        text-align: left;
+        padding-right: 10px;
+    }
 }
 
-.ion-padding {
-    padding: 0;
-    /* Override Ionic's default padding */
-}
 
 .new-chat-icon {
     position: absolute;
