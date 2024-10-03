@@ -59,9 +59,18 @@ const Register: React.FC = () => {
 			toast.info(`Successfully created user ${user.username} <${user.id}>`);
 			console.log(user);
 		} catch (error: any) {
-			const response: HttpResponse<any> = error.response.data;
-			console.error("Error creating account:", prettyError(response));
-			toast.error(`Failed to create account: ${prettyError(response)}`);
+			//Check if the error has a response section
+			let rtext = "";
+			if (error.response !== undefined) {
+				const response: HttpResponse<any> = error.response.data;
+				rtext = prettyError(response);
+			} else {
+				rtext = error.message;
+			}
+
+			//Log the error
+			console.error("Error creating account:", rtext);
+			toast.error(`Failed to create account: ${rtext}`);
 		}
 	};
 
