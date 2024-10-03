@@ -11,9 +11,12 @@ import {
 	IonText
 } from "@ionic/react";
 import "./LoginRegister.scss";
+import axios from "axios";
 import { IonRouterLink } from "@ionic/react";
 import LRLogo from "./LRLogo";
 import { toast } from "react-toastify";
+
+import { prettyError } from "../../util/http_util";
 
 const Register: React.FC = () => {
 	const [email, setEmail] = useState("");
@@ -23,7 +26,7 @@ const Register: React.FC = () => {
 	const [isKGBtnDisabled, setIsKGBtnDisabled] = useState(false);
 
 	//Handles form submissions
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
 
@@ -33,7 +36,28 @@ const Register: React.FC = () => {
 			return;
 		}
 
-		console.log("form submission");
+		const payload = {
+			username: username,
+			email: email,
+			pubkey: keystore.pk
+		};
+
+		try {
+			//Send the request
+			const response = await axios.post(
+				`${import.meta.env.VITE_API_URL}/auth/register`,
+				payload
+			);
+
+			//Report the creation of the account
+			const user: any = response.data.payloads[0];
+			toast.info(`Successfully created user ${user.username} <${user.id}>`);
+			console.log(user);
+		} catch (error: any) {
+			const response: HttpResponse<any> = error.response.data;
+			console.error("Error creating account:", prettyError(response));
+			toast.error(`Failed to create account: ${prettyError(response)}`);
+		}
 	};
 
 	//Handles keystore generation

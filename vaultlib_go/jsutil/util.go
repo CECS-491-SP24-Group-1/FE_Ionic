@@ -12,6 +12,14 @@ import (
 	"github.com/norunners/vert"
 )
 
+// Converts a JS object to a Go object using Vert.
+func Cast[T any](val js.Value) T {
+	v := vert.ValueOf(val)
+	var out T
+	v.AssignTo(&out)
+	return out
+}
+
 // Creates a generic array from a given array.
 func GenerifyArray[T any](arr []T) []interface{} {
 	out := make([]interface{}, len(arr))
@@ -53,7 +61,7 @@ func JSArray2GoArray[T any](jsa js.Value, maxlen int, convFunc func(v js.Value) 
 
 // Creates a Golang byte array from a JS array.
 func JSArray2GoByteArray(jsa js.Value, maxlen int) []byte {
-	return JSArray2GoArray[byte](jsa, maxlen, Val2Any)
+	return JSArray2GoArray[byte](jsa, maxlen, Cast)
 }
 
 // Emits errors to the JS console if any occur.
@@ -103,6 +111,11 @@ func JSWarn(warns ...string) {
 	jsLog("warn", warns...)
 }
 
+// Calls `JSON.parse()` on a given string.
+func Parse[T js.Value | string](val T) js.Value {
+	return js.Global().Get("JSON").Call("parse", val)
+}
+
 // Returns a JSON object, given a generic object.
 func RetJObj[T any](v T) js.Value {
 	//Marshal to JSON
@@ -114,13 +127,10 @@ func RetJObj[T any](v T) js.Value {
 
 	//Parse to a JSON object
 	jsons := string(jsonb)
-	return js.Global().Get("JSON").Call("parse", jsons)
+	return Parse(jsons)
 }
 
-// Converts a JS object to a Go object using Vert.
-func Val2Any[T any](val js.Value) T {
-	v := vert.ValueOf(val)
-	var out T
-	v.AssignTo(&out)
-	return out
+// Calls `JSON.stringify()` on a given JS val.
+func Stringify(val js.Value) string {
+	return js.Global().Get("JSON").Call("stringify", val).String()
 }

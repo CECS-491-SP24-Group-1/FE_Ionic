@@ -112,7 +112,7 @@ func (se StructExporter[T]) toJSObject(obj *T, this js.Value, args []js.Value) (
 	}
 
 	//Convert to a JS Object via `JSON.parse()`
-	return js.Global().Get("JSON").Call("parse", jsons), nil
+	return jsutil.Parse(jsons), nil
 }
 
 // Deserializes a struct from a plain JS object.
@@ -122,9 +122,9 @@ func (se StructExporter[T]) toJSObject(obj *T, this js.Value, args []js.Value) (
 func (se StructExporter[T]) fromJSObject(args []js.Value) (*T, error) {
 	//Get the 1st and only argument as an object and derive its JSON string form with `JSON.stringify()`
 	jsobj := args[0]
-	jsons := js.Global().Get("JSON").Call("stringify", jsobj)
+	jsons := jsutil.Stringify(jsobj)
 
-	return se.fromJson([]js.Value{jsons})
+	return se.fromJson([]js.Value{js.ValueOf(jsons)})
 }
 
 //-- Object essential methods

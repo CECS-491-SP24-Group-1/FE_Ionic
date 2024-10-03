@@ -22,6 +22,17 @@ declare global {
 	}
 	/** Use `InstanceType<typeof KeyStore>` to use this as a type in TS. */
 	const KeyStore: KeyStoreFunctions;
+
+	/** Represents a vault, which contains a keystore, conversations, sessions, etc. */
+	interface VaultFunctions extends FFIFactories<Vault> {
+		/** Creates a new vault object. */
+		new (): Vault;
+
+		/** Creates a new vault object out of an existing keystore. */
+		fromKS(ks: KeyStore): Vault;
+	}
+	/** Use `InstanceType<typeof Vault>` to use this as a type in TS. */
+	const Vault: VaultFunctions;
 }
 
 //This empty export is necessary to make this a module

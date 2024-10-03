@@ -8,6 +8,7 @@ import (
 
 	"wraith.me/vaultlib/ffi"
 	"wraith.me/vaultlib/jsutil"
+	"wraith.me/vaultlib/vaultlib/keystore"
 	"wraith.me/vaultlib/vaultlib/util"
 	"wraith.me/vaultlib/vaultlib/vault"
 )
@@ -18,7 +19,7 @@ func ExportVault() {
 	exp := ffi.NewStructExporter(
 		vault.Vault{}, vault_new,
 	).WithFactories(
-	//ffi.NewFactory("fromSK", ks_fromSK),
+		ffi.NewFactory("fromKS", vault_fromKS),
 	).WithMethods(
 	//ffi.NewMethod("sign", ks_sign),
 	//ffi.NewMethod("verify", ks_verify),
@@ -31,11 +32,27 @@ func ExportVault() {
 // new(subject: string, devIdent: string): Vault
 func vault_new(args []js.Value) (*vault.Vault, error) {
 	//Get the arguments from the function
-	subject := util.UUIDFromString(jsutil.Val2Any[string](args[0]))
-	devIdent := strings.TrimSpace(jsutil.Val2Any[string](args[1]))
+	subject := util.UUIDFromString(jsutil.Cast[string](args[0]))
+	devIdent := strings.TrimSpace(jsutil.Cast[string](args[1]))
 
 	//Construct and return the vault
 	return vault.New(subject, devIdent), nil
+}
+
+// fromKS(ks: KeyStore): Vault
+func vault_fromKS(args []js.Value) (*vault.Vault, error) {
+	//Get the argument from the function as a keystore
+	ks, err := ffi.Cast[keystore.KeyStore](args[0])
+	if err != nil {
+		return nil, err
+	}
+
+	//Create a new vault from the keystore
+	//The other fields are intended to be filled later
+	return &vault.Vault{
+		ID:     util.MustNewUUID7(),
+		KStore: *ks,
+	}, nil
 }
 
 //-- Methods
