@@ -1,39 +1,45 @@
 .chat-container {
     display: flex;
     height: 100vh;
-    /* Take up the full height of the view */
+    /* Full height of the viewport */
+    width: 100vw;
+    /* Full width of the viewport */
 }
 
 .chat-list {
-    width: 25%;
-    /* Sidebar takes up 25% of the width */
-    border-right: 1px solid #ccc;
-    /* Divider between chat list and chat view */
+    flex-grow: 1;
+    max-width: 30%;
+    border-right: 0px solid #ccc;
     overflow-y: auto;
-    /* Allow scrolling if the chat list is long */
-}
-
-.chat-view {
-    width: 75%;
-    /* Chat view takes up 75% of the width */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    background: #262525;
     position: relative;
 }
 
-.chat-header {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+.chat-view {
+    flex-grow: 2;
+    /* This will make the chat view take up 70% of the space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: white;
+    /* Make sure the chat view has a background */
+    overflow-y: auto;
+    /* Ensure it can scroll if content exceeds the view */
 }
+
+
+
 
 .chat-messages {
     flex-grow: 1;
-    /* This will expand to fill available space */
     padding: 10px;
     background-color: #f0f0f0;
     overflow-y: auto;
-    /* Allow scrolling for messages */
+    background-image: url('../assets/images/chat_background.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+    z-index: 1;
 }
 
 .chat-bubble {
@@ -64,9 +70,39 @@
 
 .ion-no-border {
     border-top: none;
+    /* Remove border on the footer */
 }
 
 .ion-padding {
     padding: 0;
-    /* Override Ionic default padding */
+    /* Override Ionic's default padding */
+}
+
+.chat-input {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    border-top: 1px solid #ccc;
+}
+
+.chat-input ion-input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.new-chat-icon {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.chats-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
 }

@@ -16,7 +16,7 @@ import {
   IonSearchbar,
   IonBadge,
 } from '@ionic/react';
-import { camera, mic, attach } from 'ionicons/icons';
+import { camera, mic, attach, chatbubbles, addCircle } from 'ionicons/icons';
 
 import './Chats.scss'; // Ensure this contains the necessary styles
 
@@ -46,7 +46,18 @@ const ChatPage: React.FC = () => {
         <div className="chat-container">
           {/* Sidebar with chats */}
           <div className="chat-list">
-            <IonSearchbar placeholder="Search" />
+            {/* Chats title and New Chat Icon */}
+            <div className="chats-header">
+              <div className="chats-title">
+                <IonLabel>Chats</IonLabel>
+                <IonIcon icon={addCircle} size="large" className="new-chat-icon" />
+              </div>
+
+              {/* Search Bar */}
+              <IonSearchbar placeholder="Search" />
+            </div>
+
+            {/* List of chats */}
             <IonList>
               <IonItem>
                 <IonAvatar slot="start">
@@ -77,7 +88,7 @@ const ChatPage: React.FC = () => {
           {/* Chat view */}
           <div className="chat-view">
             <div className="chat-header">
-              <IonItem lines="none">
+              <IonItem lines="none" className="user-chat-bar">
                 <IonAvatar slot="start">
                   <img src="https://i.pravatar.cc/300?u=mariana" alt="Mariana" />
                 </IonAvatar>
