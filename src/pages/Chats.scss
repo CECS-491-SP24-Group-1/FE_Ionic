@@ -17,7 +17,7 @@
 
 .chat-view {
     flex-grow: 2;
-    /* This will make the chat view take up 70% of the space */
+    max-width: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -68,7 +68,7 @@
     margin-top: 5px;
 }
 
-.ion-no-border {
+.chat-input {
     border-top: none;
     /* Remove border on the footer */
 }
@@ -76,20 +76,6 @@
 .ion-padding {
     padding: 0;
     /* Override Ionic's default padding */
-}
-
-.chat-input {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background-color: white;
-    border-top: 1px solid #ccc;
-}
-
-.chat-input ion-input {
-    flex-grow: 1;
-    margin-right: 10px;
 }
 
 .new-chat-icon {

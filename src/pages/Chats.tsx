@@ -44,7 +44,7 @@ const ChatPage: React.FC = () => {
 
       <IonContent className="ion-padding">
         <div className="chat-container">
-          {/* Sidebar with chats */}
+          {/* Sidebar*/}
           <div className="chat-list">
             {/* Chats title and New Chat Icon */}
             <div className="chats-header">
@@ -109,7 +109,7 @@ const ChatPage: React.FC = () => {
             </div>
 
             {/* Input area */}
-            <IonFooter className="ion-no-border">
+            <IonFooter className="chat-input">
               <IonToolbar>
                 <IonInput
                   value={message}
