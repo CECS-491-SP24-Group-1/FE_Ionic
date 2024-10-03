@@ -67,7 +67,6 @@ export interface FFIStatics {
 
 	/** Checks if a JSON-encoded struct is present in `localStorage`. */
 	inJLStore(key: string): boolean;
-
 	/** Checks if a JSON-encoded struct is present in `sessionStorage`. */
 	inJSStore(key: string): boolean;
 }
