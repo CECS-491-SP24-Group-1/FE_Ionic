@@ -230,10 +230,16 @@ Generates a new struct object and adds a constructor, static factory
 functions, and instance methods.
 */
 func (se *StructExporter[T]) exportBackend(_ js.Value, args []js.Value) any {
-	//Invoke the constructor and replace the object with this one
-	obj, err := se.constructor(args)
-	if err != nil {
-		jsutil.JSFatal(fmt.Errorf("error while calling constructor for symbol %s: %s", se.name, err))
+	//Create a new object of type `T`
+	obj := new(T)
+
+	//Invoke the constructor (if it exists) and replace the object with it
+	if se.constructor != nil {
+		var err error
+		obj, err = se.constructor(args)
+		if err != nil {
+			jsutil.JSFatal(fmt.Errorf("error while calling constructor for symbol %s: %s", se.name, err))
+		}
 	}
 
 	//Acquire a backend wrapper
