@@ -21,6 +21,7 @@ func ExportVault() {
 	).WithFactories(
 		ffi.NewFactory("fromKS", vault_fromKS),
 	).WithMethods(
+		ffi.NewMethod("encryptPassphrase", vault_ecrypt_pass),
 	//ffi.NewMethod("sign", ks_sign),
 	//ffi.NewMethod("verify", ks_verify),
 	)
@@ -56,3 +57,17 @@ func vault_fromKS(args []js.Value) (*vault.Vault, error) {
 }
 
 //-- Methods
+
+// encryptPassphrase(pass: string): EVault
+func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value, error) {
+	pass := args[0].String()
+	ev, err := obj.EncryptPassphrase(pass)
+	if err != nil {
+		return js.ValueOf(nil), err
+	}
+	evjson, err := ev.JSON()
+	if err != nil {
+		return js.ValueOf(nil), err
+	}
+	return jsutil.Parse(evjson), nil
+}
