@@ -1,34 +1,30 @@
+// src/components/Chats/ChatList.tsx
+
 import React from 'react';
-import { IonList } from '@ionic/react';
-import ChatItem from './ChatItem';
-import ChatsHeader from './ChatsHeader';
-import SearchBar from './SearchBar';
+import { IonList, IonItem, IonAvatar, IonLabel, IonBadge } from '@ionic/react';
+import { chatList } from '../../../data/ChatListData';
 
-const ChatList: React.FC = () => {
+
+interface ChatListProps {
+  onChatSelect: (chatId: number) => void;
+}
+
+const ChatList: React.FC<ChatListProps> = ({ onChatSelect }) => {
   return (
-    <div className="chat-list">
-      {/* Chats title and New Chat Icon */}
-      <ChatsHeader />
-      
-      {/* Search Bar */}
-      <SearchBar />
-
-      {/* List of chats */}
-      <IonList>
-        <ChatItem
-          avatarUrl="https://i.pravatar.cc/300?u=claudia"
-          name="Claudia Alves"
-          message="3 New Messages"
-          time="3m ago"
-        />
-        <ChatItem
-          avatarUrl="https://i.pravatar.cc/300?u=teamchat"
-          name="Team Chat"
-          message="New Message"
-          time="5m ago"
-        />
-      </IonList>
-    </div>
+    <IonList>
+      {chatList.map(chat => (
+        <IonItem button key={chat.id} onClick={() => onChatSelect(chat.id)}>
+          <IonAvatar slot="start">
+            <img src={chat.avatar} alt={chat.name} />
+          </IonAvatar>
+          <IonLabel>
+            <h2>{chat.name}</h2>
+            <p>{chat.lastMessage}</p>
+          </IonLabel>
+          <IonBadge color="success" slot="end">{chat.time}</IonBadge>
+        </IonItem>
+      ))}
+    </IonList>
   );
 };
 

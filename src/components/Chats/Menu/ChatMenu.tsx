@@ -1,8 +1,21 @@
 import React from 'react';
 import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel } from '@ionic/react';
-import MenuItem from './MenuItem';
+import { chatList } from '../../../data/ChatListData';
 
-const ChatMenu: React.FC = () => {
+interface ChatMenuProps {
+  selectedChatId: number | null;
+}
+
+const ChatMenu: React.FC<ChatMenuProps> = ({ selectedChatId }) => {
+  // If no chat is selected, return null
+  if (selectedChatId === null) return null;
+
+  // Find the selected chat details from the chatList
+  const selectedChat = chatList.find(chat => chat.id === selectedChatId);
+
+  // If the selected chat is not found, return null
+  if (!selectedChat) return null;
+
   return (
     <IonMenu side="end" contentId="main-content">
       <IonHeader>
@@ -14,19 +27,28 @@ const ChatMenu: React.FC = () => {
         <IonList>
           <IonItem>
             <IonAvatar slot="start">
-              <img src="https://i.pravatar.cc/300" alt="User" />
+              <img src={selectedChat.avatar} alt={selectedChat.name} />
             </IonAvatar>
             <IonLabel>
-              <h2>Mariana Napolitani</h2>
-              <p>Active 3h ago</p>
+              <h2>{selectedChat.name}</h2>
+              <p>Last message at {selectedChat.time}</p>
             </IonLabel>
           </IonItem>
-          <MenuItem label="Profile" />
-          <MenuItem label="Mute" />
-          <MenuItem label="Search" />
-          <MenuItem label="Customize Chat" />
-          <MenuItem label="Media, Files, and Links" />
-          <MenuItem label="Privacy & Support" />
+          <IonItem button>
+            <IonLabel>Profile</IonLabel>
+          </IonItem>
+          <IonItem button>
+            <IonLabel>Mute Notifications</IonLabel>
+          </IonItem>
+          <IonItem button>
+            <IonLabel>Search in Chat</IonLabel>
+          </IonItem>
+          <IonItem button>
+            <IonLabel>Media, Links, and Docs</IonLabel>
+          </IonItem>
+          <IonItem button>
+            <IonLabel>Privacy & Support</IonLabel>
+          </IonItem>
         </IonList>
       </IonContent>
     </IonMenu>

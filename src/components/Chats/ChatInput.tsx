@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IonInput, IonButton, IonIcon, IonToolbar, IonFooter } from '@ionic/react';
-import { camera, mic, attach } from 'ionicons/icons';
+import { send, attach, mic } from 'ionicons/icons';
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -12,7 +12,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
   const handleSendMessage = () => {
     if (message.trim()) {
       onSendMessage(message);
-      setMessage('');
+      setMessage(''); // Clear the input field after sending
     }
   };
 
@@ -21,16 +21,16 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
       <IonToolbar>
         <IonInput
           value={message}
-          placeholder="Write your message here"
+          placeholder="Write a message..."
           onIonChange={(e: CustomEvent) => setMessage(e.detail.value!)}
         />
         <IonButton onClick={handleSendMessage} slot="end" fill="clear">
-          <IonIcon icon={camera} />
+          <IonIcon icon={send} />
         </IonButton>
-        <IonButton onClick={handleSendMessage} slot="end" fill="clear">
+        <IonButton slot="end" fill="clear">
           <IonIcon icon={mic} />
         </IonButton>
-        <IonButton onClick={handleSendMessage} slot="end" fill="clear">
+        <IonButton slot="end" fill="clear">
           <IonIcon icon={attach} />
         </IonButton>
       </IonToolbar>
