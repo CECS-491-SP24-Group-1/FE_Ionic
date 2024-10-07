@@ -8,14 +8,51 @@ $primary-color: #4b8fea;
 
 /* Chat List (Sidebar) */
 .chat-list {
-    flex-grow: 1;
-    max-width: 30%;
     border-right: 0px solid #ccc;
-    overflow-y: auto;
     background: #262525;
     position: relative;
     z-index: 2;
 }
+
+
+
+/* Chat List Item */
+.chat-list-item {
+    display: flex;
+    align-items: center;
+}
+
+/* Default styles for IonLabel, IonBadge (Visible by default) */
+.chat-list-label {
+    display: block;
+}
+
+.chat-list-badge {
+    display: inline-block;
+}
+
+/* Media Query for Small Screens (e.g., mobile devices) */
+@media (max-width: 768px) {
+
+    /* Hide the chat label (name and message) when below 768px */
+    .chat-list-name {
+        display: none;
+    }
+
+    .chat-list-message {
+        display: none;
+    }
+
+    .chat-list-badge {
+        display: none;
+    }
+
+    .new-chat-icon {
+        display: none;
+    }
+}
+
+
 
 .new-chat-icon {
     position: absolute;
