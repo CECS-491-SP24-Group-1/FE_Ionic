@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IonContent, IonHeader, IonPage, IonToolbar, IonTitle } from '@ionic/react';
 import ChatList from '../components/Chats/ChatList/ChatList';
 import ChatMessages from '../components/Chats/ChatMessages';
@@ -6,6 +6,7 @@ import ChatInput from '../components/Chats/ChatInput';
 import ChatHeader from '../components/Chats/ChatHeader';
 import ChatMenu from '../components/Chats/Menu/ChatMenu';
 import { chatMessagesData } from '../data/ChatMessagesData';
+import WebSocket, { WebSocketServer } from 'ws';
 
 import './Chats.scss';
 
