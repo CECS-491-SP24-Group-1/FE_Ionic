@@ -36,6 +36,7 @@ func main() {
 	//Vaultlib stuff
 	jsbind.ExportKS()
 	jsbind.ExportVault()
+	jsbind.ExportEVault()
 
 	//TEMP: testing
 	ffiexample.ExportUser()

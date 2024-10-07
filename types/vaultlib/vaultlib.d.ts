@@ -1,5 +1,6 @@
-import { KeyStore } from "./keystore";
-import { FFIFactories } from "../vaultlib_ffi";
+import FFI from "../vaultlib_ffi"
+import { IKeyStore } from "./keystore";
+import { IEVault, IVault } from "./vault";
 
 declare global {
 	/*
@@ -12,28 +13,39 @@ declare global {
 	}*/
 
 	/** Represents a keystore, which contains a public and private Ed25519 key. */
-	interface KeyStoreFunctions extends FFIFactories<KeyStore> {
+	interface MKeyStore extends FFI<KeyStore>, IKeyStore {
 		/** Creates a new keystore object. */
-		new (): KeyStore;
+		new(): MKeyStore;
+
 		/** Signs a given message with the private key of the keystore. */
 		sign(message: string): string;
+
 		/** Verifies that a given message and signature were signed by this keystore's private key. */
 		verify(message: string, signature: string): boolean;
 	}
 	/** Use `InstanceType<typeof KeyStore>` to use this as a type in TS. */
-	const KeyStore: KeyStoreFunctions;
+	const KeyStore: MKeyStore;
 
 	/** Represents a vault, which contains a keystore, conversations, sessions, etc. */
-	interface VaultFunctions extends FFIFactories<Vault> {
+	interface MVault extends FFI<Vault>, IVault<KeyStore> {
 		/** Creates a new vault object. */
-		new (): Vault;
+		new(subject: string, devIdent: string): MVault;
 
 		/** Creates a new vault object out of an existing keystore. */
-		fromKS(ks: KeyStore): Vault;
+		fromKS(ks: KeyStore): MVault;
+
+		encryptPassphrase(pass: string): EVault;
 	}
 	/** Use `InstanceType<typeof Vault>` to use this as a type in TS. */
-	const Vault: VaultFunctions;
+	const Vault: MVault;
+
+	/** Represents an encrypted vault. */
+	interface MEVault extends FFI<EVault>, IEVault {
+		decryptPassphrase(pass: string): Vault
+	}
+	/** Use `InstanceType<typeof EVault>` to use this as a type in TS. */
+	const EVault: MEVault;
 }
 
 //This empty export is necessary to make this a module
-export {};
+export { };
