@@ -14,6 +14,7 @@ $primary-color: #4b8fea;
     overflow-y: auto;
     background: #262525;
     position: relative;
+    z-index: 2;
 }
 
 .new-chat-icon {
@@ -42,15 +43,34 @@ $primary-color: #4b8fea;
 
 /* Chat View */
 .chat-view {
+    position: relative;
+    /* Set position relative to use pseudo-element */
     flex-grow: 1;
     background-color: #f0f0f0;
     overflow-y: auto;
-    background-image: url('../assets/images/chat_background.jpg');
-    background-size: cover;
-    background-position: center;
-    opacity: 1;
     z-index: 1;
+
+    /* Create a pseudo-element for the background image */
+    &::before {
+        content: '';
+        position: fixed;
+        /* Change from absolute to fixed */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('../assets/images/chat_background.jpg');
+        background-size: cover;
+        background-position: center;
+        filter: invert(100%);
+        opacity: 1;
+        z-index: -1;
+        /* Ensure it stays behind the content */
+        pointer-events: none;
+        /* Prevent interactions with the pseudo-element */
+    }
 }
+
 
 
 /* Chat Header (Fixed at the top) */

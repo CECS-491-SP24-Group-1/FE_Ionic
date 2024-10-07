@@ -4,6 +4,8 @@ interface ChatMessagesProps {
   messages: { from: string; text: string; time: string }[];
 }
 
+//TODO: use ref to start at the bottom of chat
+
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
   return (
     <div className="chat-messages">
