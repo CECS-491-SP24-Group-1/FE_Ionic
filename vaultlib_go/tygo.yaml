@@ -1,11 +1,9 @@
 packages:
   # keystore.go
   - path: "wraith.me/vaultlib/vaultlib/keystore"
-    output_path: "dist/keystore.d.ts"
+    output_path: "dist/keystore.ts"
     indent: "\t"
-    extends: "FFIMethods"
     preserve_comments: "none"
-    frontmatter: 'import { FFIMethods } from "../vaultlib_ffi";'
     type_mappings:
       crypto.PUBKEY_SIZE: 32
       crypto.Privseed: "string"
@@ -13,15 +11,13 @@ packages:
 
   # evault.go & vault.go
   - path: "wraith.me/vaultlib/vaultlib/vault"
-    output_path: "dist/vault.d.ts"
+    output_path: "dist/vault.ts"
     indent: "\t"
-    extends: "FFIMethods"
     preserve_comments: "none"
-    frontmatter: |
-      import { KeyStore } from "./keystore";
-      import { FFIMethods } from "../vaultlib_ffi";
+#    frontmatter: |
+#      import { KeyStore } from "./keystore";
     type_mappings:
       util.UUID: "string"
       time.Time: "string"
-      keystore.KeyStore: "KeyStore"
+      keystore.KeyStore: "T"
       sectype.SecType: '"NONE" | "ENC_KEY" | "PASSPHRASE" | "QR" | "BIOMETRICS" | "HW_KEY"'
