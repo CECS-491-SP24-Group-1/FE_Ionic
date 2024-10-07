@@ -13,7 +13,7 @@ const Register: React.FC = () => {
 	//State stuff
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
-	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null);
+	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null); //TODO: zustand store here
 	const [showFingerprint, setShowFingerprint] = useState(false);
 	const [isKGBtnDisabled, setIsKGBtnDisabled] = useState(false);
 
