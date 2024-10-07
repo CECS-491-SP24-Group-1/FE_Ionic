@@ -3,8 +3,7 @@ $primary-color: #4b8fea;
 /* Chat Container */
 .chat-container {
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
 }
 
 /* Chat List (Sidebar) */
@@ -53,24 +52,20 @@ $primary-color: #4b8fea;
     z-index: 1;
 }
 
-/* Chat Header */
-.chat-header {
-    position: relative;
 
-    .chat-header-icons {
-        font-size: 1.5rem;
-        position: absolute;
-        right: 10px;
-        display: flex;
-        gap: 15px;
-        z-index: 20;
-        color: $primary-color;
-    }
+/* Chat Header (Fixed at the top) */
+.chat-header {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
 }
 
 /* Chat Bubbles */
 .chat-messages {
     display: flex;
+    height: 90vh;
     flex-direction: column;
     padding: 15px;
     overflow-y: auto;
@@ -113,9 +108,11 @@ $primary-color: #4b8fea;
 
 /* Chat Input */
 .chat-input {
+    // I want the position to be at the bottom
+    position: sticky;
     flex-shrink: 0;
-    max-width: 70%;
     margin-left: auto;
+    bottom: 0;
     background-color: white;
 
     ion-input {

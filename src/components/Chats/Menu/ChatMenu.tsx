@@ -1,7 +1,6 @@
 import React from 'react';
-import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton, IonIcon, IonButtons } from '@ionic/react';
+import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton, IonIcon, IonButtons, IonMenuToggle } from '@ionic/react';
 import { close } from 'ionicons/icons';
-import { menuController } from '@ionic/core'; // Import menuController
 import { chatList } from '../../../data/ChatListData';
 
 interface ChatMenuProps {
@@ -9,31 +8,21 @@ interface ChatMenuProps {
 }
 
 const ChatMenu: React.FC<ChatMenuProps> = ({ selectedChatId }) => {
-  // If no chat is selected, return null
   if (selectedChatId === null) return null;
 
-  // Find the selected chat details from the chatList
   const selectedChat = chatList.find(chat => chat.id === selectedChatId);
-
-  // If the selected chat is not found, return null
   if (!selectedChat) return null;
 
-  // Function to close the menu by explicitly specifying the menuId
-  const closeMenu = async () => {
-    await menuController.close('chat-menu'); // Close the menu with id 'chat-menu'
-  };
-
   return (
-    <IonMenu side="end" contentId="main-content" menuId="chat-menu"> {/* Added explicit menuId */}
+    <IonMenu side="end" contentId="main-content">
       <IonHeader>
         <IonToolbar>
           <IonTitle>Chat Information</IonTitle>
-          <IonButtons slot="end">
-            {/* Wrap IonIcon inside IonButton */}
-            <IonButton onClick={closeMenu}>
-              <IonIcon icon={close} />
-            </IonButton>
-          </IonButtons>
+            <IonMenuToggle>
+              <IonButton>
+                Click to close
+              </IonButton>
+            </IonMenuToggle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
