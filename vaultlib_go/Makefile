@@ -21,6 +21,7 @@ OUT_DIR := $(STATIC_DIR)/
 #Denotes the output directory of tygo; this must match what is in tygo.yml
 TYGO_DIR := ./dist
 TYGO_OUT := $(TYGO_DIR)/*.ts
+PATCH_DIR := ./ts_patches
 TYPES_DIR := ../types/vaultlib
 
 # Tools
@@ -30,6 +31,7 @@ TINYGO_BUILD := tinygo build
 GO_DEV := $(GO) run
 WASMOPT := wasm-opt --enable-bulk-memory -Oz
 TYGO := tygo generate
+PATCH := patch
 #MAKE := $(MAKE) -s
 
 #Flags
@@ -179,3 +181,6 @@ optim:
 .PHONY: ts
 ts:
 	$(TYGO)
+	@cd $(TYGO_DIR) && for patch in ../$(PATCH_DIR)/*.patch; do \
+		$(PATCH) < $$patch || exit 1; \
+	done
