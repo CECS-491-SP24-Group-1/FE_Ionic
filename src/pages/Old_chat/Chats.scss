@@ -1,13 +1,11 @@
 $primary-color: #4b8fea;
 
-/* Chat Container */
 .chat-container {
     display: flex;
     height: 100vh;
     width: 100vw;
 }
 
-/* Chat List (Sidebar) */
 .chat-list {
     flex-grow: 1;
     max-width: 30%;
@@ -17,22 +15,6 @@ $primary-color: #4b8fea;
     position: relative;
 }
 
-.new-chat-icon {
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    color: #ffffff;
-    cursor: pointer;
-    font-size: 24px;
-}
-
-.chats-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-}
-
-/* Chat Content */
 .chat-content {
     display: flex;
     flex-direction: column;
@@ -41,7 +23,6 @@ $primary-color: #4b8fea;
     background: white;
 }
 
-/* Chat View */
 .chat-view {
     flex-grow: 1;
     background-color: #f0f0f0;
@@ -53,7 +34,6 @@ $primary-color: #4b8fea;
     z-index: 1;
 }
 
-/* Chat Header */
 .chat-header {
     position: relative;
 
@@ -68,40 +48,24 @@ $primary-color: #4b8fea;
     }
 }
 
-/* Chat Bubbles */
-.chat-messages {
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    overflow-y: auto;
-}
 
-/* Chat Bubble */
 .chat-bubble {
     max-width: 70%;
     margin: 10px 0;
     padding: 10px;
     border-radius: 20px;
     position: relative;
-    word-wrap: break-word;
 }
 
-/* My chat - aligned right */
 .chat-bubble.from-me {
     background-color: $primary-color;
     color: white;
     margin-left: auto;
-    /* Aligns my messages to the right */
-    border-bottom-right-radius: 0;
 }
 
-/* Their chat - aligned left */
 .chat-bubble.from-them {
     background-color: #e5e5ea;
     color: black;
-    margin-right: auto;
-    /* Aligns their messages to the left */
-    border-bottom-left-radius: 0;
 }
 
 .chat-bubble span {
@@ -111,7 +75,6 @@ $primary-color: #4b8fea;
     margin-top: 5px;
 }
 
-/* Chat Input */
 .chat-input {
     flex-shrink: 0;
     max-width: 70%;
@@ -122,4 +85,20 @@ $primary-color: #4b8fea;
         text-align: left;
         padding-right: 10px;
     }
+}
+
+
+.new-chat-icon {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.chats-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
 }
