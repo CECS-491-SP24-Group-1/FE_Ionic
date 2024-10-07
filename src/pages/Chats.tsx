@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonToolbar, IonTitle } from '@ionic/react';
 import ChatList from '../components/Chats/ChatList/ChatList';
 import ChatMessages from '../components/Chats/ChatMessages';
@@ -6,7 +6,6 @@ import ChatInput from '../components/Chats/ChatInput';
 import ChatHeader from '../components/Chats/ChatHeader';
 import ChatMenu from '../components/Chats/Menu/ChatMenu';
 import { chatMessagesData } from '../data/ChatMessagesData';
-import WebSocket, { WebSocketServer } from 'ws';
 
 import './Chats.scss';
 
@@ -26,31 +25,6 @@ const Chats: React.FC = () => {
         text: message,
         time: 'Now',
       });
-    }
-  };
-
-  useEffect(() => {
-    // Open a WebSocket connection to the server
-    const newSocket = new WebSocket('ws://localhost:8080');
-
-    // Set the socket to state so that it can be accessed later
-    setSocket(newSocket);
-
-    // Handle incoming messages
-    newSocket.onmessage = (event) => {
-      setMessages((prevMessages) => [...prevMessages, event.data]);
-    };
-
-    // Clean up the socket when the component is unmounted
-    return () => {
-      newSocket.close();
-    };
-  }, []);
-
-  const sendMessage = () => {
-    if (socket && input.trim() !== '') {
-      socket.send(input);
-      setInput(''); // Clear the input field
     }
   };
   
