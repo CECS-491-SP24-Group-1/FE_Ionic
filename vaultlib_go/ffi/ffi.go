@@ -55,6 +55,9 @@ type StructExporter[T any] struct {
 
 	//Holds the static functions for the struct.
 	statics []FWrapper[T] //static type
+
+	//Holds the function to call when a setter is invoked.
+	setterHook Hook[T]
 }
 
 // Creates a new struct exporter around a given struct.
@@ -147,6 +150,12 @@ func (se *StructExporter[T]) WithSetters(setters ...Setter[T]) *StructExporter[T
 // Adds static functions to the struct.
 func (se *StructExporter[T]) WithStatics(statics ...FWrapper[T]) *StructExporter[T] {
 	se.statics = statics
+	return se
+}
+
+// Adds a setter hook to the struct.
+func (se *StructExporter[T]) WithSetterHook(hook Hook[T]) *StructExporter[T] {
+	se.setterHook = hook
 	return se
 }
 
@@ -333,6 +342,11 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 				//Set the new value in-place into the original struct's field
 				//The value is deserialized and set in-place
 				fvalue.Set(newFVal)
+
+				//Call the setter hook if one is set
+				if se.setterHook != nil {
+					se.setterHook(obj, this, args)
+				}
 			}
 
 			//Handle any errors that occurred
