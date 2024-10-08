@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { IonInput, IonButton, IonItem, IonLabel } from "@ionic/react";
-import { IonRouterLink } from "@ionic/react";
+import { IonInput, IonButton, IonItem, IonLabel, IonText } from "@ionic/react";
 
 import LRContainer from "./LRContainer";
 import { prettyError } from "../../util/http_util";
 
 import "./LoginRegister.scss";
 
-const Login: React.FC = () => {
+interface LoginProps {
+    togglePage: () => void;
+}
+
+const Login: React.FC <LoginProps>= ({ togglePage }) => {
 	//State stuff
 	const [email, setEmail] = useState("");
 	const [pass, setPass] = useState("");
@@ -55,12 +58,12 @@ const Login: React.FC = () => {
 
 			<p className="fine-print">
 				No account?&nbsp;
-				<IonRouterLink
+				<IonText
 					color="primary"
-					routerLink="/register"
-					style={{ textDecoration: "none" }}>
+					onClick={togglePage}
+					style={{ cursor: "pointer" }}>
 					Register now
-				</IonRouterLink>
+				</IonText>
 				.
 			</p>
 		</>
