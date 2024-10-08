@@ -306,7 +306,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 					err = se.setters[idx](obj, input)
 				}
 			} else {
-				fmt.Printf("using built-in setter for symbol %s\n", fname)
+				//fmt.Printf("using built-in setter for symbol %s\n", fname)
 				//Determine if initial JSON serialization can be skipped
 				//This is the case for the following types: `string<type: json>`
 				skipJsonSerial := false
@@ -314,7 +314,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 					json.Valid([]byte(input.String())) {
 					skipJsonSerial = true
 				}
-				fmt.Printf("incoming type: %s\n", input.Type().String())
+				//fmt.Printf("incoming type: %s\n", input.Type().String())
 
 				//Skip 1st pass serialization if requested
 				jsons := input.String()
