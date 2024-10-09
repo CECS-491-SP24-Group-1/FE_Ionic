@@ -3,19 +3,56 @@ $primary-color: #4b8fea;
 /* Chat Container */
 .chat-container {
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
 }
 
 /* Chat List (Sidebar) */
 .chat-list {
-    flex-grow: 1;
-    max-width: 30%;
     border-right: 0px solid #ccc;
-    overflow-y: auto;
     background: #262525;
     position: relative;
+    z-index: 2;
 }
+
+
+
+/* Chat List Item */
+.chat-list-item {
+    display: flex;
+    align-items: center;
+}
+
+/* Default styles for IonLabel, IonBadge (Visible by default) */
+.chat-list-label {
+    display: block;
+}
+
+.chat-list-badge {
+    display: inline-block;
+}
+
+/* Media Query for Small Screens (e.g., mobile devices) */
+@media (max-width: 768px) {
+
+    /* Hide the chat label (name and message) when below 768px */
+    .chat-list-name {
+        display: none;
+    }
+
+    .chat-list-message {
+        display: none;
+    }
+
+    .chat-list-badge {
+        display: none;
+    }
+
+    .new-chat-icon {
+        display: none;
+    }
+}
+
+
 
 .new-chat-icon {
     position: absolute;
@@ -43,34 +80,49 @@ $primary-color: #4b8fea;
 
 /* Chat View */
 .chat-view {
+    position: relative;
+    /* Set position relative to use pseudo-element */
     flex-grow: 1;
     background-color: #f0f0f0;
     overflow-y: auto;
-    background-image: url('../assets/images/chat_background.jpg');
-    background-size: cover;
-    background-position: center;
-    opacity: 1;
     z-index: 1;
+
+    /* Create a pseudo-element for the background image */
+    &::before {
+        content: '';
+        position: fixed;
+        /* Change from absolute to fixed */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('../assets/images/chat_background.jpg');
+        background-size: cover;
+        background-position: center;
+        filter: invert(100%);
+        opacity: 1;
+        z-index: -1;
+        /* Ensure it stays behind the content */
+        pointer-events: none;
+        /* Prevent interactions with the pseudo-element */
+    }
 }
 
-/* Chat Header */
-.chat-header {
-    position: relative;
 
-    .chat-header-icons {
-        font-size: 1.5rem;
-        position: absolute;
-        right: 10px;
-        display: flex;
-        gap: 15px;
-        z-index: 20;
-        color: $primary-color;
-    }
+
+/* Chat Header (Fixed at the top) */
+.chat-header {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
 }
 
 /* Chat Bubbles */
 .chat-messages {
     display: flex;
+    height: 90vh;
     flex-direction: column;
     padding: 15px;
     overflow-y: auto;
@@ -113,13 +165,16 @@ $primary-color: #4b8fea;
 
 /* Chat Input */
 .chat-input {
+    // I want the position to be at the bottom
+    position: sticky;
     flex-shrink: 0;
-    max-width: 70%;
     margin-left: auto;
+    bottom: 0;
     background-color: white;
 
     ion-input {
         text-align: left;
+        margin-left: 20px;
         padding-right: 10px;
     }
 }

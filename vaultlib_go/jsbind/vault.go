@@ -5,6 +5,7 @@ package jsbind
 import (
 	"strings"
 	"syscall/js"
+	"time"
 
 	"wraith.me/vaultlib/ffi"
 	"wraith.me/vaultlib/jsutil"
@@ -20,10 +21,12 @@ func ExportVault() {
 		vault.Vault{}, vault_new,
 	).WithFactories(
 		ffi.NewFactory("fromKS", vault_fromKS),
+		ffi.NewFactory("newBlank", vault_newBlank),
 	).WithMethods(
+		ffi.NewMethod("encryptPassphrase", vault_ecrypt_pass),
 	//ffi.NewMethod("sign", ks_sign),
 	//ffi.NewMethod("verify", ks_verify),
-	)
+	).WithSetterHook(vault_setterHook)
 	exp.Export("Vault")
 }
 
@@ -55,4 +58,34 @@ func vault_fromKS(args []js.Value) (*vault.Vault, error) {
 	}, nil
 }
 
+// newBlank(): Vault
+func vault_newBlank(_ []js.Value) (*vault.Vault, error) {
+	return &vault.Vault{
+		ID:      util.MustNewUUID7(),
+		LastMod: time.Now(),
+	}, nil
+}
+
 //-- Methods
+
+// encryptPassphrase(pass: string): EVault
+func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value, error) {
+	pass := args[0].String()
+	ev, err := obj.EncryptPassphrase(pass)
+	if err != nil {
+		return js.ValueOf(nil), err
+	}
+	evjson, err := ev.JSON()
+	if err != nil {
+		return js.ValueOf(nil), err
+	}
+	return jsutil.Parse(evjson), nil
+}
+
+//-- Hooks
+
+// Updates the `LastMod` field of the vault when the data changes.
+func vault_setterHook(obj *vault.Vault, _ js.Value, _ []js.Value) (js.Value, error) {
+	obj.LastMod = time.Now()
+	return js.ValueOf(nil), nil
+}

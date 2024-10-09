@@ -55,6 +55,9 @@ type (
 
 	// Defines the expected structure of a static function.
 	Static[T any] func([]js.Value) (js.Value, error)
+
+	// Defines the expected structure of a hook function.
+	Hook[T any] func(*T, js.Value, []js.Value) (js.Value, error)
 )
 
 // Helper functions to create specific function wrappers.

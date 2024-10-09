@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 const maxCacheSize = 10 * 1000000; // Increased to ~10MB
 
@@ -8,6 +9,7 @@ const maxCacheSize = 10 * 1000000; // Increased to ~10MB
 export default defineConfig({
 	plugins: [
 		react(),
+		tsconfigPaths(),
 		VitePWA({
 			registerType: "autoUpdate",
 			workbox: {

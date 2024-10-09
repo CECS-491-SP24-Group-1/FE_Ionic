@@ -48,14 +48,20 @@ const Chats: React.FC = () => {
           <div className="chat-view">
             {selectedChatId !== null ? (
               <>
-                {/* Pass only the selectedChatId to ChatHeader */}
-                <ChatHeader selectedChatId={selectedChatId} />
+                {/* Header stays fixed at the top */}
+                <div className="chat-header">
+                  <ChatHeader selectedChatId={selectedChatId} />
+                </div>
 
-                {/* Messages */}
-                <ChatMessages messages={chatMessagesData[selectedChatId]} />
+                {/* Scrollable messages section */}
+                <div className="chat-messages">
+                  <ChatMessages messages={chatMessagesData[selectedChatId]} />
+                </div>
 
-                {/* Input field for sending messages */}
-                <ChatInput onSendMessage={handleSendMessage} />
+                {/* Input stays fixed at the bottom */}
+                <div className="chat-input">
+                  <ChatInput onSendMessage={handleSendMessage} />
+                </div>
               </>
             ) : (
               <div className="no-chat-selected">

@@ -14,17 +14,19 @@ const ChatList: React.FC<ChatListProps> = ({ onChatSelect }) => {
       <ChatsHeader />
 
       {/* The chat list itself */}
-      <IonList>
-        {chatList.map(chat => (
-          <IonItem button key={chat.id} onClick={() => onChatSelect(chat.id)}>
-            <IonAvatar slot="start">
+      <IonList className="chat-list">
+        {chatList.map((chat) => (
+          <IonItem button key={chat.id} onClick={() => onChatSelect(chat.id)} className="chat-list-item">
+            <IonAvatar slot="start" className="chat-list-avatar">
               <img src={chat.avatar} alt={chat.name} />
             </IonAvatar>
-            <IonLabel>
-              <h2>{chat.name}</h2>
-              <p>{chat.lastMessage}</p>
+            <IonLabel className="chat-list-label">
+              <h2 className="chat-list-name">{chat.name}</h2>
+              <p className="chat-list-message">{chat.lastMessage}</p>
             </IonLabel>
-            <IonBadge color="success" slot="end">{chat.time}</IonBadge>
+            <IonBadge color="success" slot="end" className="chat-list-badge">
+              {chat.time}
+            </IonBadge>
           </IonItem>
         ))}
       </IonList>

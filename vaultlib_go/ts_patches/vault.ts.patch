@@ -1,0 +1,8 @@
+--- vault.ts
++++ vault.ts
+@@ -6,1 +6,1 @@
+-export interface EVault {
++export interface IEVault {
+@@ -18,1 +18,1 @@
+-export interface Vault {
++export interface IVault<T extends any> {
