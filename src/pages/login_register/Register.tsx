@@ -3,6 +3,7 @@ import { IonInput, IonButton, IonItem, IonLabel, IonText } from "@ionic/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+import PostRegister from "./PostRegister";
 import LRContainer from "./LRContainer";
 import { prettyError } from "../../util/http_util";
 
@@ -19,6 +20,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null); //TODO: zustand store here
 	const [showFingerprint, setShowFingerprint] = useState(false);
 	const [isKGBtnDisabled, setIsKGBtnDisabled] = useState(false);
+	const [isContinuePressed, setIsContinuePressed] = useState(false);
 
 	//Handles keystore generation
 	const handleKeygen = () => {
@@ -60,6 +62,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			//Report the creation of the account
 			const user: any = response.data.payloads[0];
 			toast.success(`Successfully created user ${user.username} <${user.id}>`);
+			setIsContinuePressed(true);
 			console.log(user);
 		} catch (error: any) {
 			//Check if the error has a response section
@@ -145,7 +148,10 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	);
 
 	//Render the fragment
-	return <LRContainer title="Register" content={formContent} onSubmit={handleSubmit} />;
+	return isContinuePressed ?
+	<PostRegister/>
+	:
+	(<LRContainer title="Register" content={formContent} onSubmit={handleSubmit} />);
 };
 
 export default Register;
