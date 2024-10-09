@@ -1,0 +1,180 @@
+$primary-color: #4b8fea;
+
+/* Chat Container */
+.chat-container {
+    display: flex;
+    height: 100%;
+}
+
+/* Chat List (Sidebar) */
+.chat-list {
+    border-right: 0px solid #ccc;
+    background: #262525;
+    position: relative;
+    z-index: 2;
+}
+
+
+
+/* Chat List Item */
+.chat-list-item {
+    display: flex;
+    align-items: center;
+}
+
+/* Default styles for IonLabel, IonBadge (Visible by default) */
+.chat-list-label {
+    display: block;
+}
+
+.chat-list-badge {
+    display: inline-block;
+}
+
+/* Media Query for Small Screens (e.g., mobile devices) */
+@media (max-width: 768px) {
+
+    /* Hide the chat label (name and message) when below 768px */
+    .chat-list-name {
+        display: none;
+    }
+
+    .chat-list-message {
+        display: none;
+    }
+
+    .chat-list-badge {
+        display: none;
+    }
+
+    .new-chat-icon {
+        display: none;
+    }
+}
+
+
+
+.new-chat-icon {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.chats-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Chat Content */
+.chat-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    max-width: 70%;
+    background: white;
+}
+
+/* Chat View */
+.chat-view {
+    position: relative;
+    /* Set position relative to use pseudo-element */
+    flex-grow: 1;
+    background-color: #f0f0f0;
+    overflow-y: auto;
+    z-index: 1;
+
+    /* Create a pseudo-element for the background image */
+    &::before {
+        content: '';
+        position: fixed;
+        /* Change from absolute to fixed */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('../assets/images/chat_background.jpg');
+        background-size: cover;
+        background-position: center;
+        filter: invert(100%);
+        opacity: 1;
+        z-index: -1;
+        /* Ensure it stays behind the content */
+        pointer-events: none;
+        /* Prevent interactions with the pseudo-element */
+    }
+}
+
+
+
+/* Chat Header (Fixed at the top) */
+.chat-header {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
+}
+
+/* Chat Bubbles */
+.chat-messages {
+    display: flex;
+    height: 90vh;
+    flex-direction: column;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+/* Chat Bubble */
+.chat-bubble {
+    max-width: 70%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 20px;
+    position: relative;
+    word-wrap: break-word;
+}
+
+/* My chat - aligned right */
+.chat-bubble.from-me {
+    background-color: $primary-color;
+    color: white;
+    margin-left: auto;
+    /* Aligns my messages to the right */
+    border-bottom-right-radius: 0;
+}
+
+/* Their chat - aligned left */
+.chat-bubble.from-them {
+    background-color: #e5e5ea;
+    color: black;
+    margin-right: auto;
+    /* Aligns their messages to the left */
+    border-bottom-left-radius: 0;
+}
+
+.chat-bubble span {
+    display: block;
+    font-size: 0.8rem;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* Chat Input */
+.chat-input {
+    // I want the position to be at the bottom
+    position: sticky;
+    flex-shrink: 0;
+    margin-left: auto;
+    bottom: 0;
+    background-color: white;
+
+    ion-input {
+        text-align: left;
+        margin-left: 20px;
+        padding-right: 10px;
+    }
+}
