@@ -7,10 +7,10 @@ import { prettyError } from "../../util/http_util";
 import "./LoginRegister.scss";
 
 interface LoginProps {
-    togglePage: () => void;
+	togglePage: () => void;
 }
 
-const Login: React.FC <LoginProps>= ({ togglePage }) => {
+const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	//State stuff
 	const [email, setEmail] = useState("");
 	const [pass, setPass] = useState("");
@@ -58,10 +58,7 @@ const Login: React.FC <LoginProps>= ({ togglePage }) => {
 
 			<p className="fine-print">
 				No account?&nbsp;
-				<IonText
-					color="primary"
-					onClick={togglePage}
-					style={{ cursor: "pointer" }}>
+				<IonText color="primary" onClick={togglePage} style={{ cursor: "pointer" }}>
 					Register now
 				</IonText>
 				.

@@ -11,7 +11,7 @@ console.log("v = v2 ?", v.equals(v2));
 
 const ks = new KeyStore();
 ks.sign("xgzg");
-ks.sk
+ks.sk;
 KeyStore.inJSStore("");
 
 const w = Vault.fromKS(ks);

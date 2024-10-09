@@ -10,12 +10,22 @@ import { prettyError } from "../../util/http_util";
 
 import "./LoginRegister.scss";
 
-const PostRegister: React.FC = () => {
-	const history = useHistory();
+interface PostRegisterProps {
+	vault: typeof Vault;
+}
 
+/** Holds the types of security that the vault is to be encrypted with. */
+enum VaultSecurityTypes {
+	PASSPHRASE
+}
+
+const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
 	//State stuff
-	const [username, setUsername] = useState("");
-	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null); //TODO: zustand store here
+	const history = useHistory();
+	const [secType, setSecType] = useState<VaultSecurityTypes>(
+		VaultSecurityTypes.PASSPHRASE
+	);
+	const [passphrase, setPassphrase] = useState("");
 
 	//Handles form submissions
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -23,10 +33,9 @@ const PostRegister: React.FC = () => {
 		e.preventDefault();
 
 		// Take the user back to the login page
-		// TODO: handle this with Zustand instead. This will prevent the page from fully reloading.
-		history.push('/login');
+		history.push("/login");
 		window.location.reload(); // Remove this when Zustand is implemented
-	}
+	};
 
 	//Holds the form content to render
 	const formContent = (
@@ -34,11 +43,11 @@ const PostRegister: React.FC = () => {
 			{/* Username Input */}
 			<IonItem>
 				<IonLabel position="stacked">
-					Type Something {username === "" && <span style={{ color: "red" }}>*</span>}
+					Passphrase {passphrase === "" && <span style={{ color: "red" }}>*</span>}
 				</IonLabel>
 				<IonInput
-					value={username}
-					onIonChange={(e: CustomEvent) => setUsername(e.detail.value!)}
+					value={passphrase}
+					onIonChange={(e: CustomEvent) => setPassphrase(e.detail.value!)}
 					required
 				/>
 			</IonItem>

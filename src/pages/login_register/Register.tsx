@@ -8,24 +8,20 @@ import LRContainer from "./LRContainer";
 import { prettyError } from "../../util/http_util";
 
 import "./LoginRegister.scss";
-import useVaultStore from "./stores/registration";
 
 interface RegisterProps {
 	togglePage: () => void;
 }
-
-console.log("register page loaded")
 
 const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	//State stuff
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
 	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null);
+	const [vault, setVault] = useState<InstanceType<typeof Vault>>(Vault.newBlank());
 	const [showFingerprint, setShowFingerprint] = useState(false);
 	const [isKGBtnDisabled, setIsKGBtnDisabled] = useState(false);
 	const [isContinuePressed, setIsContinuePressed] = useState(false);
-
-	//const { vault, updateSubject, updateDevIdent, updateKstore } = useVaultStore();
 
 	//Handles keystore generation
 	const handleKeygen = () => {
@@ -35,6 +31,9 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 		//Assign values and show the fingerprint
 		setKeyStore(ks);
 		setShowFingerprint(true);
+
+		//Set the keystore in the vault
+		vault.kstore = ks.toJSObject();
 
 		//Disable the button
 		setIsKGBtnDisabled(true);
@@ -152,10 +151,11 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	);
 
 	//Render the fragment
-	return isContinuePressed ?
-	<PostRegister/>
-	:
-	(<LRContainer title="Register" content={formContent} onSubmit={handleSubmit} />);
+	return isContinuePressed ? (
+		<PostRegister vault={vault} />
+	) : (
+		<LRContainer title="Register" content={formContent} onSubmit={handleSubmit} />
+	);
 };
 
 export default Register;
