@@ -70,12 +70,19 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 				payload
 			);
 			const respPayload: HttpResponse<RegisteredUser> = response.data;
+			if (!respPayload.payloads) {
+				throw new Error("server response has no payload");
+			}
+			const user = respPayload.payloads[0];
+
+			//Add the response data to the vault plus extras
+			vault.subject = user.id;
+			vault.dev_ident = window.navigator.userAgent;
+			console.log("populated vault:", vault.toString());
 
 			//Report the creation of the account
-			const user: any = response.data.payloads[0];
 			toast.success(`Successfully created user ${user.username} <${user.id}>`);
 			setIsContinuePressed(true);
-			console.log(user);
 		} catch (error: any) {
 			//Check if the error has a response section
 			let rtext = "";

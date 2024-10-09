@@ -37,6 +37,8 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
 		window.location.reload(); // Remove this when Zustand is implemented
 	};
 
+	console.log("got vault:", vault.toString());
+
 	//Holds the form content to render
 	const formContent = (
 		<>
