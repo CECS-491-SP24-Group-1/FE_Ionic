@@ -29,7 +29,7 @@ const App: React.FC = () => {
 					<Route path="/camera" component={CameraPage} exact={true} />
 					<Route path="/settings" component={Settings} exact={true} />
 					<Route path="/chat" component={Chat} exact={true} />
-					<Route exact path="/" render={() => <Redirect to="/home" />} />
+					<Route exact path="/" render={() => <Redirect to="/login" />} />
 				</IonRouterOutlet>
 
 				{/* Temporary registration page */}
@@ -47,11 +47,6 @@ const App: React.FC = () => {
 					<IonTabButton tab="chat" href="/chat">
 						<IonIcon icon={chatbubble} />
 						<IonLabel>Chat</IonLabel>
-					</IonTabButton>
-
-					<IonTabButton tab="home" href="/home">
-						<IonIcon icon={home} />
-						<IonLabel>Home</IonLabel>
 					</IonTabButton>
 
 					<IonTabButton tab="camera" href="/camera">
