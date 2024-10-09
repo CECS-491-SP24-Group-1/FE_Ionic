@@ -21,6 +21,7 @@ const Chats: React.FC = () => {
   const handleSendMessage = (message: string) => {
     if (selectedChatId !== null) {
       chatMessagesData[selectedChatId].push({
+        to: 'Mariana',
         from: 'Me',
         text: message,
         time: 'Now',

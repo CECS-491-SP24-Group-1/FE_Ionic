@@ -4,6 +4,7 @@ import React from 'react';
 
 // Define the interface for a single message
 export interface Message {
+  to: string;
   from: string;
   text: string;
   time: string;
@@ -12,18 +13,18 @@ export interface Message {
 // Define the chat message data with chatId as keys
 export const chatMessagesData: { [key: number]: Message[] } = {
   1: [
-    { from: 'Me', text: 'Hey, Mariana', time: '10:45 AM' },
-    { from: 'Mariana', text: 'Hi! How are you?', time: '10:46 AM' },
-    { from: 'Me', text: 'I’m good! What about you?', time: '10:47 AM' },
-    { from: 'Mariana', text: 'Doing well, just busy with work.', time: '10:48 AM' },
+    { to: 'Mariana', from: 'Me', text: 'Hey, Mariana', time: '10:45 AM' },
+    { to: 'Me',from: 'Mariana', text: 'Hi! How are you?', time: '10:46 AM' },
+    { to: 'Mariana', from: 'Me', text: 'I’m good! What about you?', time: '10:47 AM' },
+    { to: 'Me', from: 'Mariana', text: 'Doing well, just busy with work.', time: '10:48 AM' },
   ],
   2: [
-    { from: 'Claudia', text: 'Can we meet up tomorrow?', time: '10:30 AM' },
-    { from: 'Me', text: 'Sure! Let’s meet around noon.', time: '10:32 AM' },
+    { to: 'Me', from: 'Claudia', text: 'Can we meet up tomorrow?', time: '10:30 AM' },
+    { to: 'Claudia',from: 'Me', text: 'Sure! Let’s meet around noon.', time: '10:32 AM' },
   ],
   3: [
-    { from: 'Me', text: 'Don’t forget about the project meeting at 3 PM.', time: '08:45 AM' },
-    { from: 'Team', text: 'Got it. See you there!', time: '08:50 AM' },
+    { to: 'Team', from: 'Me', text: 'Don’t forget about the project meeting at 3 PM.', time: '08:45 AM' },
+    { to: 'Me', from: 'Team', text: 'Got it. See you there!', time: '08:50 AM' },
   ],
 };
 
