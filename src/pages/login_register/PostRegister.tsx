@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { IonInput, IonButton, IonItem, IonLabel, IonText } from "@ionic/react";
 import axios from "axios";
 import { IonRouterLink } from "@ionic/react";
@@ -10,6 +11,8 @@ import { prettyError } from "../../util/http_util";
 import "./LoginRegister.scss";
 
 const PostRegister: React.FC = () => {
+	const history = useHistory();
+
 	//State stuff
 	const [username, setUsername] = useState("");
 	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null); //TODO: zustand store here
@@ -18,6 +21,11 @@ const PostRegister: React.FC = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
+
+		// Take the user back to the login page
+		// TODO: handle this with Zustand instead. This will prevent the page from fully reloading.
+		history.push('/login');
+		window.location.reload(); // Remove this when Zustand is implemented
 	}
 
 	//Holds the form content to render
@@ -26,7 +34,7 @@ const PostRegister: React.FC = () => {
 			{/* Username Input */}
 			<IonItem>
 				<IonLabel position="stacked">
-					Username {username === "" && <span style={{ color: "red" }}>*</span>}
+					Type Something {username === "" && <span style={{ color: "red" }}>*</span>}
 				</IonLabel>
 				<IonInput
 					value={username}
