@@ -7,18 +7,23 @@ import LRContainer from "./LRContainer";
 import { prettyError } from "../../util/http_util";
 
 import "./LoginRegister.scss";
+import useVaultStore from "./stores/registration";
 
 interface RegisterProps {
-    togglePage: () => void;
+	togglePage: () => void;
 }
+
+console.log("register page loaded")
 
 const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	//State stuff
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
-	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null); //TODO: zustand store here
+	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null);
 	const [showFingerprint, setShowFingerprint] = useState(false);
 	const [isKGBtnDisabled, setIsKGBtnDisabled] = useState(false);
+
+	//const { vault, updateSubject, updateDevIdent, updateKstore } = useVaultStore();
 
 	//Handles keystore generation
 	const handleKeygen = () => {
@@ -37,6 +42,8 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
+
+		//console.log("kstore content: ", vault.kstore)
 
 		//Check if there is a keystore present
 		if (keystore === null) {
@@ -133,10 +140,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			</p>
 			<p className="fine-print">
 				Already have an account?&nbsp;
-				<IonText
-					color="primary"
-					onClick={togglePage}
-					style={{ cursor: "pointer" }}>
+				<IonText color="primary" onClick={togglePage} style={{ cursor: "pointer" }}>
 					Login Now
 				</IonText>
 				.
