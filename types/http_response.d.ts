@@ -3,16 +3,10 @@
 //////////
 // source: http_response.go
 
-declare global {
-	/** Represents a response that is sent back to the user after an API call. */
-	interface HttpResponse<T extends any> {
-		code: number /* int */;
-		status: string;
-		desc?: string;
-		errors?: string[];
-		payloads?: T[];
-	}
+export interface HttpResponse<T extends any> {
+	code: number /* int */;
+	status: string;
+	desc?: string;
+	errors?: string[];
+	payloads?: T[];
 }
-
-//This empty export is necessary to make this a module
-export {};

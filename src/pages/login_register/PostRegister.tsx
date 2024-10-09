@@ -60,7 +60,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
 	);
 
 	//Render the fragment
-	return <LRContainer title="Register" content={formContent} onSubmit={handleSubmit} />;
+	return <LRContainer title="Account Created" content={formContent} onSubmit={handleSubmit} />;
 };
 
 export default PostRegister;

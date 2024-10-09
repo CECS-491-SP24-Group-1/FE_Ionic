@@ -7,6 +7,9 @@ import PostRegister from "./PostRegister";
 import LRContainer from "./LRContainer";
 import { prettyError } from "../../util/http_util";
 
+import { HttpResponse } from "@ptypes/http_response";
+import { RegisteredUser } from "@ptypes/response_types";
+
 import "./LoginRegister.scss";
 
 interface RegisterProps {
@@ -33,7 +36,9 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 		setShowFingerprint(true);
 
 		//Set the keystore in the vault
+		console.log("add ks to vault before:", vault.toString());
 		vault.kstore = ks.toJSObject();
+		console.log("add ks to vault after:", vault.toString());
 
 		//Disable the button
 		setIsKGBtnDisabled(true);
@@ -64,6 +69,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 				`${import.meta.env.VITE_API_URL}/auth/register`,
 				payload
 			);
+			const respPayload: HttpResponse<RegisteredUser> = response.data;
 
 			//Report the creation of the account
 			const user: any = response.data.payloads[0];
@@ -74,7 +80,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			//Check if the error has a response section
 			let rtext = "";
 			if (error.response !== undefined) {
-				const response: HttpResponse<any> = error.response.data;
+				const response: HttpResponse<null> = error.response.data;
 				rtext = prettyError(response);
 			} else {
 				rtext = error.message;
