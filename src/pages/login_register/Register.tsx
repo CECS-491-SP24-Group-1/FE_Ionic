@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { IonInput, IonButton, IonItem, IonLabel, IonText } from "@ionic/react";
 import axios from "axios";
-import { IonRouterLink } from "@ionic/react";
 import { toast } from "react-toastify";
 
 import LRContainer from "./LRContainer";
@@ -9,7 +8,11 @@ import { prettyError } from "../../util/http_util";
 
 import "./LoginRegister.scss";
 
-const Register: React.FC = () => {
+interface RegisterProps {
+    togglePage: () => void;
+}
+
+const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	//State stuff
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
@@ -130,12 +133,12 @@ const Register: React.FC = () => {
 			</p>
 			<p className="fine-print">
 				Already have an account?&nbsp;
-				<IonRouterLink
+				<IonText
 					color="primary"
-					routerLink="/login"
-					style={{ textDecoration: "none" }}>
+					onClick={togglePage}
+					style={{ cursor: "pointer" }}>
 					Login Now
-				</IonRouterLink>
+				</IonText>
 				.
 			</p>
 		</>
