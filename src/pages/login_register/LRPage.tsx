@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { IonContent, IonPage } from "@ionic/react";
 
-import LRLogo from "./LRLogo";
+import LRLogo from "./components/LRLogo";
 import Login from "./Login";
 import Register from "./Register";
 
-import "./LRContainer.scss";
+//import "./LRContainer.scss";
 
 /** The parent page for the Login and Register Forms. */
 const LRPage: React.FC = () => {

@@ -1,16 +1,16 @@
-import React from 'react';
-import { IonItem, IonLabel } from '@ionic/react';
+import React from "react";
+import { IonItem, IonLabel } from "@ionic/react";
 
 interface MenuItemProps {
-  label: string;
+	label: string;
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({ label }) => {
-  return (
-    <IonItem>
-      <IonLabel>{label}</IonLabel>
-    </IonItem>
-  );
+	return (
+		<IonItem>
+			<IonLabel>{label}</IonLabel>
+		</IonItem>
+	);
 };
 
 export default MenuItem;

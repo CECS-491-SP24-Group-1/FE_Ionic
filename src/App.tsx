@@ -5,7 +5,7 @@ import {
 	IonTabBar,
 	IonTabButton,
 	IonLabel,
-	IonIcon,
+	IonIcon
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
@@ -17,6 +17,7 @@ import CameraPage from "./pages/Camera";
 import Settings from "./pages/Settings";
 import Chat from "./pages/Chats";
 import LRPage from "./pages/login_register/LRPage";
+import PostRegister from "./pages/login_register/PostRegister";
 
 const App: React.FC = () => {
 	return (
@@ -29,6 +30,7 @@ const App: React.FC = () => {
 					<Route path="/camera" component={CameraPage} exact={true} />
 					<Route path="/settings" component={Settings} exact={true} />
 					<Route path="/chat" component={Chat} exact={true} />
+					<Route path="/PostRegister" component={PostRegister} exact={true} />
 					<Route exact path="/" render={() => <Redirect to="/login" />} />
 				</IonRouterOutlet>
 

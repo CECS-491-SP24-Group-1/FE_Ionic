@@ -4,11 +4,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import PostRegister from "./PostRegister";
-import LRContainer from "./LRContainer";
+import LRContainer from "./components/LRContainer";
 import { prettyError } from "../../util/http_util";
 
 import { HttpResponse } from "@ptypes/http_response";
 import { RegisteredUser } from "@ptypes/response_types";
+import { RegisteringUser } from "@ptypes/request_types";
+
+import { faker } from "@faker-js/faker"; //TODO: temp
 
 import "./LoginRegister.scss";
 
@@ -57,7 +60,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			return;
 		}
 
-		const payload = {
+		const payload: RegisteringUser = {
 			username: username,
 			email: email,
 			pubkey: keystore.pk
@@ -97,6 +100,21 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			console.error("Error creating account:", rtext);
 			toast.error(`Failed to create account: ${rtext}`);
 		}
+	};
+
+	//TODO: temp
+	const handleFakeData = async (e: React.FormEvent) => {
+		//Generate a fake username and email
+		const username = faker.internet.userName();
+		const email = `${username}@localhost.com`;
+
+		//Set form data
+		setUsername(username);
+		setEmail(email);
+
+		//Generate a keystore and submit the form
+		await handleKeygen();
+		document.getElementById("continueBtn")?.click();
 	};
 
 	//Holds the form content to render
@@ -143,8 +161,23 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			</IonItem>
 
 			{/* Continue Button */}
-			<IonButton shape="round" expand="full" type="submit" className="continue-button">
+			<IonButton
+				shape="round"
+				expand="full"
+				type="submit"
+				className="continue-button"
+				id="continueBtn">
 				Continue
+			</IonButton>
+
+			{/* Fake data generator */}
+			{/* TODO: temp */}
+			<IonButton
+				shape="round"
+				expand="full"
+				className="continue-button"
+				onClick={handleFakeData}>
+				Generate Fake Data
 			</IonButton>
 
 			{/* Footer Text */}

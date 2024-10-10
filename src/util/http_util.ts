@@ -1,3 +1,5 @@
+import { HttpResponse } from "@ptypes/http_response";
+
 /**
  * Emits an API error as a pretty string.
  * @param resp The error response to emit.
