@@ -4,14 +4,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import PostRegister from "./PostRegister";
-import LRContainer from "./LRContainer";
+import LRContainer from "./components/LRContainer";
 import { prettyError } from "../../util/http_util";
 
 import { HttpResponse } from "@ptypes/http_response";
 import { RegisteredUser } from "@ptypes/response_types";
 import { RegisteringUser } from "@ptypes/request_types";
 
-import { faker } from "@faker-js/faker" //TODO: temp
+import { faker } from "@faker-js/faker"; //TODO: temp
 
 import "./LoginRegister.scss";
 
@@ -161,14 +161,22 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			</IonItem>
 
 			{/* Continue Button */}
-			<IonButton shape="round" expand="full" type="submit" className="continue-button" id="continueBtn">
+			<IonButton
+				shape="round"
+				expand="full"
+				type="submit"
+				className="continue-button"
+				id="continueBtn">
 				Continue
 			</IonButton>
 
 			{/* Fake data generator */}
 			{/* TODO: temp */}
-			<IonButton shape="round" expand="full"
-				className="continue-button" onClick={handleFakeData}>
+			<IonButton
+				shape="round"
+				expand="full"
+				className="continue-button"
+				onClick={handleFakeData}>
 				Generate Fake Data
 			</IonButton>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { useThemeColor } from "../hooks/useThemeColor";
+import { useThemeColor } from "../../hooks/useThemeColor";
 import "./ThemedText.css";
 
 export type ThemedTextProps = React.HTMLAttributes<HTMLSpanElement> & {

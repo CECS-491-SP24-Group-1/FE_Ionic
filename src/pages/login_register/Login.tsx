@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IonInput, IonButton, IonItem, IonLabel, IonText } from "@ionic/react";
 
-import LRContainer from "./LRContainer";
+import LRContainer from "./components/LRContainer";
 import { prettyError } from "../../util/http_util";
 
 import "./LoginRegister.scss";
