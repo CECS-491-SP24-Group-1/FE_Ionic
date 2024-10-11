@@ -71,8 +71,8 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 		toast.success("Vault was encrypted successfully!" + vault.toString());
 	};
 
-	//Holds the form content to render
-	const formContent = (
+	//Holds the form content to render when the encrypted vault is not present
+	const formContentNoEVault = (
 		<>
 			<p className="subtitle top">
 				Your account and vault have been successfully created. Your vault ID is{" "}
@@ -96,16 +96,14 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 			<br />
 
 			{/* Pre-encryption vault buttons */}
-			{!evault && (
-				<IonButton
-					className="icon-btn"
-					shape="round"
-					expand="full"
-					onClick={handleEncrypt}>
-					<span>Encrypt</span>
-					<IonIcon icon={lockClosedOutline}></IonIcon>
-				</IonButton>
-			)}
+			<IonButton
+				className="icon-btn"
+				shape="round"
+				expand="full"
+				onClick={handleEncrypt}>
+				<span>Encrypt</span>
+				<IonIcon icon={lockClosedOutline}></IonIcon>
+			</IonButton>
 
 			{/* Continue Button * /}
 			<IonButton shape="round" expand="full" type="submit" className="continue-button">
@@ -115,9 +113,19 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 		</>
 	);
 
+	//Holds the form content to render when the encrypted vault is present
+	const formContentEVault = (
+		<>
+		</>
+	);
+
 	//Render the fragment
 	return (
-		<LRContainer title="Account Created" content={formContent} onSubmit={handleSubmit} />
+		<LRContainer
+			title="Account Created"
+			content={evault ? formContentEVault : formContentNoEVault}
+			onSubmit={handleSubmit}
+		/>
 	);
 };
 
