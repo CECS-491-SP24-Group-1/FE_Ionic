@@ -5,6 +5,7 @@ import LRContainer from "./components/LRContainer";
 import { prettyError } from "../../util/http_util";
 
 import "./LoginRegister.scss";
+import PassInput from "./components/PassInput";
 
 interface LoginProps {
 	togglePage: () => void;
@@ -29,7 +30,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			{/* Email Input */}
 			<IonItem>
 				<IonLabel position="stacked">
-					Email {email === "" && <span style={{ color: "red" }}>*</span>}
+					Email {email === "" && <span className="required"></span>}
 				</IonLabel>
 				<IonInput
 					type="email"
@@ -40,16 +41,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			</IonItem>
 
 			{/* Passphrase Input */}
-			<IonItem>
-				<IonLabel position="stacked">
-					Passphrase {pass === "" && <span style={{ color: "red" }}>*</span>}
-				</IonLabel>
-				<IonInput
-					value={pass}
-					onIonChange={(e: CustomEvent) => setPass(e.detail.value!)}
-					required
-				/>
-			</IonItem>
+			<PassInput pass={pass} setPass={setPass} />
 
 			{/* Continue Button */}
 			<IonButton shape="round" expand="full" type="submit" className="continue-button">

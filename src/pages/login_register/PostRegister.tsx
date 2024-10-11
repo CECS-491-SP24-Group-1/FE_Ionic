@@ -1,26 +1,20 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import {
-	IonInput,
-	IonButton,
-	IonItem,
-	IonLabel,
-	IonText,
-	IonProgressBar
-} from "@ionic/react";
-import axios from "axios";
+import { IonButton, IonIcon } from "@ionic/react";
 import { IonRouterLink } from "@ionic/react";
 import { toast } from "react-toastify";
-import CryptoJS from "crypto-js"; // Import crypto-js for encryption
-import { passwordStrength } from "check-password-strength"; // Correct import
+import { passwordStrength } from "check-password-strength";
+import { lockClosedOutline } from "ionicons/icons";
 
-import LRContainer from "./LRContainer";
-import { prettyError } from "../../util/http_util";
+import LRContainer from "./components/LRContainer";
 
 import "./LoginRegister.scss";
+import PassStrength from "./components/PassStrength";
+import PassInput from "./components/PassInput";
 
 interface PostRegisterProps {
 	vault: typeof Vault;
+	togglePage: () => void;
 }
 
 /** Holds the types of security that the vault is to be encrypted with. */
@@ -28,16 +22,24 @@ enum VaultSecurityTypes {
 	PASSPHRASE
 }
 
-const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
+const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	//State stuff
 	const history = useHistory();
 	const [secType, setSecType] = useState<VaultSecurityTypes>(
 		VaultSecurityTypes.PASSPHRASE
 	);
-	const [passphrase, setPassphrase] = useState("");
-	const [password, setPassword] = useState(""); // State for password
-	const [passwordStrengthLevel, setPasswordStrengthLevel] = useState(""); // State for password strength
-	const [encryptedPassword, setEncryptedPassword] = useState(""); // State for encrypted password
+	const [passphrase, setPassphrase] = useState(""); //State for passphrases
+	const [passphraseStrength, setPassphraseStrength] = useState(-1); // State for password strength
+	const [shouldWarnStrength, setShouldWarnStrength] = useState(false);
+	const [evault, setEvault] = useState<typeof EVault | undefined>(undefined);
+
+	// Handle password input change and update strength using `passwordStrength`
+	const handleStrengthUpdate = (newPassphrase: string) => {
+		const result = passwordStrength(newPassphrase);
+		if (newPassphrase.length > 0) setPassphraseStrength(result.id);
+		else setPassphraseStrength(-1);
+		if (passphraseStrength < 3) setShouldWarnStrength(true);
+	};
 
 	//Handles form submissions
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -49,77 +51,67 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
 		window.location.reload(); // Remove this when Zustand is implemented
 	};
 
-	//Encrypts the password
-	const handleEncryptPassword = () => {
-		if (password) {
-			const encrypted = CryptoJS.AES.encrypt(password, "secret-key").toString();
-			setEncryptedPassword(encrypted);
-			toast.success("Password encrypted successfully!");
-		} else {
-			toast.error("Please enter a password to encrypt");
+	//Encrypts the vault
+	const handleEncrypt = async () => {
+		//Prevent encryptions with blank passwords
+		if (!passphrase) {
+			toast.error("Please enter a passphrase to encrypt the vault with.");
+			return;
 		}
-	};
 
-	// Handle password input change and update strength using `passwordStrength`
-	const handlePasswordChange = (e: CustomEvent) => {
-		const newPassword = e.detail.value!;
-		setPassword(newPassword);
-		const result = passwordStrength(newPassword); // Call passwordStrength function with password input
-		setPasswordStrengthLevel(result.value); // result.value gives 'Too Weak', 'Weak', 'Medium', or 'Strong'
-	};
-
-	// Generate password strength color based on value
-	const getPasswordStrengthColor = (strength: string) => {
-		switch (strength) {
-			case "Too Weak":
-				return "danger";
-			case "Weak":
-				return "warning";
-			case "Medium":
-				return "tertiary";
-			case "Strong":
-				return "success";
-			default:
-				return "medium";
+		//Warn users that their passphrase is not secure enough if it is
+		if (shouldWarnStrength) {
+			toast.warn(
+				"Your passphrase strength is weak. Consider using a better passphrase or press the 'Encrypt' button again to continue anyways."
+			);
+			setShouldWarnStrength(false);
+			return;
 		}
+
+		toast.success("Vault was encrypted successfully!" + vault.toString());
 	};
 
 	//Holds the form content to render
 	const formContent = (
 		<>
-			<IonItem>
-				<IonLabel position="stacked">Choose a Password</IonLabel>
-				<IonInput
-					type="password"
-					value={password}
-					onIonInput={handlePasswordChange} // Use onIonInput for real-time update
-					placeholder="Enter a password"
-				/>
-			</IonItem>
+			<p className="subtitle top">
+				Your account and vault have been successfully created. Your vault ID is{" "}
+				<code>{vault.id}</code>. To complete registration, you must encrypt your vault.
+			</p>
 
-			{/* Password strength feedback */}
-			<IonText color={getPasswordStrengthColor(passwordStrengthLevel)}>
-				<p>Password strength: {passwordStrengthLevel}</p>
-			</IonText>
-
-			<IonButton
-				shape="round"
-				expand="full"
-				onClick={handleEncryptPassword}
-				className="encrypt-button">
-				Encrypt Password
-			</IonButton>
-
-			{encryptedPassword && (
-				<IonText color="primary">
-					<p>Your encrypted password: {encryptedPassword}</p>
-				</IonText>
+			{/* Passphrase security */}
+			{secType === VaultSecurityTypes.PASSPHRASE && (
+				<>
+					<PassInput
+						pass={passphrase}
+						setPass={setPassphrase}
+						onUpdate={handleStrengthUpdate}
+					/>
+					{/* Password strength feedback */}
+					<PassStrength strength={passphraseStrength} />
+				</>
 			)}
 
-			{/* Continue Button */}
+			<br />
+			<br />
+
+			{/* Pre-encryption vault buttons */}
+			{!evault && (
+				<IonButton
+					className="icon-btn"
+					shape="round"
+					expand="full"
+					onClick={handleEncrypt}>
+					<span>Encrypt</span>
+					<IonIcon icon={lockClosedOutline}></IonIcon>
+				</IonButton>
+			)}
+
+			{/* Continue Button * /}
 			<IonButton shape="round" expand="full" type="submit" className="continue-button">
 				Continue
 			</IonButton>
+			{*/}
 		</>
 	);
 

@@ -123,7 +123,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			{/* Username Input */}
 			<IonItem>
 				<IonLabel position="stacked">
-					Username {username === "" && <span style={{ color: "red" }}>*</span>}
+					Username {username === "" && <span className="required"></span>}
 				</IonLabel>
 				<IonInput
 					value={username}
@@ -135,7 +135,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			{/* Email Input */}
 			<IonItem>
 				<IonLabel position="stacked">
-					Email {email === "" && <span style={{ color: "red" }}>*</span>}
+					Email {email === "" && <span className="required"></span>}
 				</IonLabel>
 				<IonInput
 					type="email"
@@ -197,8 +197,9 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	);
 
 	//Render the fragment
+	//TODO: remove extra prop arg
 	return isContinuePressed ? (
-		<PostRegister vault={vault} />
+		<PostRegister vault={vault} togglePage={() => {}} />
 	) : (
 		<LRContainer title="Register" content={formContent} onSubmit={handleSubmit} />
 	);

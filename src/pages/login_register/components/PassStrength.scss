@@ -1,0 +1,44 @@
+@import "./vars";
+
+.pw-strength {
+	height: 1em;
+	display: flex;
+	align-items: center;
+	width: 100%;
+
+	.bar-label {
+		flex: 1;
+		display: flex;
+		align-items: center;
+
+		span {
+			color: $subtitle;
+			font-weight: bold;
+			font-size: 0.8em;
+			line-height: 1;
+		}
+	}
+
+	.bar-container {
+		flex: 5;
+		//Center all child elements using flexbox
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+
+		//Centered floating text over the bar
+		span {
+			position: absolute;
+			z-index: 1;
+			font-size: 0.75em;
+			line-height: 1;
+			color: $subtitle;
+		}
+
+		.bar {
+			height: 1em;
+			border-radius: 0.25em;
+		}
+	}
+}

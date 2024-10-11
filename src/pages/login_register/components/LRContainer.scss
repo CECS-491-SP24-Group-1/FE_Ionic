@@ -1,3 +1,5 @@
+@import "./vars";
+
 // Background Image
 ion-content::part(scroll) {
 	background-image: url("../../../assets/images/registration-background.jpg");
@@ -26,12 +28,24 @@ ion-content::part(scroll) {
 	font-family: "Poppins", sans-serif;
 
 	.title {
-		color: #323030;
+		color: $title;
 		font-weight: bold;
 		font-family: "Poppins", sans-serif;
 		margin-top: -10px;
 		margin-bottom: 22px;
 		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+	}
+
+	.subtitle {
+		color: $subtitle;
+	}
+
+	.subtitle.top {
+		margin-bottom: 1em;
+	}
+
+	.icon-btn > *:not(:first-child) {
+		margin-left: 0.5em;
 	}
 
 	// Form
@@ -52,16 +66,28 @@ ion-content::part(scroll) {
 			height: 55px;
 		}
 	}
+
+	ion-icon {
+		color: #ffffff;
+	}
 }
 
 .fine-print {
 	font-size: 0.8rem;
-	color: #555;
+	color: $subtitle;
 	//margin-top: 1rem;
 	text-align: left;
 
 	ion-text {
 		color: #3b82f6;
 		cursor: pointer;
+	}
+}
+
+.required {
+	color: #ff0000;
+
+	&::before {
+		content: "*";
 	}
 }
