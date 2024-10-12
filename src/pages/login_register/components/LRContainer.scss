@@ -70,6 +70,17 @@ ion-content::part(scroll) {
 	ion-icon {
 		color: #ffffff;
 	}
+
+	.bottommost-button {
+		margin-top: 3rem;
+	}
+
+	.inline-btns {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
 }
 
 .fine-print {
