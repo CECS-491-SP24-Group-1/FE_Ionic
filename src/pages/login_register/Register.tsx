@@ -197,9 +197,8 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	);
 
 	//Render the fragment
-	//TODO: remove extra prop arg
 	return isContinuePressed ? (
-		<PostRegister vault={vault} togglePage={() => {}} />
+		<PostRegister vault={vault} />
 	) : (
 		<LRContainer title="Register" content={formContent} onSubmit={handleSubmit} />
 	);

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { IonButton, IonIcon } from "@ionic/react";
-import { IonRouterLink } from "@ionic/react";
 import { toast } from "react-toastify";
 import { passwordStrength } from "check-password-strength";
 import { arrowForwardOutline, lockClosedOutline, saveOutline } from "ionicons/icons";
