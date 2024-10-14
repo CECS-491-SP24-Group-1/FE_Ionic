@@ -34,28 +34,12 @@ setupIonicReact();
 export function Root() {
 	//Setup the WASM loader for vaultlib
 	const { loaded: wasmLoaded, error: wasmError } = useWasm("/vaultlib.wasm");
-	const [vaultExists, setVaultExists] = useState<boolean | null>(null);
+
 	//Listen for state changes to the loader,
 	useEffect(() => {
 		if (wasmLoaded) {
 			console.log("WebAssembly module loaded successfully");
 			//Perform any actions that depend on the WebAssembly module being loaded
-
-			// Session storage key
-			const SS_VAULT_KEY = "user_vault_key" //Placeholder
-
-			if (Vault.inSStore(SS_VAULT_KEY)){
-				const vault = Vault.fromSStore(SS_VAULT_KEY);
-				if (vault){
-					console.log("Vault deseraialized successfuly", vault)
-					setVaultExists(true);
-				}
-				else{
-					setVaultExists(false);
-				}
-			} else{
-				setVaultExists(false);
-			}
 		}
 	}, [wasmLoaded]);
 
@@ -72,7 +56,7 @@ export function Root() {
 	}
 
 	//Show a placeholder while vaultlib is loading
-	if (!wasmLoaded || vaultExists === null) {
+	if (!wasmLoaded) {
 		return (
 			<IonApp>
 				<div className="loadPlaceholder">
@@ -85,16 +69,6 @@ export function Root() {
 			</IonApp>
 		);
 	}
-	if (!vaultExists) {
-        return (
-            <IonApp>
-                <div className="registrationGate">
-                    <h1>Please Register or Log In</h1>
-                    {/* Registration/Login form can go here */}
-                </div>
-            </IonApp>
-        );
-    }
 
 	//Render the component when vaultlib loads successfully
 	//TODO: add registration and login stuff here
