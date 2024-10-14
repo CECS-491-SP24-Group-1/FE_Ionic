@@ -454,6 +454,13 @@
 						setInt64(sp + 40, toCopy.length);
 						this.mem.setUint8(sp + 48, 1);
 					},
+					
+					// func Throw(message string)
+					"wraith.me/vaultlib/jsutil.Throw": (sp) => {
+						sp >>>= 0;
+						const msg = loadString(sp + 8);
+						throw new Error(msg);
+ 					},
 
 					"debug": (value) => {
 						console.log(value);

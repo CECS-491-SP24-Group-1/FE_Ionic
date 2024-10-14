@@ -1,0 +1,14 @@
+--- wasm_exec.js
++++ wasm_exec.js
+@@ -455,2 +455,9 @@
+ 
+ 					},
++					
++					// func Throw(message string)
++					"wraith.me/vaultlib/jsutil.Throw": (sp) => {
++						sp >>>= 0;
++						const msg = loadString(sp + 8);
++						throw new Error(msg);
++ 					},
++
+

@@ -352,7 +352,6 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 			//Handle any errors that occurred
 			if err != nil {
 				jsutil.JSErr(fmt.Errorf("error while running %s setter for symbol %s: %s", fname, se.name, err))
-				return js.ValueOf(nil)
 			}
 
 			return js.ValueOf(nil)

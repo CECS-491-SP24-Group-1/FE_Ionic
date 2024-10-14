@@ -22,7 +22,9 @@ OUT_DIR := $(STATIC_DIR)/
 TYGO_DIR := ./dist
 TYGO_OUT := $(TYGO_DIR)/*.ts
 PATCH_DIR := ./ts_patches
+JS_PATCH_DIR := ./js_patches
 TYPES_DIR := ../types/vaultlib
+WASM_EXEC_OUT := ../src/wasm_util
 
 # Tools
 GO := go
@@ -184,3 +186,13 @@ ts:
 	@cd $(TYGO_DIR) && for patch in ../$(PATCH_DIR)/*.patch; do \
 		$(PATCH) < $$patch || exit 1; \
 	done
+
+#Patches `wasm_exec.js` to add the new `Throw()` function that was defined in the FFI
+.PHONY: wasm_exec
+wasm_exec:
+	cp "$(shell $(GO) env GOROOT)/misc/wasm/wasm_exec.js" .
+	for patch in $(JS_PATCH_DIR)/*.patch; do \
+		$(PATCH) < $$patch || exit 1; \
+	done
+	mv wasm_exec.js $(WASM_EXEC_OUT)
+	rm wasm_exec.js.orig
