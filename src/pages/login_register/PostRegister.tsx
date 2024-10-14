@@ -40,7 +40,8 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
 		const result = passwordStrength(newPassphrase);
 		if (newPassphrase.length > 0) setPassphraseStrength(result.id);
 		else setPassphraseStrength(-1);
-		if (passphraseStrength < 3) setShouldWarnStrength(true);
+		//console.log("password:", newPassphrase, "; strength:", result.id)
+		setShouldWarnStrength(result.id < 3);
 	};
 
 	//Handles form submissions
