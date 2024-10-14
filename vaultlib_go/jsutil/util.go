@@ -136,7 +136,7 @@ func Stringify(val js.Value) string {
 	return js.Global().Get("JSON").Call("stringify", val).String()
 }
 
-
 // Throws a JS exception.
+//
 //go:wasmimport gojs wraith.me/vaultlib/jsutil.Throw
 func Throw(message string)
