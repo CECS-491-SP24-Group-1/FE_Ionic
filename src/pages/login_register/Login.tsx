@@ -6,6 +6,7 @@ import { prettyError } from "../../util/http_util";
 
 import "./LoginRegister.scss";
 import PassInput from "./components/PassInput";
+import { LS_EVAULT_KEY } from "@/constants/WebStorageKeys";
 
 interface LoginProps {
 	togglePage: () => void;
@@ -13,6 +14,9 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	//State stuff
+	const [hasEVault, setHasEVault] = useState(EVault.inLStore(LS_EVAULT_KEY));
+
+
 	const [email, setEmail] = useState("");
 	const [pass, setPass] = useState("");
 
@@ -23,6 +27,12 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 		// Handle the form submission logic
 	};
+
+	const formNoEVault = (
+		<>
+			<p style={{ color: `${hasEVault ? "#00FF00" : "#FF0000"}` }}>ewtwqlgoinge</p>
+		</>
+	);
 
 	//Holds the form content to render
 	const formContent = (
@@ -59,7 +69,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	);
 
 	//Render the fragment
-	return <LRContainer title="Login" content={formContent} onSubmit={handleSubmit} />;
+	return <LRContainer title="Login" content={formNoEVault} onSubmit={handleSubmit} />;
 };
 
 export default Login;
