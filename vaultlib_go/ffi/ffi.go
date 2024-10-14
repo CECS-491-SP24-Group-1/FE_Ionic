@@ -339,13 +339,16 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 				//Unmarshal the value to a generic interface
 				err = json.Unmarshal([]byte(jsons), newFVal.Addr().Interface())
 
-				//Set the new value in-place into the original struct's field
-				//The value is deserialized and set in-place
-				fvalue.Set(newFVal)
+				//Only update the object if no errors occurred
+				if err == nil {
+					//Set the new value in-place into the original struct's field
+					//The value is deserialized and set in-place
+					fvalue.Set(newFVal)
 
-				//Call the setter hook if one is set
-				if se.setterHook != nil {
-					se.setterHook(obj, this, args)
+					//Call the setter hook if one is set
+					if se.setterHook != nil {
+						se.setterHook(obj, this, args)
+					}
 				}
 			}
 
