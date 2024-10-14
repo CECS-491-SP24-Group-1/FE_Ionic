@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IonApp, IonSpinner } from "@ionic/react";
-import App from "./App";
-
+//import App from "./App";
+import Home from "../Home"
 /** Props interface for VaultChecker */
 interface VaultCheckerProps {
     SS_VAULT_KEY: string;
@@ -52,6 +52,6 @@ export default function VaultChecker({ SS_VAULT_KEY }: VaultCheckerProps) {
         );
     }
 
-    // Render the main app if the vault exists
-    return <App />;
+    // Render Home app if the vault exists
+    return <Home />;
 }
