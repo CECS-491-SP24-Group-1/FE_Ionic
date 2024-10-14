@@ -73,7 +73,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
 
 		//Encrypt the vault and store it in localstorage
 		const ev: typeof EVault = EVault.fromJSObject(vault.encryptPassphrase(passphrase));
-		ev.toJLStore(LS_EVAULT_KEY);
+		ev.toLStore(LS_EVAULT_KEY);
 		setEvault(ev);
 
 		//Announce the successful encryption
