@@ -39,9 +39,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 		setShowFingerprint(true);
 
 		//Set the keystore in the vault
-		console.log("add ks to vault before:", vault.toString());
 		vault.kstore = ks.toJSObject();
-		console.log("add ks to vault after:", vault.toString());
 
 		//Disable the button
 		setIsKGBtnDisabled(true);
@@ -81,7 +79,6 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			//Add the response data to the vault plus extras
 			vault.subject = user.id;
 			vault.dev_ident = window.navigator.userAgent;
-			console.log("populated vault:", vault.toString());
 
 			//Report the creation of the account
 			toast.success(`Successfully created user ${user.username} <${user.id}>`);
