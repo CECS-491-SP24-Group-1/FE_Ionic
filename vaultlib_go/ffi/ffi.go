@@ -201,7 +201,7 @@ func (se StructExporter[T]) Export(name string) {
 			//Call the factory function
 			obj, err := factory.CallFactory(args)
 			if err != nil {
-				jsutil.JSFatal(fmt.Errorf("error while running %s::%s(); %s", se.name, factory.Name, err))
+				jsutil.JSErr(fmt.Errorf("error while running %s::%s(); %s", se.name, factory.Name, err))
 				return nil
 			}
 
@@ -223,7 +223,7 @@ func (se StructExporter[T]) Export(name string) {
 			//Call the static function
 			ret, err := static.CallStatic(args)
 			if err != nil {
-				jsutil.JSFatal(fmt.Errorf("error while running %s::%s(); %s", se.name, static.Name, err))
+				jsutil.JSErr(fmt.Errorf("error while running %s::%s(); %s", se.name, static.Name, err))
 				return nil
 			}
 			return ret
@@ -247,7 +247,7 @@ func (se *StructExporter[T]) exportBackend(_ js.Value, args []js.Value) any {
 		var err error
 		obj, err = se.constructor(args)
 		if err != nil {
-			jsutil.JSFatal(fmt.Errorf("error while calling constructor for symbol %s: %s", se.name, err))
+			jsutil.JSErr(fmt.Errorf("error while calling constructor for symbol %s: %s", se.name, err))
 		}
 	}
 
@@ -298,7 +298,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 
 			//Handle any errors that occurred
 			if err != nil {
-				jsutil.JSFatal(fmt.Errorf("error while running %s getter for symbol %s: %s", fname, se.name, err))
+				jsutil.JSErr(fmt.Errorf("error while running %s getter for symbol %s: %s", fname, se.name, err))
 				return js.ValueOf(nil)
 			}
 
@@ -351,7 +351,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 
 			//Handle any errors that occurred
 			if err != nil {
-				jsutil.JSFatal(fmt.Errorf("error while running %s setter for symbol %s: %s", fname, se.name, err))
+				jsutil.JSErr(fmt.Errorf("error while running %s setter for symbol %s: %s", fname, se.name, err))
 				return js.ValueOf(nil)
 			}
 
@@ -406,7 +406,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 			//Call the instance function
 			val, err := method.CallMethod(obj, this, args)
 			if err != nil {
-				jsutil.JSFatal(fmt.Errorf("error while running %s.%s(); %s", se.name, method.Name, err))
+				jsutil.JSErr(fmt.Errorf("error while running %s.%s(); %s", se.name, method.Name, err))
 				return nil
 			}
 			return val

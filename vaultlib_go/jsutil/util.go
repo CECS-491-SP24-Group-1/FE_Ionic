@@ -64,13 +64,14 @@ func JSArray2GoByteArray(jsa js.Value, maxlen int) []byte {
 	return JSArray2GoArray[byte](jsa, maxlen, Cast)
 }
 
-// Emits errors to the JS console if any occur.
+// Emits errors to the JS console if any occur and calls `Throw()` after.
 func JSErr(errs ...error) {
 	strErrs := make([]string, len(errs))
 	for i, err := range errs {
 		strErrs[i] = err.Error()
 	}
 	jsLog("error", strErrs...)
+	Throw(strings.Join(strErrs, ", "))
 }
 
 // Emits errors to the JS console if any occur and calls `panic()` after.
@@ -133,4 +134,11 @@ func RetJObj[T any](v T) js.Value {
 // Calls `JSON.stringify()` on a given JS val.
 func Stringify(val js.Value) string {
 	return js.Global().Get("JSON").Call("stringify", val).String()
+}
+
+// Throws a JS exception.
+func Throw(message string) {
+	errorConstructor := js.Global().Get("Error")
+	errorObject := errorConstructor.New(message)
+	js.Global().Get("throw").Invoke(errorObject)
 }
