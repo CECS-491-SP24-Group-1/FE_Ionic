@@ -54,7 +54,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 
 		//Check if there is a keystore present
 		if (keystore === null) {
-			toast.error("No keystore found. Please generate one before continuing.", {});
+			toast.error("No keystore found. Please generate one before continuing.");
 			return;
 		}
 

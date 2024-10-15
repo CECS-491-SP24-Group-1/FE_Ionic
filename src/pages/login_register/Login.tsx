@@ -37,29 +37,46 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	//Vault state
 	const [vaultState, setVaultState] = useState<VaultState>({
 		hasEVault: EVault.inLStore(LS_EVAULT_KEY),
-		hasVault: Vault.inLStore(SS_VAULT_KEY),
+		hasVault: Vault.inSStore(SS_VAULT_KEY),
 		vaultFile: null,
 		evault: null,
 		vault: null
 	});
 	const loadedEVault = useRef<boolean>(false);
+	const loadedVault = useRef<boolean>(false);
 
 	//Misc state stuff
 	const [secType, setSecType] = useState<VaultSecurityTypes>(
 		VaultSecurityTypes.PASSPHRASE
 	);
 	const [passphrase, setPassphrase] = useState(""); //State for passphrases
+	const disablePassphraseInput = useRef<boolean>(false);
 
 	//Invokes the form loader only once
 	useEffect(() => {
 		setForm(pickForm());
-	}, [vaultState]);
+	}, [vaultState, passphrase]);
 
 	//Picks the correct form to render
 	const pickForm = (): JSX.Element => {
 		//Check for a vault
 		if (vaultState.hasVault) {
-			return formVault;
+			//Check if the vault is already loaded in memory
+			if (vaultState.vault) return formVault;
+
+			//Try to deserialize the vault
+			if (!loadedVault.current) {
+				try {
+					const loaded = Vault.fromSStore(SS_VAULT_KEY);
+					setVaultState((prevState) => ({
+						...prevState,
+						vault: loaded
+					}));
+					toast.success("Successfully deserialized vault from sessionstorage.");
+					loadedVault.current = true;
+					return formVault;
+				} catch (e) {} //Fail silently
+			}
 		}
 
 		//Check for an encrypted vault
@@ -99,10 +116,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		//Do not proceed unless a vault file is selected
 		console.log("vault file:", vaultState.vaultFile);
 		if (!vaultState.vaultFile) {
-			toast.error(
-				"No encrypted vault file found. Please choose one before continuing.",
-				{}
-			);
+			toast.error("No encrypted vault file found. Please choose one before continuing.");
 			return;
 		}
 
@@ -122,7 +136,41 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 				hasEVault: true
 			}));
 		} catch (e: any) {
-			toast.error(e.message, {});
+			toast.error(e.message);
+		}
+	};
+
+	//Handles vault decryption
+	const handleDecrypt = () => {
+		//Prevent decryptions with blank passphrases
+		if (disablePassphraseInput.current) return;
+		if (!passphrase) {
+			toast.error("Please enter the passphrase you used to encrypt the vault.");
+			return;
+		}
+
+		//Attempt to decrypt the vault
+		if (!vaultState.evault) return; //This shouldn't be hit
+		disablePassphraseInput.current = true;
+		try {
+			//Decrypt the vault
+			const decrypted = Vault.fromJSObject(
+				vaultState.evault.decryptPassphrase(passphrase)
+			);
+			disablePassphraseInput.current = false;
+
+			//Store the vault in session storage
+			decrypted.toSStore(SS_VAULT_KEY);
+			setVaultState((prevState) => ({
+				...prevState,
+				hasVault: true
+			}));
+		} catch (e: any) {
+			toast.error(
+				"The passphrase you entered was incorrect or an error occurred. Check the console for more details."
+			);
+			console.error(e.message);
+			disablePassphraseInput.current = false;
 		}
 	};
 
@@ -168,13 +216,19 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 			{/* Passphrase security */}
 			{secType === VaultSecurityTypes.PASSPHRASE && (
-				<>
-					<PassInput pass={passphrase} setPass={setPassphrase} />
-				</>
+				<PassInput
+					pass={passphrase}
+					setPass={setPassphrase}
+					disable={disablePassphraseInput.current}
+				/>
 			)}
 
-			{/* Pre-encryption vault buttons */}
-			<IonButton className="icon-btn bottommost-button" shape="round" expand="full">
+			{/* Pre-decryption vault buttons */}
+			<IonButton
+				className="icon-btn bottommost-button"
+				shape="round"
+				expand="full"
+				onClick={handleDecrypt}>
 				<span>Decrypt</span>
 				<IonIcon icon={lockOpenOutline}></IonIcon>
 			</IonButton>
@@ -185,8 +239,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const formVault = (
 		<>
 			<p className="subtitle top">
-				Your vault was successfully decrypted. Please click the button below to initiate
-				the login process.
+				Your vault is decrypted and ready to use. Please click the button below to
+				initiate the login process.
 			</p>
 
 			<IonButton shape="round" className="icon-btn continue-button" type="submit">
