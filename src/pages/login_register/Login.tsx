@@ -50,19 +50,13 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	);
 	const [passphrase, setPassphrase] = useState(""); //State for passphrases
 
-	// Added useEffect to listen for vaultState changes
-	useEffect(() => {
-		// Whenever vaultState changes, re-pick the form
-		setForm(pickForm());
-	}, [vaultState]);
-
 	//Invokes the form loader only once
 	useEffect(() => {
 		if (!formPickedRef.current) {
 			setForm(pickForm());
 			formPickedRef.current = true;
 		}
-	}, []);
+	}, [vaultState]);
 
 	//Picks the correct form to render
 	const pickForm = (): JSX.Element => {
