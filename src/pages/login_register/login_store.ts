@@ -1,4 +1,4 @@
-import { createWithEqualityFn as create } from 'zustand/traditional'
+import { createWithEqualityFn as create } from "zustand/traditional";
 import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys"; // Adjust imports as necessary
 
 interface VaultState {

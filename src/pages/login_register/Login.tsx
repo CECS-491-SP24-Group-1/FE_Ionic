@@ -33,7 +33,6 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	//Holds the form to render and a ref to only load it once
 	const [form, setForm] = useState<JSX.Element | null>(null);
-	const formPickedRef = useRef(false);
 
 	//Vault state
 	const [vaultState, setVaultState] = useState<VaultState>({
@@ -43,6 +42,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		evault: null,
 		vault: null
 	});
+	const loadedEVault = useRef<boolean>(false);
 
 	//Misc state stuff
 	const [secType, setSecType] = useState<VaultSecurityTypes>(
@@ -53,12 +53,10 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	//Invokes the form loader only once
 	useEffect(() => {
 		setForm(pickForm());
-		formPickedRef.current = true;
 	}, [vaultState]);
 
 	//Picks the correct form to render
 	const pickForm = (): JSX.Element => {
-		console.log("booby");
 		//Check for a vault
 		if (vaultState.hasVault) {
 			return formVault;
@@ -70,15 +68,18 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			if (vaultState.evault) return formEVault;
 
 			//Try to deserialize the encrypted vault
-			try {
-				const loaded = EVault.fromLStore(LS_EVAULT_KEY);
-				setVaultState((prevState) => ({
-					...prevState,
-					evault: loaded
-				}));
-				toast.success("Successfully deserialized encrypted vault from localstorage.");
-				return formEVault;
-			} catch (e) {} //Fail silently
+			if (!loadedEVault.current) {
+				try {
+					const loaded = EVault.fromLStore(LS_EVAULT_KEY);
+					setVaultState((prevState) => ({
+						...prevState,
+						evault: loaded
+					}));
+					toast.success("Successfully deserialized encrypted vault from localstorage.");
+					loadedEVault.current = true;
+					return formEVault;
+				} catch (e) {} //Fail silently
+			}
 		}
 
 		//By default, assume no vault exists
