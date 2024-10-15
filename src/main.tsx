@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { IonApp, setupIonicReact, IonSpinner } from "@ionic/react";
 import { ToastContainer } from "react-toastify";
+import {useCookies} from 'react-cookie';
 
 import App from "./App";
 import useWasm from "./wasm_util/use_wasm";
-
+import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys";
 import "./index.scss";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -36,6 +37,13 @@ export function Root() {
 	const { loaded: wasmLoaded, error: wasmError } = useWasm("/vaultlib.wasm");
 	const initRef = useRef(false);
 
+	//Set up vault checks and login gates
+	const [hasVault, setHasVault] = useState(Vault.inLStore(SS_VAULT_KEY));
+	const [shouldLogin, setShouldLogin] = useState(true);	// Login gate, true equals that it needs to login 
+
+	//Cookies init
+	const [cookies] = useCookies();
+
 	//Initializes the WASM module
 	const initWasm = useCallback(() => {
 		if (initRef.current) return;
@@ -52,8 +60,26 @@ export function Root() {
 	useEffect(() => {
 		if (wasmLoaded) {
 			initWasm();
+
+
+			// Vault check
+			if (hasVault){
+				try{
+					const loadedVault = Vault.fromSStore(SS_VAULT_KEY) // Loading the vault from Session Storage
+					zstore.setVault(loadedVault) // TODO: Placeholder for zustand store 
+
+					if (cookies[import.meta.env.VITE_ACOOKIE_EXPR_NAME] !== undefined){
+						setShouldLogin(false) //User does not need to login 
+					}else{
+						setShouldLogin(true) // User needs to login, show login page
+					}
+				} catch(e: any){
+					sessionStorage.removeItem(SS_VAULT_KEY) // Remove invalid session storage key
+					setShouldLogin(true)
+				}
+			}
 		}
-	}, [wasmLoaded, initWasm]);
+	}, [wasmLoaded, hasVault, cookies, initWasm]);
 
 	//Show an error screen if an error occurred
 	if (wasmError) {
@@ -83,10 +109,11 @@ export function Root() {
 	}
 
 	//Render the component when vaultlib loads successfully
-	//TODO: add registration and login stuff here
+	//Passing the login boolean as a prop 
 	return (
 		<IonApp>
-			<App />
+			
+			<App shouldLogin = {shouldLogin} />
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}

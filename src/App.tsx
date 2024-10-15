@@ -19,19 +19,30 @@ import Chat from "./pages/Chats";
 import LRPage from "./pages/login_register/LRPage";
 import PostRegister from "./pages/login_register/PostRegister";
 
-const App: React.FC = () => {
+interface AppProps{
+	shouldLogin: boolean;
+}
+
+const App: React.FC<AppProps> = ({ shouldLogin }) => {
 	return (
 		<IonReactRouter>
 			<IonTabs>
-				<IonRouterOutlet>
-					{/* Define routes for each tab */}
-					<Route path="/home" component={Home} exact={true} />
-					<Route path="/login" component={LRPage} exact={true} />
-					<Route path="/camera" component={CameraPage} exact={true} />
-					<Route path="/settings" component={Settings} exact={true} />
-					<Route path="/chat" component={Chat} exact={true} />
-					<Route path="/PostRegister" component={PostRegister} exact={true} />
-					<Route exact path="/" render={() => <Redirect to="/login" />} />
+			<IonRouterOutlet>
+					{/* Redirect to login if shouldLogin is true */}
+					{shouldLogin ? (
+						<Redirect to="/login" />
+					) : (
+						<>
+							{/* Define routes for each tab */}
+							<Route path="/home" component={Home} exact={true} />
+							<Route path="/login" component={LRPage} exact={true} />
+							<Route path="/camera" component={CameraPage} exact={true} />
+							<Route path="/settings" component={Settings} exact={true} />
+							<Route path="/chat" component={Chat} exact={true} />
+							<Route path="/PostRegister" component={PostRegister} exact={true} />
+							<Route exact path="/" render={() => <Redirect to="/home" />} />
+						</>
+					)}
 				</IonRouterOutlet>
 
 				{/* Temporary registration page */}
