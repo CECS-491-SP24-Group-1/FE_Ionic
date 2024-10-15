@@ -3,7 +3,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { HttpResponse } from "@ptypes/http_response";
-import { prettyError } from "./http_util";
+import { swallowError } from "./http_util";
 
 //Sets the maximum delta between the current time and the expiry time before auto-refreshes occur (in seconds).
 const MAX_DELTA_TO_EXPIRY = 43200; //12 hours
@@ -45,16 +45,7 @@ axiosInst.interceptors.request.use(
 			).data;
 			console.log("Access token refreshed; response:", response);
 		} catch (error: any) {
-			//Check if the error has a response section
-			let rtext = "";
-			if (error.response !== undefined) {
-				const response: HttpResponse<null> = error.response.data;
-				rtext = prettyError(response);
-			} else {
-				rtext = error.message;
-			}
-
-			//Log the error
+			const rtext = swallowError(error);
 			console.error("An error occurred while refreshing the access token:", rtext);
 		}
 

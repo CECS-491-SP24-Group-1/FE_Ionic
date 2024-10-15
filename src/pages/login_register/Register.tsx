@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 import PostRegister from "./PostRegister";
 import LRContainer from "./components/LRContainer";
-import { prettyError } from "../../util/http_util";
+import { swallowError } from "@/util/http_util";
 
 import { HttpResponse } from "@ptypes/http_response";
 import { RegisteredUser } from "@ptypes/response_types";
@@ -84,16 +84,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			toast.success(`Successfully created user ${user.username} <${user.id}>`);
 			setIsContinuePressed(true);
 		} catch (error: any) {
-			//Check if the error has a response section
-			let rtext = "";
-			if (error.response !== undefined) {
-				const response: HttpResponse<null> = error.response.data;
-				rtext = prettyError(response);
-			} else {
-				rtext = error.message;
-			}
-
-			//Log the error
+			const rtext = swallowError(error);
 			console.error("Error creating account:", rtext);
 			toast.error(`Failed to create account: ${rtext}`);
 		}
