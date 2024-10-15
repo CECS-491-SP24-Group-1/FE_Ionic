@@ -52,10 +52,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 	//Invokes the form loader only once
 	useEffect(() => {
-		if (!formPickedRef.current) {
-			setForm(pickForm());
-			formPickedRef.current = true;
-		}
+		setForm(pickForm());
+		formPickedRef.current = true;
 	}, [vaultState]);
 
 	//Picks the correct form to render
