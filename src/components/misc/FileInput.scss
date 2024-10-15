@@ -1,0 +1,21 @@
+.file-input-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.custom-file-input {
+	flex: 1;
+	--background: var(--ion-color-primary);
+	--color: var(--ion-color-primary-contrast);
+	--border-radius: 4px;
+	--padding-start: 16px;
+	--padding-end: 16px;
+}
+
+.file-name {
+	flex: 3;
+	color: var(--ion-color-medium);
+	font-size: 14px;
+	overflow: scroll;
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { IonApp, setupIonicReact, IonSpinner } from "@ionic/react";
 import { ToastContainer } from "react-toastify";
@@ -34,14 +34,26 @@ setupIonicReact();
 export function Root() {
 	//Setup the WASM loader for vaultlib
 	const { loaded: wasmLoaded, error: wasmError } = useWasm("/vaultlib.wasm");
+	const initRef = useRef(false);
 
-	//Listen for state changes to the loader,
-	useEffect(() => {
+	//Initializes the WASM module
+	const initWasm = useCallback(() => {
+		if (initRef.current) return;
+		initRef.current = true;
+
+		console.log("Initializing WebAssembly");
 		if (wasmLoaded) {
 			console.log("WebAssembly module loaded successfully");
-			//Perform any actions that depend on the WebAssembly module being loaded
+			// Perform any actions that depend on the WebAssembly module being loaded
 		}
-	}, [wasmLoaded]);
+	}, []);
+
+	//Initializes the WASM module when the component mounts
+	useEffect(() => {
+		if (wasmLoaded) {
+			initWasm();
+		}
+	}, [wasmLoaded, initWasm]);
 
 	//Show an error screen if an error occurred
 	if (wasmError) {
