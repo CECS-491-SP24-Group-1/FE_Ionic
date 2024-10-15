@@ -1,4 +1,4 @@
-import create from "zustand";
+import { createWithEqualityFn as create } from 'zustand/traditional'
 import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys"; // Adjust imports as necessary
 
 interface VaultState {
@@ -10,6 +10,8 @@ interface VaultState {
 	setHasEVault: (value: boolean) => void;
 	setHasVault: (value: boolean) => void;
 	setVaultFile: (file: File | null) => void;
+	setEVault: (ev: typeof EVault) => void;
+	setVault: (ev: typeof Vault) => void;
 }
 
 const useVaultStore = create<VaultState>((set: any) => ({
@@ -20,7 +22,9 @@ const useVaultStore = create<VaultState>((set: any) => ({
 	vault: null,
 	setHasEVault: (value: boolean) => set({ hasEVault: value }),
 	setHasVault: (value: boolean) => set({ hasVault: value }),
-	setVaultFile: (file: File | null) => set({ vaultFile: file }) // Explicitly typed
+	setVaultFile: (file: File | null) => set({ vaultFile: file }),
+	setEVault: (ev: typeof EVault) => set({ evault: ev }),
+	setVault: (v: typeof Vault) => set({ vault: v })
 }));
 
 export default useVaultStore;
