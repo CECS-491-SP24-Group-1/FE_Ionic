@@ -36,6 +36,7 @@ interface LoginProps {
 	togglePage: () => void;
 }
 
+//TODO: somehow cascade to main.tsx that login succeeded
 const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	//Holds the form to render and a ref to only load it once
 	const [form, setForm] = useState<JSX.Element | null>(null);
