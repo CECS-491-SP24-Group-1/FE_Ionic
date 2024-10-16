@@ -1,18 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import {
-	IonInput,
 	IonIcon,
 	IonButton,
-	IonItem,
-	IonLabel,
 	IonText,
-	useIonRouter
 } from "@ionic/react";
 import { downloadOutline, lockOpenOutline, logInOutline } from "ionicons/icons";
 import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 import LRContainer from "./components/LRContainer";
-import { prettyError, swallowError } from "@/util/http_util";
+import { swallowError } from "@/util/http_util";
 
 import "./LoginRegister.scss";
 import PassInput from "./components/PassInput";
@@ -25,8 +22,6 @@ import { Auth, LoginReq } from "@ptypes/response_types";
 import credAxios from "@/util/axios_with_creds";
 import { HttpResponse } from "@ptypes/http_response";
 import { PKCRequest, PKCSignedRequest } from "@ptypes/request_types";
-import { useHistory } from "react-router-dom";
-import { getType } from "tst-reflect";
 
 /** Holds the types of security that the vault is to be encrypted with. */
 enum VaultSecurityTypes {
@@ -91,7 +86,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized vault from sessionstorage.");
 					loadedVault.current = true;
 					return formVault;
-				} catch (e) {} //Fail silently
+				} catch (e) { } //Fail silently
 			}
 		}
 
@@ -111,7 +106,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized encrypted vault from localstorage.");
 					loadedEVault.current = true;
 					return formEVault;
-				} catch (e) {} //Fail silently
+				} catch (e) { } //Fail silently
 			}
 		}
 
