@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { IonIcon, IonButton, IonText } from "@ionic/react";
 import { downloadOutline, lockOpenOutline, logInOutline } from "ionicons/icons";
 import { toast } from "react-toastify";
-import { useHistory } from "react-router-dom";
 
 import LRContainer from "./components/LRContainer";
 import { swallowError } from "@/util/http_util";
@@ -18,6 +17,8 @@ import { Auth, LoginReq } from "@ptypes/response_types";
 import credAxios from "@/util/axios_with_creds";
 import { HttpResponse } from "@ptypes/http_response";
 import { PKCRequest, PKCSignedRequest } from "@ptypes/request_types";
+import useVaultStore from "@/stores/vault_store";
+import useLoginGateStore from "@/stores/login_gate";
 
 /** Holds the types of security that the vault is to be encrypted with. */
 enum VaultSecurityTypes {
@@ -36,8 +37,12 @@ interface LoginProps {
 	togglePage: () => void;
 }
 
-//TODO: somehow cascade to main.tsx that login succeeded
 const Login: React.FC<LoginProps> = ({ togglePage }) => {
+	//Login gate store
+	const { setShouldLogin } = useLoginGateStore((state) => ({
+		setShouldLogin: state.setShouldLogin
+	}));
+
 	//Holds the form to render and a ref to only load it once
 	const [form, setForm] = useState<JSX.Element | null>(null);
 
@@ -58,7 +63,12 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	);
 	const [passphrase, setPassphrase] = useState(""); //State for passphrases
 	const disablePassphraseInput = useRef<boolean>(false);
-	const history = useHistory();
+
+	//TODO: tmp
+	const { dummy, setDummy } = useVaultStore((state) => ({
+		dummy: state.dummy,
+		setDummy: state.setDummy
+	}));
 
 	//Invokes the form loader only once
 	useEffect(() => {
@@ -198,6 +208,9 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			pk: ks.pk
 		};
 
+		//TODO: tmp
+		setDummy("foobar2000");
+
 		//Step 1: Acquire a login request token
 		let token = "";
 		try {
@@ -214,8 +227,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			if (isRefreshResp) {
 				//Skip the rest of the process; jump straight to the homepage
 				console.log("Detected token refresh. Re-routing...");
-				history.push("/home");
-				window.location.reload();
+				setShouldLogin(false);
+				//window.location.reload();
 				return;
 			}
 
@@ -262,8 +275,9 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		}
 
 		//Redirect to the homepage
-		history.push("/home");
-		window.location.reload();
+		setShouldLogin(false);
+		//history.push("/home");
+		//window.location.reload();
 	};
 
 	//Form contents to show when an encrypted vault is not present.

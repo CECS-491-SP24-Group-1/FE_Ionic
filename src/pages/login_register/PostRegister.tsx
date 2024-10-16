@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { IonButton, IonIcon } from "@ionic/react";
 import { toast } from "react-toastify";
 import { passwordStrength } from "check-password-strength";
@@ -14,9 +13,11 @@ import PassInput from "./components/PassInput";
 import { LS_EVAULT_KEY } from "@/constants/WebStorageKeys";
 import { string2File } from "@/util/io";
 import { VAULT_SAVE_NAME_FMT } from "@/constants/Misc";
+import useVaultStore from "@/stores/vault_store";
 
 interface PostRegisterProps {
 	vault: typeof Vault;
+	togglePage: () => void; //From LRPage.tsx
 }
 
 /** Holds the types of security that the vault is to be encrypted with. */
@@ -24,9 +25,8 @@ enum VaultSecurityTypes {
 	PASSPHRASE
 }
 
-const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
+const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	//State stuff
-	const history = useHistory();
 	const [secType, setSecType] = useState<VaultSecurityTypes>(
 		VaultSecurityTypes.PASSPHRASE
 	);
@@ -44,14 +44,22 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
 		setShouldWarnStrength(result.id < 3);
 	};
 
+	//TODO: tmp
+	const { dummy2, setDummy2 } = useVaultStore((state) => ({
+		dummy2: state.dummy2,
+		setDummy2: state.setDummy2
+	}));
+
 	//Handles form submissions
 	const handleSubmit = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
 
+		setDummy2("windows_xp");
+
 		//Take the user back to the login page
-		history.push("/login");
-		window.location.reload();
+		togglePage();
+		//window.location.reload();
 	};
 
 	//Encrypts the vault

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IonContent, IonHeader, IonPage, IonToolbar, IonTitle } from "@ionic/react";
 import ChatList from "../components/Chats/ChatList/ChatList";
 import ChatMessages from "../components/Chats/ChatMessages";
@@ -8,14 +8,28 @@ import ChatMenu from "../components/Chats/Menu/ChatMenu";
 import { chatMessagesData } from "../data/ChatMessagesData";
 
 import "./Chats.scss";
+import useVaultStore from "@/stores/vault_store";
 
 const Chats: React.FC = () => {
 	const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+	//TODO: tmp
+	const { dummy, setDummy, dummy2, setDummy2 } = useVaultStore((state) => ({
+		dummy: state.dummy,
+		setDummy: state.setDummy,
+		dummy2: state.dummy2,
+		setDummy2: state.setDummy2
+	}));
 
 	// Function to handle chat selection
 	const handleChatSelect = (chatId: number) => {
 		setSelectedChatId(chatId);
 	};
+
+	//TODO: tmp
+	useEffect(() => {
+		console.log("dummy val:", dummy);
+		console.log("dummy val2:", dummy2);
+	});
 
 	// Function to handle sending messages
 	const handleSendMessage = (message: string) => {

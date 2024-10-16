@@ -30,6 +30,7 @@ import "@ionic/react/css/palettes/dark.always.css";
 /* Ionic Theme variables */
 import "./variables.scss";
 import LRPage from "./pages/login_register/LRPage";
+import useLoginGateStore from "./stores/login_gate";
 
 /* Run init stuff here */
 setupIonicReact();
@@ -42,7 +43,10 @@ export function Root() {
 
 	//Set up vault checks and login gates
 	const [hasVault, setHasVault] = useState(SS_VAULT_KEY in sessionStorage);
-	const [shouldLogin, setShouldLogin] = useState(true); // Login gate, true equals that it needs to login
+	const { shouldLogin, setShouldLogin } = useLoginGateStore((state) => ({
+		shouldLogin: state.shouldLogin,
+		setShouldLogin: state.setShouldLogin
+	})); // Login gate, true equals that it needs to login
 
 	//Cookies init
 	const [cookies] = useCookies();
