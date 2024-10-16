@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-	IonIcon,
-	IonButton,
-	IonText,
-} from "@ionic/react";
+import { IonIcon, IonButton, IonText } from "@ionic/react";
 import { downloadOutline, lockOpenOutline, logInOutline } from "ionicons/icons";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
@@ -86,7 +82,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized vault from sessionstorage.");
 					loadedVault.current = true;
 					return formVault;
-				} catch (e) { } //Fail silently
+				} catch (e) {} //Fail silently
 			}
 		}
 
@@ -106,7 +102,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized encrypted vault from localstorage.");
 					loadedEVault.current = true;
 					return formEVault;
-				} catch (e) { } //Fail silently
+				} catch (e) {} //Fail silently
 			}
 		}
 
@@ -218,6 +214,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 				//Skip the rest of the process; jump straight to the homepage
 				console.log("Detected token refresh. Re-routing...");
 				history.push("/home");
+				window.location.reload();
 				return;
 			}
 
@@ -265,6 +262,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 		//Redirect to the homepage
 		history.push("/home");
+		window.location.reload();
 	};
 
 	//Form contents to show when an encrypted vault is not present.
