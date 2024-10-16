@@ -2,12 +2,13 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { IonApp, setupIonicReact, IonSpinner } from "@ionic/react";
 import { ToastContainer } from "react-toastify";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
+import { IonReactRouter } from "@ionic/react-router";
 
 import App from "./App";
-import useVaultStore from "./stores/vault_store"
+import useVaultStore from "./stores/vault_store";
 import useWasm from "./wasm_util/use_wasm";
-import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys";
+import { SS_VAULT_KEY } from "@/constants/WebStorageKeys";
 import "./index.scss";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -41,7 +42,7 @@ export function Root() {
 
 	//Set up vault checks and login gates
 	const [hasVault, setHasVault] = useState(SS_VAULT_KEY in sessionStorage);
-	const [shouldLogin, setShouldLogin] = useState(true);	// Login gate, true equals that it needs to login 
+	const [shouldLogin, setShouldLogin] = useState(true); // Login gate, true equals that it needs to login
 
 	//Cookies init
 	const [cookies] = useCookies();
@@ -66,21 +67,20 @@ export function Root() {
 		if (wasmLoaded) {
 			initWasm();
 
-
 			// Vault check
 			if (hasVault) {
 				try {
-					const loadedVault = Vault.fromSStore(SS_VAULT_KEY) // Loading the vault from Session Storage
+					const loadedVault = Vault.fromSStore(SS_VAULT_KEY); // Loading the vault from Session Storage
 					setVault(loadedVault);
 
 					if (cookies[import.meta.env.VITE_ACOOKIE_EXPR_NAME] !== undefined) {
-						setShouldLogin(false) //User does not need to login 
+						setShouldLogin(false); //User does not need to login
 					} else {
-						setShouldLogin(true) // User needs to login, show login page
+						setShouldLogin(true); // User needs to login, show login page
 					}
 				} catch (e: any) {
-					sessionStorage.removeItem(SS_VAULT_KEY) // Remove invalid session storage key
-					setShouldLogin(true)
+					sessionStorage.removeItem(SS_VAULT_KEY); // Remove invalid session storage key
+					setShouldLogin(true);
 				}
 			}
 		}
@@ -114,10 +114,10 @@ export function Root() {
 	}
 
 	//Render the component when vaultlib loads successfully
-	//Passing the login boolean as a prop 
+	//Passing the login boolean as a prop
 	return (
 		<IonApp>
-			{(shouldLogin ? <LRPage /> : <App />)}
+			{shouldLogin ? <LRPage /> : <App />}
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}
@@ -137,6 +137,8 @@ export function Root() {
 //Creates the root element in the HTML DOM.
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<React.StrictMode>
-		<Root />
+		<IonReactRouter>
+			<Root />
+		</IonReactRouter>
 	</React.StrictMode>
 );

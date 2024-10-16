@@ -1,17 +1,33 @@
 import { useEffect, useRef, useState } from "react";
-import { IonInput, IonIcon, IonButton, IonItem, IonLabel, IonText } from "@ionic/react";
+import {
+	IonInput,
+	IonIcon,
+	IonButton,
+	IonItem,
+	IonLabel,
+	IonText,
+	useIonRouter
+} from "@ionic/react";
 import { downloadOutline, lockOpenOutline, logInOutline } from "ionicons/icons";
+import { toast } from "react-toastify";
 
 import LRContainer from "./components/LRContainer";
-import { prettyError } from "@/util/http_util";
+import { prettyError, swallowError } from "@/util/http_util";
 
 import "./LoginRegister.scss";
 import PassInput from "./components/PassInput";
 import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys";
 import { VAULT_FILE_EXT } from "@/constants/Misc";
 import FileInput from "@/components/misc/FileInput";
-import { toast } from "react-toastify";
+
 import { readText } from "@/util/io";
+import { Auth, LoginReq } from "@ptypes/response_types";
+import credAxios from "@/util/axios_with_creds";
+import { HttpResponse } from "@ptypes/http_response";
+import { PKCRequest, PKCSignedRequest } from "@ptypes/request_types";
+import axios from "axios";
+import { s } from "vite/dist/node/types.d-aGj9QkWt";
+import { useHistory } from "react-router-dom";
 
 /** Holds the types of security that the vault is to be encrypted with. */
 enum VaultSecurityTypes {
@@ -51,6 +67,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	);
 	const [passphrase, setPassphrase] = useState(""); //State for passphrases
 	const disablePassphraseInput = useRef<boolean>(false);
+	const history = useHistory();
 
 	//Invokes the form loader only once
 	useEffect(() => {
@@ -178,8 +195,70 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const handleLogin = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
+		if (!vaultState.vault) return;
 
-		// Handle the form submission logic
+		//Get the user's ID and keystore from the vault
+		const uid = vaultState.vault.subject;
+		const ks: typeof KeyStore = KeyStore.fromJSObject(vaultState.vault.kstore);
+
+		//Construct the login request
+		const loginReq: PKCRequest = {
+			id: uid,
+			pk: ks.pk
+		};
+
+		//Step 1: Acquire a login request token
+		//TODO: might want to ensure this request is actually returning a req; BE can refresh tokens here
+		let token = "";
+		try {
+			//Issue the request
+			const response: HttpResponse<LoginReq> = (
+				await credAxios.post(`${import.meta.env.VITE_API_URL}/auth/login_req`, loginReq)
+			).data;
+
+			//Pull the token out of the response; guaranteed to be non-null
+			token = response!.payloads![0]!.token;
+		} catch (e: any) {
+			const etext = swallowError(e);
+			console.error(etext);
+			toast.error(etext);
+			return;
+		}
+
+		//Sign the token using the keystore's private key
+		const signature = ks.sign(token);
+
+		//Construct the login verification request
+		const loginVReq: PKCSignedRequest = {
+			id: uid,
+			pk: ks.pk,
+			token: token,
+			signature: signature
+		};
+
+		//Step 2: Acquire an access token; first logins also verify ownership of the SK
+		//The user is auto-redirected at this point
+		try {
+			//Issue the request
+			const response: HttpResponse<Auth> = (
+				await credAxios.post(
+					`${import.meta.env.VITE_API_URL}/auth/login_verify`,
+					loginVReq
+				)
+			).data;
+
+			//Pull the response data out; guaranteed to be non-null
+			const udata = response!.payloads![0]!;
+			toast.success(`Successfully logged in as ${udata.username} <id: ${udata.id}>.`);
+		} catch (e: any) {
+			const etext = swallowError(e);
+			console.error(etext);
+			toast.error(etext);
+			return;
+		}
+
+		//Redirect to the homepage
+		history.push("/home");
 	};
 
 	//Form contents to show when an encrypted vault is not present.

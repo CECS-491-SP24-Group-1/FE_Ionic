@@ -51,7 +51,6 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault }) => {
 
 		//Take the user back to the login page
 		history.push("/login");
-		window.location.reload(); //Remove this when Zustand is implemented
 	};
 
 	//Encrypts the vault
