@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import {useCookies} from 'react-cookie';
 
 import App from "./App";
+import useVaultStore from "./stores/vault_store"
 import useWasm from "./wasm_util/use_wasm";
 import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys";
 import "./index.scss";
@@ -44,6 +45,9 @@ export function Root() {
 	//Cookies init
 	const [cookies] = useCookies();
 
+	//Zustand store access
+	const setVault = useVaultStore((state) => state.setVault);
+	
 	//Initializes the WASM module
 	const initWasm = useCallback(() => {
 		if (initRef.current) return;
@@ -66,7 +70,7 @@ export function Root() {
 			if (hasVault){
 				try{
 					const loadedVault = Vault.fromSStore(SS_VAULT_KEY) // Loading the vault from Session Storage
-					zstore.setVault(loadedVault) // TODO: Placeholder for zustand store 
+					setVault(loadedVault);
 
 					if (cookies[import.meta.env.VITE_ACOOKIE_EXPR_NAME] !== undefined){
 						setShouldLogin(false) //User does not need to login 
