@@ -25,9 +25,8 @@ import { Auth, LoginReq } from "@ptypes/response_types";
 import credAxios from "@/util/axios_with_creds";
 import { HttpResponse } from "@ptypes/http_response";
 import { PKCRequest, PKCSignedRequest } from "@ptypes/request_types";
-import axios from "axios";
-import { s } from "vite/dist/node/types.d-aGj9QkWt";
 import { useHistory } from "react-router-dom";
+import { getType } from "tst-reflect";
 
 /** Holds the types of security that the vault is to be encrypted with. */
 enum VaultSecurityTypes {
@@ -208,16 +207,27 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		};
 
 		//Step 1: Acquire a login request token
-		//TODO: might want to ensure this request is actually returning a req; BE can refresh tokens here
 		let token = "";
 		try {
-			//Issue the request
-			const response: HttpResponse<LoginReq> = (
+			//Issue the request; token refreshes can occur here
+			const response: HttpResponse<LoginReq | Auth> = (
 				await credAxios.post(`${import.meta.env.VITE_API_URL}/auth/login_req`, loginReq)
 			).data;
+			const payload = response!.payloads![0];
+			console.log("S1 response:", response);
+
+			//Check if the response if of type `Auth`; this indicates a refreshed session
+			//TS has no way to get the keys of interfaces, unfortunately
+			const isRefreshResp = ["id", "username"].every((key) => key in payload);
+			if (isRefreshResp) {
+				//Skip the rest of the process; jump straight to the homepage
+				console.log("Detected token refresh. Re-routing...");
+				history.push("/home");
+				return;
+			}
 
 			//Pull the token out of the response; guaranteed to be non-null
-			token = response!.payloads![0]!.token;
+			token = (payload as LoginReq).token;
 		} catch (e: any) {
 			const etext = swallowError(e);
 			console.error(etext);
@@ -246,6 +256,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					loginVReq
 				)
 			).data;
+			console.log("S2 response:", response);
 
 			//Pull the response data out; guaranteed to be non-null
 			const udata = response!.payloads![0]!;
