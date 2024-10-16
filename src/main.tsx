@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { IonApp, setupIonicReact, IonSpinner } from "@ionic/react";
 import { ToastContainer } from "react-toastify";
-import {useCookies} from 'react-cookie';
+import { useCookies } from 'react-cookie';
 
 import App from "./App";
 import useVaultStore from "./stores/vault_store"
@@ -28,6 +28,7 @@ import "@ionic/react/css/palettes/dark.always.css";
 
 /* Ionic Theme variables */
 import "./variables.scss";
+import LRPage from "./pages/login_register/LRPage";
 
 /* Run init stuff here */
 setupIonicReact();
@@ -39,7 +40,7 @@ export function Root() {
 	const initRef = useRef(false);
 
 	//Set up vault checks and login gates
-	const [hasVault, setHasVault] = useState(Vault.inLStore(SS_VAULT_KEY));
+	const [hasVault, setHasVault] = useState(SS_VAULT_KEY in sessionStorage);
 	const [shouldLogin, setShouldLogin] = useState(true);	// Login gate, true equals that it needs to login 
 
 	//Cookies init
@@ -47,7 +48,7 @@ export function Root() {
 
 	//Zustand store access
 	const setVault = useVaultStore((state) => state.setVault);
-	
+
 	//Initializes the WASM module
 	const initWasm = useCallback(() => {
 		if (initRef.current) return;
@@ -67,17 +68,17 @@ export function Root() {
 
 
 			// Vault check
-			if (hasVault){
-				try{
+			if (hasVault) {
+				try {
 					const loadedVault = Vault.fromSStore(SS_VAULT_KEY) // Loading the vault from Session Storage
 					setVault(loadedVault);
 
-					if (cookies[import.meta.env.VITE_ACOOKIE_EXPR_NAME] !== undefined){
+					if (cookies[import.meta.env.VITE_ACOOKIE_EXPR_NAME] !== undefined) {
 						setShouldLogin(false) //User does not need to login 
-					}else{
+					} else {
 						setShouldLogin(true) // User needs to login, show login page
 					}
-				} catch(e: any){
+				} catch (e: any) {
 					sessionStorage.removeItem(SS_VAULT_KEY) // Remove invalid session storage key
 					setShouldLogin(true)
 				}
@@ -116,8 +117,7 @@ export function Root() {
 	//Passing the login boolean as a prop 
 	return (
 		<IonApp>
-			
-			<App shouldLogin = {shouldLogin} />
+			{(shouldLogin ? <LRPage /> : <App />)}
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}

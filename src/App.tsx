@@ -19,30 +19,21 @@ import Chat from "./pages/Chats";
 import LRPage from "./pages/login_register/LRPage";
 import PostRegister from "./pages/login_register/PostRegister";
 
-interface AppProps{
-	shouldLogin: boolean;
-}
-
-const App: React.FC<AppProps> = ({ shouldLogin }) => {
+const App: React.FC = () => {
 	return (
 		<IonReactRouter>
 			<IonTabs>
-			<IonRouterOutlet>
-					{/* Redirect to login if shouldLogin is true */}
-					{shouldLogin ? (
-						<Redirect to="/login" />
-					) : (
-						<>
-							{/* Define routes for each tab */}
-							<Route path="/home" component={Home} exact={true} />
-							<Route path="/login" component={LRPage} exact={true} />
-							<Route path="/camera" component={CameraPage} exact={true} />
-							<Route path="/settings" component={Settings} exact={true} />
-							<Route path="/chat" component={Chat} exact={true} />
-							<Route path="/PostRegister" component={PostRegister} exact={true} />
-							<Route exact path="/" render={() => <Redirect to="/home" />} />
-						</>
-					)}
+				<IonRouterOutlet>
+					<>
+						{/* Define routes for each tab */}
+						<Route path="/home" component={Home} exact={true} />
+						{/* <Route path="/login" component={LRPage} exact={true} /> */}
+						<Route path="/camera" component={CameraPage} exact={true} />
+						<Route path="/settings" component={Settings} exact={true} />
+						<Route path="/chat" component={Chat} exact={true} />
+						{/* <Route path="/PostRegister" component={PostRegister} exact={true} /> */}
+						<Route exact path="/" render={() => <Redirect to="/home" />} />
+					</>
 				</IonRouterOutlet>
 
 				{/* Temporary registration page */}
@@ -52,10 +43,12 @@ const App: React.FC<AppProps> = ({ shouldLogin }) => {
 							<IonLabel>Register</IonLabel>
 						</IonTabButton> */}
 
+					{/*
 					<IonTabButton tab="login" href="/login">
 						<IonIcon icon={logIn} />
 						<IonLabel>Login</IonLabel>
 					</IonTabButton>
+					*/}
 
 					<IonTabButton tab="chat" href="/chat">
 						<IonIcon icon={chatbubble} />
