@@ -7,9 +7,16 @@ interface PassInputProps {
 	setPass: (value: string) => void;
 	onUpdate?: (value: string) => void; // Optional function to call on update
 	maxLen?: number;
+	disable?: boolean;
 }
 
-const PassInput: React.FC<PassInputProps> = ({ pass, setPass, onUpdate, maxLen }) => {
+const PassInput: React.FC<PassInputProps> = ({
+	pass,
+	setPass,
+	onUpdate,
+	maxLen,
+	disable
+}) => {
 	const [showPassphrase, setShowPassphrase] = useState<boolean>(false);
 
 	const togglePassphraseVisibility = () => {
@@ -35,6 +42,7 @@ const PassInput: React.FC<PassInputProps> = ({ pass, setPass, onUpdate, maxLen }
 				onIonInput={handleInputChange} // Use onIonInput for real-time update
 				placeholder="Enter a passphrase"
 				maxlength={maxLen ? maxLen : undefined}
+				disabled={disable}
 				required
 			/>
 			<IonButton slot="end" fill="clear" onClick={togglePassphraseVisibility}>
