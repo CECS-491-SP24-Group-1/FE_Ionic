@@ -1,5 +1,6 @@
 /**
  * Derives a `Date` object from a given UUIDv7.
+ * See: https://www.perplexity.ai/search/make-this-function-compatible-H5yBMhNTRjyatpG5kqdgJg
  * @param {string} uuid The UUIDv7 to ingest
  * @returns {Date} The date that's encoded in the given UUIDv7
  */
