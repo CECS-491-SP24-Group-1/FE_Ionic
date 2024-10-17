@@ -9,6 +9,7 @@ import App from "./App";
 import useVaultStore from "./stores/vault_store";
 import useWasm from "./wasm_util/use_wasm";
 import { SS_VAULT_KEY } from "@/constants/WebStorageKeys";
+import usePageTrap from "./util/page_trap";
 import "./index.scss";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -37,6 +38,11 @@ setupIonicReact();
 
 /** Sets up the entire React application. */
 export function Root() {
+	//Page trap
+	usePageTrap();
+	
+	
+
 	//Setup the WASM loader for vaultlib
 	const { loaded: wasmLoaded, error: wasmError } = useWasm("/vaultlib.wasm");
 	const initRef = useRef(false);
