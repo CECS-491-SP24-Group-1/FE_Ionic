@@ -40,8 +40,6 @@ setupIonicReact();
 export function Root() {
 	//Page trap
 	usePageTrap();
-	
-	
 
 	//Setup the WASM loader for vaultlib
 	const { loaded: wasmLoaded, error: wasmError } = useWasm("/vaultlib.wasm");
