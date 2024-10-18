@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 interface ChatMessagesProps {
-	messages: { from: string; text: string; time: string }[];
+	messages: { to: string, from: string; text: string; time: string }[];
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
@@ -18,7 +18,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
 			const shouldScroll = container.scrollHeight > container.clientHeight;
 
 			if (shouldScroll) {
-				messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+				messagesEndRef.current.scrollIntoView();
 			}
 		}
 	}, [messages]);
