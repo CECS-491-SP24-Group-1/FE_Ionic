@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 interface ChatMessagesProps {
-	messages: { to: string, from: string; text: string; time: string }[];
+	messages: { to: string; from: string; text: string; time: string }[];
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {

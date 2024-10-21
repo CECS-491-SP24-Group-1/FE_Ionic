@@ -1,5 +1,15 @@
 import React, { KeyboardEventHandler, useEffect, useState } from "react";
-import { IonContent, IonHeader, IonPage, IonToolbar, IonTitle, IonFooter, IonInput, IonButton, IonIcon } from "@ionic/react";
+import {
+	IonContent,
+	IonHeader,
+	IonPage,
+	IonToolbar,
+	IonTitle,
+	IonFooter,
+	IonInput,
+	IonButton,
+	IonIcon
+} from "@ionic/react";
 import { send, attach, mic } from "ionicons/icons";
 import ChatList from "../components/Chats/ChatList/ChatList";
 import ChatMessages from "../components/Chats/ChatMessages";
@@ -9,155 +19,156 @@ import "./Chats.scss";
 import useVaultStore from "@/stores/vault_store";
 
 const Chats: React.FC = () => {
-  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
-  const [inputMessage, setInputMessage] = useState("");
-  const [ws, setWs] = useState<WebSocket | null>(null);
-  const [messages, setMessages] = useState<{ [key: number]: { to: string; from: string; text: string; time: string; }[] }>({}); // Object to hold messages by chatId
-  const api = import.meta.env.VITE_API_URL
+	const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+	const [inputMessage, setInputMessage] = useState("");
+	const [ws, setWs] = useState<WebSocket | null>(null);
+	const [messages, setMessages] = useState<{
+		[key: number]: { to: string; from: string; text: string; time: string }[];
+	}>({}); // Object to hold messages by chatId
+	const api = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    if (ws) ws.close();
+	useEffect(() => {
+		if (ws) ws.close();
 
-    // /api/chat/room/{roomID} - use this route with a real roomID once the socket path is updated
-    const socket = new WebSocket(`${api}/chat/room/0192ad23-2978-7916-a89d-bee209d84b49`);
+		// /api/chat/room/{roomID} - use this route with a real roomID once the socket path is updated
+		const socket = new WebSocket(`${api}/chat/room/0192ad23-2978-7916-a89d-bee209d84b49`);
 
-    socket.onopen = () => {
-      console.log('WebSocket connection established');
-    };
+		socket.onopen = () => {
+			console.log("WebSocket connection established");
+		};
 
-    socket.onmessage = (event) => {
-      console.log('Message from server:', event.data);
-      if (selectedChatId) {
-		    // TODO: change this to real data
-        setMessages(prevMessages => ({
-          ...prevMessages,
-          [selectedChatId]: [
-            ...(prevMessages[selectedChatId] || []),
-            {
-              to: "Me",
-              from: "WebSocket",
-              text: event.data,
-              time: "Now",
-            },
-          ],
-        }));
-      }
-    };
+		socket.onmessage = (event) => {
+			console.log("Message from server:", event.data);
+			if (selectedChatId) {
+				// TODO: change this to real data
+				setMessages((prevMessages) => ({
+					...prevMessages,
+					[selectedChatId]: [
+						...(prevMessages[selectedChatId] || []),
+						{
+							to: "Me",
+							from: "WebSocket",
+							text: event.data,
+							time: "Now"
+						}
+					]
+				}));
+			}
+		};
 
-    socket.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
+		socket.onclose = () => {
+			console.log("WebSocket connection closed");
+		};
 
-    socket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
+		socket.onerror = (error) => {
+			console.error("WebSocket error:", error);
+		};
 
-    setWs(socket);
-  }, [selectedChatId]);
+		setWs(socket);
+	}, [selectedChatId]);
 
-  // Function to handle chat selection
-  const handleChatSelect = (chatId: number) => {
-    setSelectedChatId(chatId);
-  };
+	// Function to handle chat selection
+	const handleChatSelect = (chatId: number) => {
+		setSelectedChatId(chatId);
+	};
 
-  // Function to handle sending messages
-  const handleSendMessage = (message: string) => {
-    if (selectedChatId) {
-      ws?.send(message);
-	  // TODO: change this to real data and make an API call to send message
-      setMessages(prevMessages => ({
-        ...prevMessages,
-        [selectedChatId]: [
-          ...(prevMessages[selectedChatId] || []), 
-          {
-            to: "Server",
-            from: "Me",
-            text: message,
-            time: "Now",
-          },
-        ],
-      }));
+	// Function to handle sending messages
+	const handleSendMessage = (message: string) => {
+		if (selectedChatId) {
+			ws?.send(message);
 
-      setInputMessage(""); // Clear the input field after sending
-    }
-  };
+			setMessages((prevMessages) => ({
+				...prevMessages,
+				[selectedChatId]: [
+					...(prevMessages[selectedChatId] || []),
+					{
+						to: "Server",
+						from: "Me",
+						text: message,
+						time: "Now"
+					}
+				]
+			}));
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-	const inputElement = event.target as HTMLIonInputElement;
-	const message = inputElement.value?.toString().trim();
-  
-	if (event.key === "Enter" && message) {
-	  event.preventDefault(); // Prevent any unwanted default behavior
-	  handleSendMessage(message); // Trigger the send message logic directly
-	  setInputMessage(""); // Clear the input field after sending
-	}
-  };
+			setInputMessage(""); // Clear the input field after sending
+		}
+	};
 
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonTitle>Chats</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+	const handleKeyDown = (event: React.KeyboardEvent) => {
+		const inputElement = event.target as HTMLIonInputElement;
+		const message = inputElement.value?.toString().trim();
 
-      <IonContent id="main-content">
-        <div className="chat-container">
-          {/* Chat list (left sidebar) */}
-          <div className="chat-list">
-            <ChatList onChatSelect={handleChatSelect} />
-          </div>
+		if (event.key === "Enter" && message) {
+			event.preventDefault(); // Prevent any unwanted default behavior
+			handleSendMessage(message); // Trigger the send message logic directly
+			setInputMessage(""); // Clear the input field after sending
+		}
+	};
 
-          {/* Chat view (right side) */}
-          <div className="chat-view">
-            {selectedChatId !== null ? (
-              <>
-                {/* Header stays fixed at the top */}
-                <div className="chat-header">
-                  <ChatHeader selectedChatId={selectedChatId} />
-                </div>
+	return (
+		<IonPage>
+			<IonContent id="main-content">
+				<div className="chat-container">
+					{/* Chat list (left sidebar) */}
+					<div className="chat-list">
+						<ChatList onChatSelect={handleChatSelect} />
+					</div>
 
-                {/* Scrollable messages section */}
-                <div className="chat-messages">
-                  <ChatMessages messages={messages[selectedChatId] || []} /> {/* Pass only messages for the selected chat */}
-                </div>
+					{ /* TODO: break this up into its own component */}
+					{/* Chat view (right side) */}
+					<div className="chat-view">
+						{selectedChatId !== null ? (
+							<>
+								{/* Header stays fixed at the top */}
+								<div className="chat-header">
+									<ChatHeader selectedChatId={selectedChatId} />
+								</div>
 
-                {/* Input stays fixed at the bottom */}
-                <div className="chat-input">
-                  <IonFooter className="chat-input">
-                    <IonToolbar>
-                      <IonInput
-                        value={inputMessage}
-                        placeholder="Write a message..."
-                        onIonChange={(e: CustomEvent) => setInputMessage(e.detail.value!)}
-						            onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
-                      />
-                      <IonButton onClick={() => handleSendMessage(inputMessage)} slot="end" fill="clear">
-                        <IonIcon icon={send} />
-                      </IonButton>
-                      <IonButton slot="end" fill="clear">
-                        <IonIcon icon={mic} />
-                      </IonButton>
-                      <IonButton slot="end" fill="clear">
-                        <IonIcon icon={attach} />
-                      </IonButton>
-                    </IonToolbar>
-                  </IonFooter>
-                </div>
-              </>
-            ) : (
-              <div className="no-chat-selected">
-                <p>Please select a chat to view messages.</p>
-              </div>
-            )}
-          </div>
-        </div>
+								{/* Scrollable messages section */}
+								<div className="chat-messages">
+									<ChatMessages messages={messages[selectedChatId] || []} />{" "}
+									{/* Pass only messages for the selected chat */}
+								</div>
 
-        {/* Chat Menu (right side menu) */}
-        <ChatMenu selectedChatId={selectedChatId} />
-      </IonContent>
-    </IonPage>
-  );
+								{/* Input stays fixed at the bottom */}
+								<div className="chat-input">
+									<IonFooter className="chat-input">
+										<IonToolbar>
+											<IonInput
+												value={inputMessage}
+												placeholder="Write a message..."
+												onIonChange={(e: CustomEvent) => setInputMessage(e.detail.value!)}
+												onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
+											/>
+											<IonButton
+												onClick={() => handleSendMessage(inputMessage)}
+												slot="end"
+												fill="clear">
+												<IonIcon icon={send} />
+											</IonButton>
+											<IonButton slot="end" fill="clear">
+												<IonIcon icon={mic} />
+											</IonButton>
+											<IonButton slot="end" fill="clear">
+												<IonIcon icon={attach} />
+											</IonButton>
+										</IonToolbar>
+									</IonFooter>
+								</div>
+							</>
+						) : (
+							<div className="no-chat-selected">
+								<p>Please select a chat to view messages.</p>
+							</div>
+						)}
+					</div>
+				</div>
+
+				{/* Chat Menu (right side menu) */}
+				<ChatMenu selectedChatId={selectedChatId} />
+			</IonContent>
+		</IonPage>
+	);
 };
 
 export default Chats;

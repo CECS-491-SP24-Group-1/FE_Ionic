@@ -1,7 +1,7 @@
-/** 
- * I took the chatInput fragment from here and moved it over to the 
+/**
+ * I took the chatInput fragment from here and moved it over to the
  * main Chats.tsx page. The separate file was not as easy for me to comprehend
- * when working on the echo websocketing. I left this file here in case we want 
+ * when working on the echo websocketing. I left this file here in case we want
  * to go back to using it this way. -Michael K.
  */
 import React, { useState } from "react";
