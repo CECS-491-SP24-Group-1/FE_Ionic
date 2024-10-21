@@ -76,7 +76,7 @@ const Chats: React.FC = () => {
 	const handleSendMessage = (message: string) => {
 		if (selectedChatId) {
 			ws?.send(message);
-			// TODO: change this to real data and make an API call to send message
+
 			setMessages((prevMessages) => ({
 				...prevMessages,
 				[selectedChatId]: [
@@ -120,6 +120,7 @@ const Chats: React.FC = () => {
 						<ChatList onChatSelect={handleChatSelect} />
 					</div>
 
+					{ /* TODO: break this up into its own component */}
 					{/* Chat view (right side) */}
 					<div className="chat-view">
 						{selectedChatId !== null ? (
