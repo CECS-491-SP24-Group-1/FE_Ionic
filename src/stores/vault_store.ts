@@ -1,8 +1,16 @@
+import { S } from "@faker-js/faker/dist/airline-C5Qwd7_q";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 interface VaultStore {
 	vault: typeof Vault | null;
+	keystore: typeof KeyStore | null;
 	setVault: (ev: typeof Vault) => void;
+
+	salt: string;
+	setSalt: (salt: string) => void;
+
+	vaultEKey: string;
+	setVaultEKey: (key: string) => void;
 
 	dummy: string;
 	setDummy: (str: string) => void;
@@ -18,7 +26,17 @@ interface VaultStore {
  */
 const useVaultStore = create<VaultStore>((set: any) => ({
 	vault: null,
-	setVault: (v: typeof Vault) => set({ vault: v }),
+	keystore: null,
+	setVault: (v: typeof Vault) => set({
+		vault: v,
+		keystore: KeyStore.fromJSObject(v.kstore)
+	}),
+
+	salt: "",
+	setSalt: (salt: string) => set({ salt: salt }),
+
+	vaultEKey: "",
+	setVaultEKey: (key: string) => set({ vaultEKey: key }),
 
 	dummy: "",
 	setDummy: (str: string) => set({ dummy: str }),
