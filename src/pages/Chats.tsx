@@ -107,12 +107,6 @@ const Chats: React.FC = () => {
 
 	return (
 		<IonPage>
-			<IonHeader>
-				<IonToolbar color="primary">
-					<IonTitle>Chats</IonTitle>
-				</IonToolbar>
-			</IonHeader>
-
 			<IonContent id="main-content">
 				<div className="chat-container">
 					{/* Chat list (left sidebar) */}

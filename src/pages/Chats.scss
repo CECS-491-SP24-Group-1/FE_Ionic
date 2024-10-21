@@ -6,6 +6,14 @@ $primary-color: #4b8fea;
 	height: 100%;
 }
 
+.chats-header {
+	padding-top: 0.5em;
+
+	.new-chat-icon {
+		vertical-align: middle;
+	}
+}
+
 /* Chat List (Sidebar) */
 .chat-list {
 	border-right: 0px solid #ccc;
@@ -31,6 +39,7 @@ $primary-color: #4b8fea;
 
 /* Media Query for Small Screens (e.g., mobile devices) */
 @media (max-width: 768px) {
+
 	/* Hide the chat label (name and message) when below 768px */
 	.chat-list-name {
 		display: none;
@@ -49,6 +58,7 @@ $primary-color: #4b8fea;
 	}
 }
 
+//TODO: use flexbox here
 .new-chat-icon {
 	position: absolute;
 	top: 5px;
@@ -81,6 +91,7 @@ $primary-color: #4b8fea;
 	background-color: #f0f0f0;
 	overflow-y: auto;
 	z-index: 1;
+	//padding: 1em;
 
 	/* Create a pseudo-element for the background image */
 	&::before {
