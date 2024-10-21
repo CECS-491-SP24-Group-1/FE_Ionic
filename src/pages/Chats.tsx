@@ -18,8 +18,8 @@ const Chats: React.FC = () => {
   useEffect(() => {
     if (ws) ws.close();
 
-    // /api/chat/room/{roomID} - use this route with roomID once the socket path is updated
-    const socket = new WebSocket(`${api}/chat/room/78`);
+    // /api/chat/room/{roomID} - use this route with a real roomID once the socket path is updated
+    const socket = new WebSocket(`${api}/chat/room/0192ad23-2978-7916-a89d-bee209d84b49`);
 
     socket.onopen = () => {
       console.log('WebSocket connection established');
