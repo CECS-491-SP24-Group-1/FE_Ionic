@@ -27,10 +27,11 @@ interface VaultStore {
 const useVaultStore = create<VaultStore>((set: any) => ({
 	vault: null,
 	keystore: null,
-	setVault: (v: typeof Vault) => set({
-		vault: v,
-		keystore: KeyStore.fromJSObject(v.kstore)
-	}),
+	setVault: (v: typeof Vault) =>
+		set({
+			vault: v,
+			keystore: KeyStore.fromJSObject(v.kstore)
+		}),
 
 	salt: "",
 	setSalt: (salt: string) => set({ salt: salt }),
