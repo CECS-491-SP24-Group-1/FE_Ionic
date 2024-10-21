@@ -13,11 +13,13 @@ const Chats: React.FC = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<{ [key: number]: { to: string; from: string; text: string; time: string; }[] }>({}); // Object to hold messages by chatId
+  const api = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     if (ws) ws.close();
 
-    const socket = new WebSocket('wss://echo.websocket.org');
+    // /api/chat/room/{roomID} - use this route with roomID once the socket path is updated
+    const socket = new WebSocket(`${api}/chat/room/78`);
 
     socket.onopen = () => {
       console.log('WebSocket connection established');
@@ -26,7 +28,7 @@ const Chats: React.FC = () => {
     socket.onmessage = (event) => {
       console.log('Message from server:', event.data);
       if (selectedChatId) {
-		// TODO: change this to real data
+		    // TODO: change this to real data
         setMessages(prevMessages => ({
           ...prevMessages,
           [selectedChatId]: [
@@ -128,7 +130,7 @@ const Chats: React.FC = () => {
                         value={inputMessage}
                         placeholder="Write a message..."
                         onIonChange={(e: CustomEvent) => setInputMessage(e.detail.value!)}
-						onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
+						            onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
                       />
                       <IonButton onClick={() => handleSendMessage(inputMessage)} slot="end" fill="clear">
                         <IonIcon icon={send} />
