@@ -1,3 +1,5 @@
+@import "../scss_mixin/hide_scrollbar.scss";
+
 .file-input-wrapper {
 	display: flex;
 	align-items: center;
@@ -17,5 +19,8 @@
 	flex: 3;
 	color: var(--ion-color-medium);
 	font-size: 14px;
-	overflow: scroll;
+	overflow-x: scroll;
+	overflow-y: hidden;
+
+	@include hide-scrollbar;
 }
