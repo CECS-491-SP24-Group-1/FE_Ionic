@@ -70,6 +70,7 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 		<div>
 			{error && <p style={{ color: "red" }}>{error}</p>}
 			{success && <p style={{ color: "green" }}>{success}</p>}
+			<style>{` input {color: #000 !important} `}</style> //TODO: to fix issues with colors temporarily
 
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="participants">Participants (comma-separated UUIDs):</label>
