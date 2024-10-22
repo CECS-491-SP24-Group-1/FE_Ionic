@@ -20,12 +20,14 @@ axiosInst.interceptors.request.use(
 		if (!accessTExpCVal || !refreshTExpCVal) return config;
 		const accessTExp = getUnixTime(accessTExpCVal),
 			refreshTExp = getUnixTime(refreshTExpCVal);
+		const now = getUnixTime(new Date());
 
-		console.log("access token expires on:", accessTExp);
+		console.log("current time:            ", now);
+		console.log("access token expires on: ", accessTExp);
 		console.log("refresh token expires on:", refreshTExp);
 
 		//Check if the access token needs to be refreshed
-		const delta2Exp = accessTExp - getUnixTime(Date.now().toString());
+		const delta2Exp = accessTExp - now;
 		if (delta2Exp >= MAX_DELTA_TO_EXPIRY) {
 			console.log("No need to refresh access token; delta to expiry:", delta2Exp);
 			return config;
@@ -95,6 +97,7 @@ function getCookie(name: string): string | null {
  * @param date The date to convert
  * @returns The resulting Unix timestamp
  */
-function getUnixTime(date: string): number {
-	return parseInt((new Date(date).getTime() / 1000).toFixed(0));
+function getUnixTime(date: Date | string): number {
+	const dateObject = date instanceof Date ? date : new Date(date);
+	return parseInt((dateObject.getTime() / 1000).toFixed(0));
 }
