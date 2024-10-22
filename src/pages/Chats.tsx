@@ -17,13 +17,18 @@ import ChatHeader from "../components/Chats/ChatHeader";
 import ChatMenu from "../components/Chats/Menu/ChatMenu";
 import "./Chats.scss";
 import useVaultStore from "@/stores/vault_store";
+import { newChat } from "@/util/chat";
 
 const Chats: React.FC = () => {
-	const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+	const { myID } = useVaultStore((state) => ({
+		myID: state.myID
+	}));
+
+	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
 	const [messages, setMessages] = useState<{
-		[key: number]: { to: string; from: string; text: string; time: string }[];
+		[key: string]: { to: string; from: string; text: string; time: string }[];
 	}>({}); // Object to hold messages by chatId
 	const api = import.meta.env.VITE_API_URL;
 
@@ -68,14 +73,17 @@ const Chats: React.FC = () => {
 	}, [selectedChatId]);
 
 	// Function to handle chat selection
-	const handleChatSelect = (chatId: number) => {
+	const handleChatSelect = (chatId: string) => {
 		setSelectedChatId(chatId);
 	};
 
 	// Function to handle sending messages
 	const handleSendMessage = (message: string) => {
 		if (selectedChatId) {
-			ws?.send(message);
+			//Create the chat message
+			const chat = newChat(message, myID, selectedChatId);
+
+			ws?.send(JSON.stringify(chat));
 
 			setMessages((prevMessages) => ({
 				...prevMessages,

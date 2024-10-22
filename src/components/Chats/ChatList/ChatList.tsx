@@ -4,7 +4,7 @@ import { chatList } from "../../../data/ChatListData";
 import ChatsHeader from "./ChatsHeader"; // Adjust the import to make sure it points to the correct file
 
 interface ChatListProps {
-	onChatSelect: (chatId: number) => void;
+	onChatSelect: (chatId: string) => void;
 }
 
 const ChatList: React.FC<ChatListProps> = ({ onChatSelect }) => {

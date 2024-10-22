@@ -12,7 +12,7 @@ import { call, videocam, informationCircle } from "ionicons/icons";
 import { chatList } from "../../data/ChatListData"; // Import chatList here
 
 interface ChatHeaderProps {
-	selectedChatId: number; // Pass the chatId instead of avatarUrl and name
+	selectedChatId: string; // Pass the chatId instead of avatarUrl and name
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ selectedChatId }) => {

@@ -1,4 +1,3 @@
-import { S } from "@faker-js/faker/dist/airline-C5Qwd7_q";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 // TEMP
@@ -13,6 +12,7 @@ interface ChatRoom {
 interface VaultStore {
 	vault: typeof Vault | null;
 	keystore: typeof KeyStore | null;
+	myID: string;
 	setVault: (ev: typeof Vault) => void;
 
 	salt: string;
@@ -41,11 +41,14 @@ interface VaultStore {
 const useVaultStore = create<VaultStore>((set: any) => ({
 	vault: null,
 	keystore: null,
-	setVault: (v: typeof Vault) =>
+	myID: "",
+	setVault: (v: typeof Vault) => {
 		set({
 			vault: v,
-			keystore: KeyStore.fromJSObject(v.kstore)
-		}),
+			keystore: KeyStore.fromJSObject(v.kstore),
+			myID: v.subject
+		});
+	},
 
 	salt: "",
 	setSalt: (salt: string) => set({ salt: salt }),

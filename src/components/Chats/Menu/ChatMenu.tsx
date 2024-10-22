@@ -18,7 +18,7 @@ import { close } from "ionicons/icons";
 import { chatList } from "../../../data/ChatListData";
 
 interface ChatMenuProps {
-	selectedChatId: number | null;
+	selectedChatId: string | null;
 }
 
 const ChatMenu: React.FC<ChatMenuProps> = ({ selectedChatId }) => {
