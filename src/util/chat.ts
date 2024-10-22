@@ -11,7 +11,7 @@ import { uuidv7 } from "uuidv7";
 export function newChat(content: string, sid: string, rid: string): Message {
 	return {
 		id: uuidv7(),
-		type: "MESSAGE",
+		type: "U_MSG",
 		sender_id: sid,
 		recipient_id: rid,
 		content: content
