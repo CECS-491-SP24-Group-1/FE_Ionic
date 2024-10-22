@@ -7,8 +7,8 @@ import Cookies from "js-cookie";
  * @param uname The user's username
  */
 export function addMiscCookies(uid: string, uname: string) {
-	Cookies.set(import.meta.env.VITE_USER_ID, uid);
-	Cookies.set(import.meta.env.VITE_USER_USERNAME, uname);
+	Cookies.set(import.meta.env.VITE_USER_ID, uid, { sameSite: "Strict" });
+	Cookies.set(import.meta.env.VITE_USER_USERNAME, uname, { sameSite: "Strict" });
 }
 
 /**
