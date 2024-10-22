@@ -1,6 +1,15 @@
 import { S } from "@faker-js/faker/dist/airline-C5Qwd7_q";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
+// TEMP
+interface ChatRoom {
+	id: string;
+	name: string;
+	avatar: string;
+	lastMessage: string;
+	time: string;
+}
+
 interface VaultStore {
 	vault: typeof Vault | null;
 	keystore: typeof KeyStore | null;
@@ -17,6 +26,11 @@ interface VaultStore {
 
 	dummy2: string;
 	setDummy2: (str: string) => void;
+
+	// TEMP Map of UUIDs to ChatRoom objects
+	chatRooms: Record<string, ChatRoom>;
+	addChatRoom: (newRoom: ChatRoom) => void;
+	getChatRoom: (id: string) => ChatRoom | undefined;
 }
 
 /**
@@ -43,7 +57,22 @@ const useVaultStore = create<VaultStore>((set: any) => ({
 	setDummy: (str: string) => set({ dummy: str }),
 
 	dummy2: "",
-	setDummy2: (str: string) => set({ dummy2: str })
+	setDummy2: (str: string) => set({ dummy2: str }),
+
+	// Initialize chatRooms as an empty map
+	chatRooms: {},
+
+	// Add the new room to the chatRooms map
+	addChatRoom: (newRoom: ChatRoom) =>
+		set((state: VaultStore) => ({
+			chatRooms: {
+				...state.chatRooms,
+				[newRoom.id]: newRoom // Add new room with UUID as key
+			}
+		})),
+
+	// Get a chat room by its UUID
+	getChatRoom: (id: string) => set((state: VaultStore) => state.chatRooms[id])
 }));
 
 export default useVaultStore;

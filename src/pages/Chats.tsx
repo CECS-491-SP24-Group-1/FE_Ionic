@@ -114,7 +114,7 @@ const Chats: React.FC = () => {
 						<ChatList onChatSelect={handleChatSelect} />
 					</div>
 
-					{ /* TODO: break this up into its own component */}
+					{/* TODO: break this up into its own component */}
 					{/* Chat view (right side) */}
 					<div className="chat-view">
 						{selectedChatId !== null ? (
