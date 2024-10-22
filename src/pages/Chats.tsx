@@ -21,6 +21,7 @@ import { newChat } from "@/util/chat";
 import taxios from "@/util/token_refresh_hook";
 import { swallowError } from "@/util/http_util";
 import { HttpResponse } from "@ptypes/http_response";
+import { Room } from "@ptypes/room";
 
 const Chats: React.FC = () => {
 	const { myID } = useVaultStore((state) => ({
@@ -40,8 +41,8 @@ const Chats: React.FC = () => {
 		try {
 			//Issue the request and get the response
 			const response = await taxios.get(`${api}/chat/room/list`);
-			const rdata: HttpResponse<any> = response.data;
-			const payload = rdata!.payloads;
+			const rdata: HttpResponse<Room> = response.data;
+			const payload = rdata.payloads!;
 
 			console.log("Rooms list:", payload);
 

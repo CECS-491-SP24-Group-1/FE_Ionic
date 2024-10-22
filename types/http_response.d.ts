@@ -6,7 +6,7 @@
 export interface HttpResponse<T extends any> {
 	code: number /* int */;
 	status: string;
-	desc?: string;
+	desc: string;
 	errors?: string[];
 	payloads?: T[];
 }
