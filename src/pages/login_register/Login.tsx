@@ -94,7 +94,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized vault from sessionstorage.");
 					loadedVault.current = true;
 					return formVault;
-				} catch (e) { } //Fail silently
+				} catch (e) {} //Fail silently
 			}
 		}
 
@@ -114,7 +114,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized encrypted vault from localstorage.");
 					loadedEVault.current = true;
 					return formEVault;
-				} catch (e) { } //Fail silently
+				} catch (e) {} //Fail silently
 			}
 		}
 
@@ -268,6 +268,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 			//Pull the response data out; guaranteed to be non-null
 			const udata = response!.payloads![0]!;
+			addMiscCookies(udata.id, udata.username);
 			toast.success(`Successfully logged in as ${udata.username} <id: ${udata.id}>.`);
 		} catch (e: any) {
 			const etext = swallowError(e);
