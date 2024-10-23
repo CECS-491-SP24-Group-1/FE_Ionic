@@ -9,19 +9,19 @@ import {
 	IonMenuToggle
 } from "@ionic/react";
 import { call, videocam, informationCircle } from "ionicons/icons";
-import { useRoomStore } from "@/stores/room_store"; // Import Zustand store hook
+import { chatList } from "../../data/ChatListData"; // Import chatList here
 
 interface ChatHeaderProps {
-	selectedChatId: string; // Use the chatId to get the correct chat data
+	selectedChatId: string; // Pass the chatId instead of avatarUrl and name
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ selectedChatId }) => {
-	// Get the room data from Zustand
-	const room = useRoomStore((state) => state.rooms[selectedChatId]);
+	// Find the selected chat based on selectedChatId
+	const selectedChat = chatList.find((chat) => chat.id === selectedChatId);
 
-	// Ensure the selected room exists
-	if (!room) {
-		return null; // Handle the case where the room is not found (optional)
+	// Ensure the selected chat exists
+	if (!selectedChat) {
+		return null; // Handle the case where the chat is not found (optional)
 	}
 
 	const toggleMenu = async () => {
@@ -31,11 +31,10 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ selectedChatId }) => {
 	return (
 		<IonItem lines="none" className="user-chat-bar">
 			<IonAvatar slot="start">
-				<img src={`https://i.pravatar.cc/300?u=${room.id}`} alt={room.id} />{" "}
-				{/* Using placeholder avatar */}
+				<img src={selectedChat.avatar} alt={selectedChat.name} />
 			</IonAvatar>
 			<IonLabel>
-				<h2>{room.id}</h2> {/* Display the room ID or name */}
+				<h2>{selectedChat.name}</h2>
 				<p>Click here for contact information</p>
 			</IonLabel>
 			<div className="chat-header-icons">

@@ -1,58 +1,42 @@
-import React from "react";
-import { menuController } from "@ionic/core";
-import {
-	IonItem,
-	IonAvatar,
-	IonLabel,
-	IonButton,
-	IonIcon,
-	IonMenuToggle
-} from "@ionic/react";
-import { call, videocam, informationCircle } from "ionicons/icons";
-import { useRoomStore } from "@/stores/room_store"; // Import Zustand store hook
+import React, { useState } from "react";
+import { IonLabel, IonIcon, IonModal, IonButton } from "@ionic/react";
+import { addCircle } from "ionicons/icons";
+import CreateChatRoom from "../CreateChatRoom";
 
-interface ChatHeaderProps {
-	selectedChatId: string; // Use the chatId to get the correct chat data
-}
+const ChatsHeader: React.FC = () => {
+	const [showModal, setShowModal] = useState(false); // State to control the modal visibility
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ selectedChatId }) => {
-	// Get the room data from Zustand
-	const room = useRoomStore((state) => state.rooms[selectedChatId]);
+	const handleOpenModal = () => {
+		setShowModal(true); // Open the modal
+	};
 
-	// Ensure the selected room exists
-	if (!room) {
-		return null; // Handle the case where the room is not found (optional)
-	}
-
-	const toggleMenu = async () => {
-		await menuController.toggle();
+	const handleCloseModal = () => {
+		setShowModal(false); // Close the modal
 	};
 
 	return (
-		<IonItem lines="none" className="user-chat-bar">
-			<IonAvatar slot="start">
-				<img src={`https://i.pravatar.cc/300?u=${room.id}`} alt={room.id} />{" "}
-				{/* Using placeholder avatar */}
-			</IonAvatar>
-			<IonLabel>
-				<h2>{room.id}</h2> {/* Display the room ID or name */}
-				<p>Click here for contact information</p>
-			</IonLabel>
-			<div className="chat-header-icons">
-				<IonButton fill="clear">
-					<IonIcon icon={call} />
-				</IonButton>
-				<IonButton fill="clear">
-					<IonIcon icon={videocam} />
-				</IonButton>
-				<IonMenuToggle>
-					<IonButton fill="clear" onClick={toggleMenu}>
-						<IonIcon icon={informationCircle} />
-					</IonButton>
-				</IonMenuToggle>
+		<div className="chats-header">
+			<div className="chats-title">
+				<IonLabel>Chats</IonLabel>
+				<IonIcon
+					icon={addCircle}
+					size="large"
+					className="new-chat-icon"
+					onClick={handleOpenModal}
+				/>
 			</div>
-		</IonItem>
+
+			{/* Modal for creating a new chat room */}
+			<IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
+				<div className="modal-content">
+					<h2>Create a New Chat Room</h2>
+					{/* Render the CreateChatRoom component within the modal */}
+					<CreateChatRoom onRoomCreated={handleCloseModal} />
+					<IonButton onClick={handleCloseModal}>Close</IonButton>
+				</div>
+			</IonModal>
+		</div>
 	);
 };
 
-export default ChatHeader;
+export default ChatsHeader;
