@@ -31,7 +31,7 @@ interface VaultState {
 	hasVault: boolean;
 	vaultFile: File | null;
 	evault: typeof EVault | null;
-	vault: typeof Vault | null;
+	//vault: typeof Vault | null;
 }
 
 interface LoginProps {
@@ -53,7 +53,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		hasVault: Vault.inSStore(SS_VAULT_KEY),
 		vaultFile: null,
 		evault: null,
-		vault: null
+		//vault: null
 	});
 	const loadedEVault = useRef<boolean>(false);
 	const loadedVault = useRef<boolean>(false);
@@ -66,9 +66,11 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const disablePassphraseInput = useRef<boolean>(false);
 
 	//TODO: tmp
-	const { dummy, setDummy } = useVaultStore((state) => ({
+	const { dummy, setDummy, vault, setVault } = useVaultStore((state) => ({
 		dummy: state.dummy,
-		setDummy: state.setDummy
+		setDummy: state.setDummy,
+		vault: state.vault,
+		setVault: state.setVault
 	}));
 
 	//Invokes the form loader only once
@@ -81,7 +83,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		//Check for a vault
 		if (vaultState.hasVault) {
 			//Check if the vault is already loaded in memory
-			if (vaultState.vault) return formVault;
+			if (vault) return formVault;
 
 			//Try to deserialize the vault
 			if (!loadedVault.current) {
@@ -94,7 +96,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized vault from sessionstorage.");
 					loadedVault.current = true;
 					return formVault;
-				} catch (e) {} //Fail silently
+				} catch (e) { } //Fail silently
 			}
 		}
 
@@ -114,7 +116,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized encrypted vault from localstorage.");
 					loadedEVault.current = true;
 					return formEVault;
-				} catch (e) {} //Fail silently
+				} catch (e) { } //Fail silently
 			}
 		}
 
@@ -197,11 +199,11 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const handleLogin = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
-		if (!vaultState.vault) return;
+		if (!vault) return;
 
 		//Get the user's ID and keystore from the vault
-		const uid = vaultState.vault.subject;
-		const ks: typeof KeyStore = KeyStore.fromJSObject(vaultState.vault.kstore);
+		const uid = vault.subject;
+		const ks: typeof KeyStore = KeyStore.fromJSObject(vault.kstore);
 
 		//Construct the login request
 		const loginReq: PKCRequest = {

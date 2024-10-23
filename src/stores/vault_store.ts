@@ -11,9 +11,12 @@ interface ChatRoom {
 
 interface VaultStore {
 	vault: typeof Vault | null;
+	hasVault: boolean;
+	setVault: (ev: typeof Vault) => void;
+
+	//Managed by vault
 	keystore: typeof KeyStore | null;
 	myID: string;
-	setVault: (ev: typeof Vault) => void;
 
 	salt: string;
 	setSalt: (salt: string) => void;
@@ -40,15 +43,20 @@ interface VaultStore {
  */
 const useVaultStore = create<VaultStore>((set: any) => ({
 	vault: null,
-	keystore: null,
-	myID: "",
+	hasVault: false,
 	setVault: (v: typeof Vault) => {
+		console.log("vualtwkagn", typeof Vault)
 		set({
 			vault: v,
+			hasVault: true,
 			keystore: KeyStore.fromJSObject(v.kstore),
 			myID: v.subject
 		});
 	},
+
+	//Managed by vault
+	keystore: null,
+	myID: "",
 
 	salt: "",
 	setSalt: (salt: string) => set({ salt: salt }),

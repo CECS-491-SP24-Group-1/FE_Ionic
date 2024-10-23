@@ -44,10 +44,11 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 		setShouldWarnStrength(result.id < 3);
 	};
 
-	//TODO: tmp
-	const { dummy2, setDummy2 } = useVaultStore((state) => ({
+	//Vault state
+	const { dummy2, setDummy2, setVault } = useVaultStore((state) => ({
 		dummy2: state.dummy2,
-		setDummy2: state.setDummy2
+		setDummy2: state.setDummy2,
+		setVault: state.setVault
 	}));
 
 	//Handles form submissions
@@ -55,6 +56,8 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
 
+		//Set the vault in the Zustand store
+		setVault(vault);
 		setDummy2("windows_xp");
 
 		//Take the user back to the login page
