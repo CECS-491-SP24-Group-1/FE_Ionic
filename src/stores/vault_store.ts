@@ -26,12 +26,6 @@ interface VaultStore {
 	vaultEKey: string;
 	setVaultEKey: (key: string) => void;
 
-	dummy: string;
-	setDummy: (str: string) => void;
-
-	dummy2: string;
-	setDummy2: (str: string) => void;
-
 	// TEMP Map of UUIDs to ChatRoom objects
 	chatRooms: Record<string, ChatRoom>;
 	addChatRoom: (newRoom: ChatRoom) => void;
@@ -96,12 +90,6 @@ const useVaultStore = create<VaultStore>((set: any, get: any) => {
 
 		vaultEKey: "",
 		setVaultEKey: (key: string) => set({ vaultEKey: key }),
-
-		dummy: "",
-		setDummy: (str: string) => set({ dummy: str }),
-
-		dummy2: "",
-		setDummy2: (str: string) => set({ dummy2: str }),
 
 		// Initialize chatRooms as an empty map
 		chatRooms: {},
