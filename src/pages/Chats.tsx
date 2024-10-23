@@ -1,27 +1,27 @@
-import React, { KeyboardEventHandler, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
 	IonContent,
-	IonHeader,
 	IonPage,
-	IonToolbar,
-	IonTitle,
 	IonFooter,
 	IonInput,
 	IonButton,
-	IonIcon
+	IonIcon,
+	IonModal,
+	IonToolbar
 } from "@ionic/react";
-import { send, attach, mic } from "ionicons/icons";
+import { send, attach, mic, camera } from "ionicons/icons";
 import ChatList from "../components/Chats/ChatList/ChatList";
 import ChatMessages from "../components/Chats/ChatMessages";
 import ChatHeader from "../components/Chats/ChatHeader";
 import ChatMenu from "../components/Chats/Menu/ChatMenu";
-import "./Chats.scss";
+import Camera from "/Users/michaelglider/Documents/GitHub/FE_Ionic/src/pages/Camera"; // Import your Camera component
 import useVaultStore from "@/stores/vault_store";
 import { newChat } from "@/util/chat";
 import taxios from "@/util/token_refresh_hook";
 import { swallowError } from "@/util/http_util";
 import { HttpResponse } from "@ptypes/http_response";
 import { Room } from "@ptypes/room";
+import "./Chats.scss";
 
 const Chats: React.FC = () => {
 	const { myID } = useVaultStore((state) => ({
@@ -33,36 +33,30 @@ const Chats: React.FC = () => {
 	const [ws, setWs] = useState<WebSocket | null>(null);
 	const [messages, setMessages] = useState<{
 		[key: string]: { to: string; from: string; text: string; time: string }[];
-	}>({}); // Object to hold messages by chatId
+	}>({});
+	const [showCamera, setShowCamera] = useState(false); // State to control the camera modal
 	const api = import.meta.env.VITE_API_URL;
 
-	//TODO: integrate this eventually. This is only a test
+	// Function to get room list
 	const getRoomList = useCallback(async () => {
 		try {
-			//Issue the request and get the response
 			const response = await taxios.get(`${api}/chat/room/list`);
 			const rdata: HttpResponse<Room> = response.data;
 			const payload = rdata.payloads!;
-
 			console.log("Rooms list:", payload);
-
 		} catch (error: any) {
 			const rtext = swallowError(error);
 			console.error("Error getting rooms list:", rtext);
 		}
-
 	}, []);
 
 	useEffect(() => {
 		getRoomList();
 	}, [getRoomList]);
 
-
-
 	useEffect(() => {
 		if (ws) ws.close();
 
-		// /api/chat/room/{roomID} - use this route with a real roomID once the socket path is updated
 		const socket = new WebSocket(`${api}/chat/room/0192ad23-2978-7916-a89d-bee209d84b49`);
 
 		socket.onopen = () => {
@@ -72,7 +66,6 @@ const Chats: React.FC = () => {
 		socket.onmessage = (event) => {
 			console.log("Message from server:", event.data);
 			if (selectedChatId) {
-				// TODO: change this to real data
 				setMessages((prevMessages) => ({
 					...prevMessages,
 					[selectedChatId]: [
@@ -104,12 +97,10 @@ const Chats: React.FC = () => {
 		setSelectedChatId(chatId);
 	};
 
-	// Function to handle sending messages
+	// Function to handle sending text messages
 	const handleSendMessage = (message: string) => {
 		if (selectedChatId) {
-			//Create the chat message
 			const chat = newChat(message, myID, selectedChatId);
-
 			ws?.send(JSON.stringify(chat));
 
 			setMessages((prevMessages) => ({
@@ -125,18 +116,41 @@ const Chats: React.FC = () => {
 				]
 			}));
 
-			setInputMessage(""); // Clear the input field after sending
+			setInputMessage("");
 		}
 	};
 
+	// Function to handle sending image messages
+	const handleSendImage = (imageData: string) => {
+		if (selectedChatId) {
+			const chat = newChat(imageData, myID, selectedChatId);
+
+			ws?.send(JSON.stringify(chat));
+
+			setMessages((prevMessages) => ({
+				...prevMessages,
+				[selectedChatId]: [
+					...(prevMessages[selectedChatId] || []),
+					{
+						to: "Server",
+						from: "Me",
+						text: "[Image]",
+						time: "Now"
+					}
+				]
+			}));
+		}
+	};
+
+	// Function to handle key down for the input
 	const handleKeyDown = (event: React.KeyboardEvent) => {
 		const inputElement = event.target as HTMLIonInputElement;
 		const message = inputElement.value?.toString().trim();
 
 		if (event.key === "Enter" && message) {
-			event.preventDefault(); // Prevent any unwanted default behavior
-			handleSendMessage(message); // Trigger the send message logic directly
-			setInputMessage(""); // Clear the input field after sending
+			event.preventDefault();
+			handleSendMessage(message);
+			setInputMessage("");
 		}
 	};
 
@@ -144,28 +158,21 @@ const Chats: React.FC = () => {
 		<IonPage>
 			<IonContent id="main-content">
 				<div className="chat-container">
-					{/* Chat list (left sidebar) */}
 					<div className="chat-list">
 						<ChatList onChatSelect={handleChatSelect} />
 					</div>
 
-					{/* TODO: break this up into its own component */}
-					{/* Chat view (right side) */}
 					<div className="chat-view">
 						{selectedChatId !== null ? (
 							<>
-								{/* Header stays fixed at the top */}
 								<div className="chat-header">
 									<ChatHeader selectedChatId={selectedChatId} />
 								</div>
 
-								{/* Scrollable messages section */}
 								<div className="chat-messages">
-									<ChatMessages messages={messages[selectedChatId] || []} />{" "}
-									{/* Pass only messages for the selected chat */}
+									<ChatMessages messages={messages[selectedChatId] || []} />
 								</div>
 
-								{/* Input stays fixed at the bottom */}
 								<div className="chat-input">
 									<IonFooter className="chat-input">
 										<IonToolbar>
@@ -184,6 +191,12 @@ const Chats: React.FC = () => {
 											<IonButton slot="end" fill="clear">
 												<IonIcon icon={mic} />
 											</IonButton>
+											<IonButton
+												slot="end"
+												fill="clear"
+												onClick={() => setShowCamera(true)}>
+												<IonIcon icon={camera} />
+											</IonButton>
 											<IonButton slot="end" fill="clear">
 												<IonIcon icon={attach} />
 											</IonButton>
@@ -199,8 +212,17 @@ const Chats: React.FC = () => {
 					</div>
 				</div>
 
-				{/* Chat Menu (right side menu) */}
 				<ChatMenu selectedChatId={selectedChatId} />
+
+				{/* Camera Modal */}
+				<IonModal isOpen={showCamera} onDidDismiss={() => setShowCamera(false)}>
+					<Camera
+						onCapture={(imageData: string) => {
+							handleSendImage(imageData);
+							setShowCamera(false);
+						}}
+					/>
+				</IonModal>
 			</IonContent>
 		</IonPage>
 	);

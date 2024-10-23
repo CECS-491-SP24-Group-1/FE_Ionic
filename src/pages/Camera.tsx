@@ -1,16 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
-import {
-	IonPage,
-	IonHeader,
-	IonToolbar,
-	IonTitle,
-	IonContent,
-	IonButton,
-	IonIcon
-} from "@ionic/react";
+import { IonPage, IonContent } from "@ionic/react";
 import "./Camera.scss"; // Custom styling
 
-const Camera: React.FC = () => {
+// Define the props type
+interface CameraProps {
+	onCapture: (imageData: string) => void;
+}
+
+const Camera: React.FC<CameraProps> = ({ onCapture }) => {
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [photo, setPhoto] = useState<string | null>(null);
@@ -58,6 +55,9 @@ const Camera: React.FC = () => {
 				if (stream) {
 					stream.getTracks().forEach((track) => track.stop());
 				}
+
+				// Trigger the onCapture callback with the image data
+				onCapture(imageData);
 			}
 		}
 	};
