@@ -9,7 +9,7 @@ import App from "./App";
 import useVaultStore from "./stores/vault_store";
 import useWasm from "./wasm_util/use_wasm";
 import { SS_VAULT_KEY } from "@/constants/WebStorageKeys";
-import usePageTrap from "./util/page_trap";
+import usePageTrap from "./hooks/page_trap";
 import "./index.scss";
 
 import "react-toastify/dist/ReactToastify.css";
