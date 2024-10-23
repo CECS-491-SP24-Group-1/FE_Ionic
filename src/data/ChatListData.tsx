@@ -21,7 +21,6 @@ export const chatList: ChatListItem[] = [
 		time: "10:45 AM"
 	},
 	{
-
 		id: "0192b5c9-5f17-7d72-9097-1e58410a70a2",
 		name: "Claudia Alves",
 		avatar: "https://i.pravatar.cc/300?u=claudia",

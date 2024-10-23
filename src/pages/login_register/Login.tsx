@@ -52,7 +52,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		hasEVault: EVault.inLStore(LS_EVAULT_KEY),
 		hasVault: Vault.inSStore(SS_VAULT_KEY),
 		vaultFile: null,
-		evault: null,
+		evault: null
 		//vault: null
 	});
 	const loadedEVault = useRef<boolean>(false);
@@ -96,7 +96,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized vault from sessionstorage.");
 					loadedVault.current = true;
 					return formVault;
-				} catch (e) { } //Fail silently
+				} catch (e) {} //Fail silently
 			}
 		}
 
@@ -116,7 +116,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized encrypted vault from localstorage.");
 					loadedEVault.current = true;
 					return formEVault;
-				} catch (e) { } //Fail silently
+				} catch (e) {} //Fail silently
 			}
 		}
 

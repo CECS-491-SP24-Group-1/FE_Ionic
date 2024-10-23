@@ -6,9 +6,8 @@ import { useCookies } from "react-cookie";
 import { IonReactRouter } from "@ionic/react-router";
 
 import App from "./App";
-import useVaultStore from "./stores/vault_store";
+import useVaultStore, { vaultInSS } from "./stores/vault_store";
 import useWasm from "./wasm_util/use_wasm";
-import { SS_VAULT_KEY } from "@/constants/WebStorageKeys";
 import usePageTrap from "./hooks/page_trap";
 import "./index.scss";
 
@@ -46,7 +45,7 @@ export function Root() {
 	const initRef = useRef(false);
 
 	//Set up vault checks and login gates
-	const [hasVault, setHasVault] = useState(SS_VAULT_KEY in sessionStorage);
+	const hasVault = useRef(vaultInSS());
 	const { shouldLogin, setShouldLogin } = useLoginGateStore((state) => ({
 		shouldLogin: state.shouldLogin,
 		setShouldLogin: state.setShouldLogin
@@ -55,8 +54,10 @@ export function Root() {
 	//Cookies init
 	const [cookies] = useCookies();
 
-	//Zustand store access
-	const setVault = useVaultStore((state) => state.setVault);
+	//Vault store access
+	const { populateVault } = useVaultStore((state) => ({
+		populateVault: state.vaultFromSS
+	}));
 
 	//Initializes the WASM module
 	const initWasm = useCallback(() => {
@@ -75,24 +76,24 @@ export function Root() {
 		if (wasmLoaded) {
 			initWasm();
 
-			// Vault check
-			if (hasVault) {
-				try {
-					const loadedVault = Vault.fromSStore(SS_VAULT_KEY); // Loading the vault from Session Storage
-					setVault(loadedVault);
-
+			//Vault check
+			if (hasVault.current) {
+				//Attempt to load the vault
+				if (populateVault()) {
+					//Set cookies
 					if (cookies[import.meta.env.VITE_ACOOKIE_EXPR_NAME] !== undefined) {
 						setShouldLogin(false); //User does not need to login
 					} else {
 						setShouldLogin(true); // User needs to login, show login page
 					}
-				} catch (e: any) {
-					sessionStorage.removeItem(SS_VAULT_KEY); // Remove invalid session storage key
+				} else {
 					setShouldLogin(true);
 				}
+			} else {
+				console.log("no vault in sessionstorage");
 			}
 		}
-	}, [wasmLoaded, hasVault, cookies, initWasm]);
+	}, [wasmLoaded, cookies, initWasm]);
 
 	//Show an error screen if an error occurred
 	if (wasmError) {

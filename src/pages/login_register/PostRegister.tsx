@@ -33,7 +33,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	const [passphrase, setPassphrase] = useState(""); //State for passphrases
 	const [passphraseStrength, setPassphraseStrength] = useState(-1); // State for passphrase strength
 	const [shouldWarnStrength, setShouldWarnStrength] = useState(false);
-	const [evault, setEvault] = useState<typeof EVault | undefined>(undefined);
+	const [evault, setEvault] = useState<typeof EVault | undefined>(undefined); //TODO: maybe move to Zustand
 
 	//Handles passphrase input change and update strength using `passphraseStrength`
 	const handleStrengthUpdate = (newPassphrase: string) => {
@@ -45,9 +45,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	};
 
 	//Vault state
-	const { dummy2, setDummy2, setVault } = useVaultStore((state) => ({
-		dummy2: state.dummy2,
-		setDummy2: state.setDummy2,
+	const { setVault } = useVaultStore((state) => ({
 		setVault: state.setVault
 	}));
 
@@ -55,10 +53,6 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
-
-		//Set the vault in the Zustand store
-		setVault(vault);
-		setDummy2("windows_xp");
 
 		//Take the user back to the login page
 		togglePage();
@@ -86,6 +80,9 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 		const ev: typeof EVault = EVault.fromJSObject(vault.encryptPassphrase(passphrase));
 		ev.toLStore(LS_EVAULT_KEY);
 		setEvault(ev);
+
+		//Set the vault in the Zustand store
+		setVault(vault);
 
 		//Announce the successful encryption
 		toast.success("Vault was encrypted successfully!");

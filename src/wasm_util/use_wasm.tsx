@@ -7,6 +7,7 @@ interface WasmState {
 	error: Error | null;
 }
 
+//TODO: optimize for React strict mode
 const useWasm = (wasmPath: string): WasmState => {
 	const [state, setState] = useState<WasmState>({ loaded: false, error: null });
 
