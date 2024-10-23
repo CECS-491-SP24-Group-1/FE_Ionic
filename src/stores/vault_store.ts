@@ -18,7 +18,7 @@ interface VaultStore {
 
 	//Managed by vault
 	keystore: typeof KeyStore | null;
-	myID: string;
+	myID: string; //TODO: use cookies???
 
 	salt: string;
 	setSalt: (salt: string) => void;
@@ -43,83 +43,82 @@ interface VaultStore {
  * instructions:
  * https://www.perplexity.ai/search/how-do-i-use-this-zustand-stor-mha_ERBLTB.IUQy8ZXXY0g
  */
-const useVaultStore = create<VaultStore>((set: any, get: any) => ({
-	vault: null,
-	hasVault: false,
-	setVault: (v: typeof Vault) => {
-		console.log("vualtwkagn", typeof Vault);
-
-		//Get the previous value
-		//const currentVault = get().vault;
-
-		//Update the component state
+const useVaultStore = create<VaultStore>((set: any, get: any) => {
+	//Private functions
+	const updateVaultState = (v: typeof Vault) => {
+		console.log("vualtwkagn");
 		set({
 			vault: v,
 			hasVault: true,
 			keystore: KeyStore.fromJSObject(v.kstore),
 			myID: v.subject
 		});
+	};
 
-		//Persist the changes to session storage
-		(v as typeof Vault).toSStore(SS_VAULT_KEY);
-	},
-	vaultFromSS: () => {
-		//It is assumed that the vault is already in session storage
-		try {
-			console.log("populating vault from session storage");
-			//Load the vault from Session Storage
-			const loadedVault = Vault.fromSStore(SS_VAULT_KEY);
+	//Declare the Zustand component here
+	return {
+		vault: null,
+		hasVault: false,
+		setVault: (v: typeof Vault) => {
+			//Get the previous value
+			//const currentVault = get().vault;
 
 			//Update the component state
-			//This must match what is in the setter
-			//TODO: investigate way to dedupe
-			set({
-				vault: v,
-				hasVault: true,
-				keystore: KeyStore.fromJSObject(v.kstore),
-				myID: v.subject
-			});
+			updateVaultState(v);
 
-			return true;
-		} catch (e: any) {
-			//Remove invalid session storage key
-			console.error("failed to load vault from session storage", e);
-			sessionStorage.removeItem(SS_VAULT_KEY);
-			return false;
-		}
-	},
+			//Persist the changes to session storage
+			(v as typeof Vault).toSStore(SS_VAULT_KEY);
+		},
+		vaultFromSS: () => {
+			//It is assumed that the vault is already in session storage
+			try {
+				//Load the vault from Session Storage
+				const loadedVault = Vault.fromSStore(SS_VAULT_KEY);
 
-	//Managed by vault
-	keystore: null,
-	myID: "",
+				//Update the vault state
+				updateVaultState(loadedVault);
 
-	salt: "",
-	setSalt: (salt: string) => set({ salt: salt }),
-
-	vaultEKey: "",
-	setVaultEKey: (key: string) => set({ vaultEKey: key }),
-
-	dummy: "",
-	setDummy: (str: string) => set({ dummy: str }),
-
-	dummy2: "",
-	setDummy2: (str: string) => set({ dummy2: str }),
-
-	// Initialize chatRooms as an empty map
-	chatRooms: {},
-
-	// Add the new room to the chatRooms map
-	addChatRoom: (newRoom: ChatRoom) =>
-		set((state: VaultStore) => ({
-			chatRooms: {
-				...state.chatRooms,
-				[newRoom.id]: newRoom // Add new room with UUID as key
+				return true;
+			} catch (e: any) {
+				//Remove invalid session storage key
+				console.error("failed to load vault from session storage", e);
+				sessionStorage.removeItem(SS_VAULT_KEY);
+				return false;
 			}
-		})),
+		},
 
-	// Get a chat room by its UUID
-	getChatRoom: (id: string) => set((state: VaultStore) => state.chatRooms[id])
-}));
+		//Managed by vault
+		keystore: null,
+		myID: "",
+
+		salt: "",
+		setSalt: (salt: string) => set({ salt: salt }),
+
+		vaultEKey: "",
+		setVaultEKey: (key: string) => set({ vaultEKey: key }),
+
+		dummy: "",
+		setDummy: (str: string) => set({ dummy: str }),
+
+		dummy2: "",
+		setDummy2: (str: string) => set({ dummy2: str }),
+
+		// Initialize chatRooms as an empty map
+		chatRooms: {},
+
+		// Add the new room to the chatRooms map
+		addChatRoom: (newRoom: ChatRoom) =>
+			set((state: VaultStore) => ({
+				chatRooms: {
+					...state.chatRooms,
+					[newRoom.id]: newRoom // Add new room with UUID as key
+				}
+			})),
+
+		// Get a chat room by its UUID
+		getChatRoom: (id: string) => set((state: VaultStore) => state.chatRooms[id])
+	};
+});
 
 /**
  * Checks if a vault is in session storage. This function does NOT check if

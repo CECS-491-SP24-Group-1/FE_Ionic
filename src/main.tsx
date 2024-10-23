@@ -80,7 +80,7 @@ export function Root() {
 			if (hasVault.current) {
 				//Attempt to load the vault
 				if (populateVault()) {
-					//Set cookies
+					//Check login capability from cookies
 					if (cookies[import.meta.env.VITE_ACOOKIE_EXPR_NAME] !== undefined) {
 						setShouldLogin(false); //User does not need to login
 					} else {
