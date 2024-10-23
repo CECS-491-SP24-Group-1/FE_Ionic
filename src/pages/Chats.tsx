@@ -14,7 +14,7 @@ import ChatList from "../components/Chats/ChatList/ChatList";
 import ChatMessages from "../components/Chats/ChatMessages";
 import ChatHeader from "../components/Chats/ChatHeader";
 import ChatMenu from "../components/Chats/Menu/ChatMenu";
-import Camera from "/Users/michaelglider/Documents/GitHub/FE_Ionic/src/pages/Camera"; // Import your Camera component
+import Camera from "@/pages/Camera"; // Import your Camera component
 import useVaultStore from "@/stores/vault_store";
 import { newChat } from "@/util/chat";
 import taxios from "@/util/token_refresh_hook";
@@ -57,7 +57,8 @@ const Chats: React.FC = () => {
 	useEffect(() => {
 		if (ws) ws.close();
 
-		const socket = new WebSocket(`${api}/chat/room/0192ad23-2978-7916-a89d-bee209d84b49`);
+		// /api/chat/room/{roomID} - use this route with a real roomID once the socket path is updated
+		const socket = new WebSocket(`${api}/chat/room/0192b623-fb80-7af2-8661-72541262c42d`);
 
 		socket.onopen = () => {
 			console.log("WebSocket connection established");
