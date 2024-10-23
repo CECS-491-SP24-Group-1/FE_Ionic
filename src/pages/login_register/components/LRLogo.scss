@@ -1,16 +1,24 @@
 .logo-container {
-	position: absolute;
-	top: 20px;
-	left: 35px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	margin-right: 750px;
+	margin-top: 350px;
 
-	.logo {
-		width: 60px;
-		height: auto;
-	}
+	@media (max-width: 1100px) {
+		display: none;
 
-	.logo-text {
-		font-size: 1rem;
-		color: white;
-		font-weight: bold;
 	}
+}
+
+.logo {
+	width: 200px;
+	height: auto;
+}
+
+.logo-text {
+	font-size: 1rem;
+	color: white;
+	font-weight: bold;
 }

@@ -11,6 +11,13 @@
 	font-family: "Courier New", Courier, monospace;
 }
 
+@media screen and (max-width: 1100px) {
+	.lr-container {
+		left: 50%; // Center horizontally on smaller screens
+		transform: translate(-50%, -50%);
+	}
+}
+
 /*
 .ion-item {
 	--highlight-color-focused: #8f9bba;

@@ -8,12 +8,19 @@ ion-content::part(scroll) {
 	background-repeat: no-repeat;
 }
 
+@media screen and (max-width: 1100px) {
+	.lr-container {
+		left: 50%; // Center horizontally on smaller screens
+		transform: translate(-50%, -50%);
+	}
+}
+
 // Login and registration Containers
 .lr-container {
 	// Position
 	position: fixed;
 	top: 50%;
-	left: 50%;
+	left: 60%;
 	transform: translate(-50%, -50%);
 	z-index: 1;
 
@@ -26,6 +33,7 @@ ion-content::part(scroll) {
 	box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
 	text-align: center;
 	font-family: "Poppins", sans-serif;
+
 
 	.title {
 		color: $title;
@@ -44,9 +52,10 @@ ion-content::part(scroll) {
 		margin-bottom: 1em;
 	}
 
-	.icon-btn > *:not(:first-child) {
+	.icon-btn>*:not(:first-child) {
 		margin-left: 0.5em;
 	}
+
 
 	// Form
 	ion-item {

@@ -13,7 +13,7 @@ const Home: React.FC = () => (
 		<IonContent className="ion-padding">
 			{/* Welcome Message */}
 			<IonText color="primary">
-				<h1>Welcome to the App!</h1>
+				<h1>Welcome to Wraith</h1>
 			</IonText>
 
 			<IonText>

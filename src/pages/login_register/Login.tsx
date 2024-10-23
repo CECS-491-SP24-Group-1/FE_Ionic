@@ -345,7 +345,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			</p>
 
 			<IonButton shape="round" className="icon-btn continue-button" type="submit">
-				<span>Login</span>
+				<span>Login to Wraith</span>
 				<IonIcon icon={logInOutline}></IonIcon>
 			</IonButton>
 		</>
