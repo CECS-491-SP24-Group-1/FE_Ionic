@@ -4,7 +4,7 @@ import React from "react";
 
 // Define the interface for a single chat list item
 export interface ChatListItem {
-	id: number;
+	id: string;
 	name: string;
 	avatar: string;
 	lastMessage: string;
@@ -14,21 +14,21 @@ export interface ChatListItem {
 // Export the chat list data
 export const chatList: ChatListItem[] = [
 	{
-		id: 1,
+		id: "1",
 		name: "Mariana Napolitani",
 		avatar: "https://i.pravatar.cc/300?u=mariana",
 		lastMessage: "Hey, how’s it going?",
 		time: "10:45 AM"
 	},
 	{
-		id: 2,
+		id: "2",
 		name: "Claudia Alves",
 		avatar: "https://i.pravatar.cc/300?u=claudia",
 		lastMessage: "Let’s meet up tomorrow.",
 		time: "11:15 AM"
 	},
 	{
-		id: 3,
+		id: "3",
 		name: "Team Chat",
 		avatar: "https://i.pravatar.cc/300?u=teamchat",
 		lastMessage: "Project meeting at 3 PM",

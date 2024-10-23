@@ -19,11 +19,11 @@ import "./Chats.scss";
 import useVaultStore from "@/stores/vault_store";
 
 const Chats: React.FC = () => {
-	const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
 	const [messages, setMessages] = useState<{
-		[key: number]: { to: string; from: string; text: string; time: string }[];
+		[key: string]: { to: string; from: string; text: string; time: string }[];
 	}>({}); // Object to hold messages by chatId
 	const api = import.meta.env.VITE_API_URL;
 
@@ -68,7 +68,7 @@ const Chats: React.FC = () => {
 	}, [selectedChatId]);
 
 	// Function to handle chat selection
-	const handleChatSelect = (chatId: number) => {
+	const handleChatSelect = (chatId: string) => {
 		setSelectedChatId(chatId);
 	};
 

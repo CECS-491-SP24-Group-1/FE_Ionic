@@ -1,38 +1,58 @@
 import React from "react";
 import { IonList, IonItem, IonAvatar, IonLabel, IonBadge } from "@ionic/react";
-import { chatList } from "../../../data/ChatListData";
+import { useRoomStore } from "../../../stores/room_store"; // Import Zustand store
 import ChatsHeader from "./ChatsHeader"; // Adjust the import to make sure it points to the correct file
+import emptyFolderImage from "../../../assets/images/empty_folder.svg";
 
 interface ChatListProps {
-	onChatSelect: (chatId: number) => void;
+	onChatSelect: (chatId: string) => void; // Modify to string if UUID is used
 }
 
 const ChatList: React.FC<ChatListProps> = ({ onChatSelect }) => {
+	// Get the chat rooms from Zustand store
+	const rooms = useRoomStore((state) => state.rooms);
+
+	const isEmpty = Object.keys(rooms).length === 0;
+
 	return (
 		<>
 			{/* Include the header at the top of the chat list */}
 			<ChatsHeader />
 
-			{/* The chat list itself */}
-			<IonList className="chat-list">
-				{chatList.map((chat) => (
-					<IonItem
-						button
-						key={chat.id}
-						onClick={() => onChatSelect(chat.id)}
-						className="chat-list-item">
-						<IonAvatar slot="start" className="chat-list-avatar">
-							<img src={chat.avatar} alt={chat.name} />
-						</IonAvatar>
-						<IonLabel className="chat-list-label">
-							<h2 className="chat-list-name">{chat.name}</h2>
-							<p className="chat-list-message">{chat.lastMessage}</p>
-						</IonLabel>
-						<IonBadge color="success" slot="end" className="chat-list-badge">
-							{chat.time}
-						</IonBadge>
-					</IonItem>
-				))}
+			<IonList className={`chat-list ${isEmpty ? "empty" : ""}`}>
+				{isEmpty ? (
+					<div className="empty-container">
+						<div className="empty-chat-message">
+							<h2>You got no messages right now</h2>
+							<p>Create a new chat to view them!</p>
+						</div>
+						<img src={emptyFolderImage} className="empty-image" alt="Empty folder" />
+					</div>
+				) : (
+					Object.values(rooms).map((room) => (
+						<IonItem
+							button
+							key={room.id}
+							onClick={() => onChatSelect(room.id)}
+							className="chat-list-item">
+							<IonAvatar slot="start" className="chat-list-avatar">
+								<img
+									src={`https://i.pravatar.cc/300?u=${room.id}`}
+									alt={`Chat room ${room.id}`}
+								/>
+							</IonAvatar>
+							<IonLabel className="chat-list-label">
+								<h2 className="chat-list-name">Room {room.id}</h2>
+								<p className="chat-list-message">
+									{room.last_message?.content || "No messages yet"}
+								</p>
+							</IonLabel>
+							<IonBadge color="success" slot="end" className="chat-list-badge">
+								{new Date(room.last_message?.timestamp).toLocaleTimeString() || "N/A"}
+							</IonBadge>
+						</IonItem>
+					))
+				)}
 			</IonList>
 		</>
 	);
