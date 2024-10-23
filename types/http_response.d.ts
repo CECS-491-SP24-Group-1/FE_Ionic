@@ -14,4 +14,3 @@ interface HttpResponseBase<T extends any> {
 export type HttpResponse<T> = T extends null
 	? HttpResponseBase<T> & { payloads?: never }
 	: HttpResponseBase<T> & { payloads: T[] };
-
