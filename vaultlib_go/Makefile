@@ -192,7 +192,7 @@ ts:
 wasm_exec:
 	cp "$(shell $(GO) env GOROOT)/misc/wasm/wasm_exec.js" .
 	for patch in $(JS_PATCH_DIR)/*.patch; do \
-		$(PATCH) < $$patch || exit 1; \
+		$(PATCH) --no-backup-if-mismatch -r - < $$patch || exit 1; \
 	done
 	mv wasm_exec.js $(WASM_EXEC_OUT)
 	rm wasm_exec.js.orig

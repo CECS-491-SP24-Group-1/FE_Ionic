@@ -5,7 +5,7 @@ import ChatsHeader from "./ChatsHeader"; // Adjust the import to make sure it po
 import emptyFolderImage from "../../../assets/images/empty_folder.svg";
 
 interface ChatListProps {
-	onChatSelect: (chatId: string) => void; // Modify to string if UUID is used
+	onChatSelect: (chatId: string) => void;
 }
 
 const ChatList: React.FC<ChatListProps> = ({ onChatSelect }) => {
