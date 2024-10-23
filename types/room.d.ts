@@ -12,5 +12,5 @@ export interface Room {
 	created_at: string;
 	updated_at: string;
 	id: string;
-	participants: { [rid: string]: Role};
+	participants: { [rid: string]: Role };
 }

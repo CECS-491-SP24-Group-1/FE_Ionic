@@ -1,4 +1,4 @@
-import React, { KeyboardEventHandler, useEffect, useState } from "react";
+import React, { KeyboardEventHandler, useCallback, useEffect, useState } from "react";
 import {
 	IonContent,
 	IonHeader,
@@ -17,8 +17,17 @@ import ChatHeader from "../components/Chats/ChatHeader";
 import ChatMenu from "../components/Chats/Menu/ChatMenu";
 import "./Chats.scss";
 import useVaultStore from "@/stores/vault_store";
+import { newChat } from "@/util/chat";
+import taxios from "@/util/token_refresh_hook";
+import { swallowError } from "@/util/http_util";
+import { HttpResponse } from "@ptypes/http_response";
+import { Room } from "@ptypes/room";
 
 const Chats: React.FC = () => {
+	const { myID } = useVaultStore((state) => ({
+		myID: state.myID
+	}));
+
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
@@ -26,6 +35,29 @@ const Chats: React.FC = () => {
 		[key: string]: { to: string; from: string; text: string; time: string }[];
 	}>({}); // Object to hold messages by chatId
 	const api = import.meta.env.VITE_API_URL;
+
+	//TODO: integrate this eventually. This is only a test
+	const getRoomList = useCallback(async () => {
+		try {
+			//Issue the request and get the response
+			const response = await taxios.get(`${api}/chat/room/list`);
+			const rdata: HttpResponse<Room> = response.data;
+			const payload = rdata.payloads!;
+
+			console.log("Rooms list:", payload);
+
+		} catch (error: any) {
+			const rtext = swallowError(error);
+			console.error("Error getting rooms list:", rtext);
+		}
+
+	}, []);
+
+	useEffect(() => {
+		getRoomList();
+	}, [getRoomList]);
+
+
 
 	useEffect(() => {
 		if (ws) ws.close();
@@ -75,7 +107,10 @@ const Chats: React.FC = () => {
 	// Function to handle sending messages
 	const handleSendMessage = (message: string) => {
 		if (selectedChatId) {
-			ws?.send(message);
+			//Create the chat message
+			const chat = newChat(message, myID, selectedChatId);
+
+			ws?.send(JSON.stringify(chat));
 
 			setMessages((prevMessages) => ({
 				...prevMessages,

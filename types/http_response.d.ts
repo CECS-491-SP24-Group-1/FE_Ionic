@@ -3,10 +3,14 @@
 //////////
 // source: http_response.go
 
-export interface HttpResponse<T extends any> {
+interface HttpResponseBase<T extends any> {
 	code: number /* int */;
 	status: string;
-	desc?: string;
+	desc: string;
 	errors?: string[];
 	payloads?: T[];
 }
+
+export type HttpResponse<T> = T extends null
+	? HttpResponseBase<T> & { payloads?: never }
+	: HttpResponseBase<T> & { payloads: T[] };

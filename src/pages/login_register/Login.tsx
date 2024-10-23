@@ -19,6 +19,7 @@ import { HttpResponse } from "@ptypes/http_response";
 import { PKCRequest, PKCSignedRequest } from "@ptypes/request_types";
 import useVaultStore from "@/stores/vault_store";
 import useLoginGateStore from "@/stores/login_gate";
+import { addMiscCookies } from "@/util/manage_misc_cookies";
 
 /** Holds the types of security that the vault is to be encrypted with. */
 enum VaultSecurityTypes {
@@ -226,6 +227,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			const isRefreshResp = ["id", "username"].every((key) => key in payload);
 			if (isRefreshResp) {
 				//Skip the rest of the process; jump straight to the homepage
+				addMiscCookies((payload as Auth).id, (payload as Auth).username);
 				console.log("Detected token refresh. Re-routing...");
 				setShouldLogin(false);
 				//window.location.reload();
@@ -266,6 +268,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 			//Pull the response data out; guaranteed to be non-null
 			const udata = response!.payloads![0]!;
+			addMiscCookies(udata.id, udata.username);
 			toast.success(`Successfully logged in as ${udata.username} <id: ${udata.id}>.`);
 		} catch (e: any) {
 			const etext = swallowError(e);

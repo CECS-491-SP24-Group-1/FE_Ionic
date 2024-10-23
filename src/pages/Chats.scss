@@ -85,7 +85,6 @@ $primary-color: #4b8fea;
 
 /* Media Query for Small Screens (e.g., mobile devices) */
 @media (max-width: 768px) {
-
 	/* Hide the chat label (name and message) when below 768px */
 	.chat-list-name {
 		display: none;
