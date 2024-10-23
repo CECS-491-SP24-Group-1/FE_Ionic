@@ -1,6 +1,7 @@
 import { createWithEqualityFn as create } from "zustand/traditional";
+import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys";
 
-// TEMP
+//TODO: move this elsewhere; separate concerns
 interface ChatRoom {
 	id: string;
 	name: string;
@@ -11,21 +12,19 @@ interface ChatRoom {
 
 interface VaultStore {
 	vault: typeof Vault | null;
-	keystore: typeof KeyStore | null;
-	myID: string;
+	hasVault: boolean;
 	setVault: (ev: typeof Vault) => void;
+	vaultFromSS: () => boolean;
+
+	//Managed by vault
+	keystore: typeof KeyStore | null;
+	myID: string; //TODO: use cookies???
 
 	salt: string;
 	setSalt: (salt: string) => void;
 
 	vaultEKey: string;
 	setVaultEKey: (key: string) => void;
-
-	dummy: string;
-	setDummy: (str: string) => void;
-
-	dummy2: string;
-	setDummy2: (str: string) => void;
 
 	// TEMP Map of UUIDs to ChatRoom objects
 	chatRooms: Record<string, ChatRoom>;
@@ -38,44 +37,93 @@ interface VaultStore {
  * instructions:
  * https://www.perplexity.ai/search/how-do-i-use-this-zustand-stor-mha_ERBLTB.IUQy8ZXXY0g
  */
-const useVaultStore = create<VaultStore>((set: any) => ({
-	vault: null,
-	keystore: null,
-	myID: "",
-	setVault: (v: typeof Vault) => {
+const useVaultStore = create<VaultStore>((set: any, get: any) => {
+	//Private functions
+	const updateVaultState = (v: typeof Vault) => {
+		console.log("vualtwkagn");
 		set({
 			vault: v,
+			hasVault: true,
 			keystore: KeyStore.fromJSObject(v.kstore),
 			myID: v.subject
 		});
-	},
+	};
 
-	salt: "",
-	setSalt: (salt: string) => set({ salt: salt }),
+	//Declare the Zustand component here
+	return {
+		vault: null,
+		hasVault: false,
+		setVault: (v: typeof Vault) => {
+			//Get the previous value
+			//const currentVault = get().vault;
 
-	vaultEKey: "",
-	setVaultEKey: (key: string) => set({ vaultEKey: key }),
+			//Update the component state
+			updateVaultState(v);
 
-	dummy: "",
-	setDummy: (str: string) => set({ dummy: str }),
+			//Persist the changes to session storage
+			(v as typeof Vault).toSStore(SS_VAULT_KEY);
+		},
+		vaultFromSS: () => {
+			//It is assumed that the vault is already in session storage
+			try {
+				//Load the vault from Session Storage
+				const loadedVault = Vault.fromSStore(SS_VAULT_KEY);
 
-	dummy2: "",
-	setDummy2: (str: string) => set({ dummy2: str }),
+				//Update the vault state
+				updateVaultState(loadedVault);
 
-	// Initialize chatRooms as an empty map
-	chatRooms: {},
-
-	// Add the new room to the chatRooms map
-	addChatRoom: (newRoom: ChatRoom) =>
-		set((state: VaultStore) => ({
-			chatRooms: {
-				...state.chatRooms,
-				[newRoom.id]: newRoom // Add new room with UUID as key
+				return true;
+			} catch (e: any) {
+				//Remove invalid session storage key
+				console.error("failed to load vault from session storage", e);
+				sessionStorage.removeItem(SS_VAULT_KEY);
+				return false;
 			}
-		})),
+		},
 
-	// Get a chat room by its UUID
-	getChatRoom: (id: string) => set((state: VaultStore) => state.chatRooms[id])
-}));
+		//Managed by vault
+		keystore: null,
+		myID: "",
+
+		salt: "",
+		setSalt: (salt: string) => set({ salt: salt }),
+
+		vaultEKey: "",
+		setVaultEKey: (key: string) => set({ vaultEKey: key }),
+
+		// Initialize chatRooms as an empty map
+		chatRooms: {},
+
+		// Add the new room to the chatRooms map
+		addChatRoom: (newRoom: ChatRoom) =>
+			set((state: VaultStore) => ({
+				chatRooms: {
+					...state.chatRooms,
+					[newRoom.id]: newRoom // Add new room with UUID as key
+				}
+			})),
+
+		// Get a chat room by its UUID
+		getChatRoom: (id: string) => set((state: VaultStore) => state.chatRooms[id])
+	};
+});
+
+/**
+ * Checks if a vault is in session storage. This function does NOT check if
+ * the value at the expected ss key is valid. It is up to the programmer to
+ * check for validity before loading the vault.
+ */
+export function vaultInSS(): boolean {
+	return SS_VAULT_KEY in sessionStorage;
+}
+
+/**
+ * Checks if an encrypted vault is in local storage. This function does NOT
+ * check if the value at the expected ls key is valid. It is up to the
+ * programmer to check for validity before loading the encrypted vault.
+ */
+export function evaultInLS(): boolean {
+	return LS_EVAULT_KEY in localStorage;
+}
 
 export default useVaultStore;

@@ -34,7 +34,6 @@ ion-content::part(scroll) {
 	text-align: center;
 	font-family: "Poppins", sans-serif;
 
-
 	.title {
 		color: $title;
 		font-weight: bold;
@@ -52,10 +51,9 @@ ion-content::part(scroll) {
 		margin-bottom: 1em;
 	}
 
-	.icon-btn>*:not(:first-child) {
+	.icon-btn > *:not(:first-child) {
 		margin-left: 0.5em;
 	}
-
 
 	// Form
 	ion-item {

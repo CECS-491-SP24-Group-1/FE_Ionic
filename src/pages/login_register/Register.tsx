@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IonInput, IonButton, IonItem, IonLabel, IonText } from "@ionic/react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -21,10 +21,12 @@ interface RegisterProps {
 
 const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 	//State stuff
+	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null);
+	const vault = useRef<InstanceType<typeof Vault>>(Vault.newBlank());
+
+	//Form data
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
-	const [keystore, setKeyStore] = useState<InstanceType<typeof KeyStore> | null>(null);
-	const [vault, setVault] = useState<InstanceType<typeof Vault>>(Vault.newBlank());
 	const [showFingerprint, setShowFingerprint] = useState(false);
 	const [isKGBtnDisabled, setIsKGBtnDisabled] = useState(false);
 	const [isContinuePressed, setIsContinuePressed] = useState(false);
@@ -39,7 +41,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 		setShowFingerprint(true);
 
 		//Set the keystore in the vault
-		vault.kstore = ks.toJSObject();
+		vault.current.kstore = ks.toJSObject();
 
 		//Disable the button
 		setIsKGBtnDisabled(true);
@@ -77,8 +79,8 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 			const user = respPayload.payloads[0];
 
 			//Add the response data to the vault plus extras
-			vault.subject = user.id;
-			vault.dev_ident = window.navigator.userAgent;
+			vault.current.subject = user.id;
+			vault.current.dev_ident = window.navigator.userAgent;
 
 			//Report the creation of the account
 			toast.success(`Successfully created user ${user.username} <${user.id}>`);
@@ -186,7 +188,7 @@ const Register: React.FC<RegisterProps> = ({ togglePage }) => {
 
 	//Render the fragment
 	return isContinuePressed ? (
-		<PostRegister vault={vault} togglePage={togglePage} />
+		<PostRegister vault={vault.current} togglePage={togglePage} />
 	) : (
 		<LRContainer title="Register" content={formContent} onSubmit={handleSubmit} />
 	);

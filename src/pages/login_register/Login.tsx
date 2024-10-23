@@ -31,7 +31,6 @@ interface VaultState {
 	hasVault: boolean;
 	vaultFile: File | null;
 	evault: typeof EVault | null;
-	vault: typeof Vault | null;
 }
 
 interface LoginProps {
@@ -47,16 +46,22 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	//Holds the form to render and a ref to only load it once
 	const [form, setForm] = useState<JSX.Element | null>(null);
 
-	//Vault state
+	//Local vault state
 	const [vaultState, setVaultState] = useState<VaultState>({
 		hasEVault: EVault.inLStore(LS_EVAULT_KEY),
 		hasVault: Vault.inSStore(SS_VAULT_KEY),
 		vaultFile: null,
-		evault: null,
-		vault: null
+		evault: null
 	});
 	const loadedEVault = useRef<boolean>(false);
 	const loadedVault = useRef<boolean>(false);
+
+	//Vault store
+	const { vault, setVault, vaultFromSS } = useVaultStore((state) => ({
+		vault: state.vault,
+		setVault: state.setVault,
+		vaultFromSS: state.vaultFromSS
+	}));
 
 	//Misc state stuff
 	const [secType, setSecType] = useState<VaultSecurityTypes>(
@@ -65,41 +70,49 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const [passphrase, setPassphrase] = useState(""); //State for passphrases
 	const disablePassphraseInput = useRef<boolean>(false);
 
-	//TODO: tmp
-	const { dummy, setDummy } = useVaultStore((state) => ({
-		dummy: state.dummy,
-		setDummy: state.setDummy
-	}));
-
-	//Invokes the form loader only once
+	//Invokes the form loader
 	useEffect(() => {
+		console.log("setForm called");
 		setForm(pickForm());
-	}, [vaultState, passphrase]);
+	}, [vaultState, passphrase, vault]);
+
+	/*
+	useEffect(() => {
+		console.log("Vault updated:", vault);
+	}, [vault]);
+	*/
 
 	//Picks the correct form to render
 	const pickForm = (): JSX.Element => {
+		//console.log("loadedVaultRef = ", loadedVault.current)
+		//console.log("evault in ls:", vaultState.hasEVault)
+		//console.log("vault in ss:", vaultState.hasVault)
+
 		//Check for a vault
-		if (vaultState.hasVault) {
+		if (vaultState.hasVault === true) {
 			//Check if the vault is already loaded in memory
-			if (vaultState.vault) return formVault;
+			if (vault && vault !== null) {
+				console.log("vault exists in zustand. lets go");
+				return formVault;
+			}
 
 			//Try to deserialize the vault
 			if (!loadedVault.current) {
-				try {
-					const loaded = Vault.fromSStore(SS_VAULT_KEY);
-					setVaultState((prevState) => ({
-						...prevState,
-						vault: loaded
-					}));
+				if (vaultFromSS()) {
+					//Alert the user
 					toast.success("Successfully deserialized vault from sessionstorage.");
+
+					//Mark the vault as loaded
 					loadedVault.current = true;
+
+					//Show the vault form
 					return formVault;
-				} catch (e) {} //Fail silently
+				}
 			}
 		}
 
 		//Check for an encrypted vault
-		else if (vaultState.hasEVault) {
+		else if (vaultState.hasEVault === true) {
 			//Check if the encrypted vault is already loaded in memory
 			if (vaultState.evault) return formEVault;
 
@@ -141,7 +154,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 		//Begin loading the vault
 		try {
-			//Load the vault contents into a string and parse it into a vault object
+			//Load the vault contents into a string and parse it into an evault object
 			const vaultContent: string = await readText(vaultState.vaultFile);
 			const loaded = EVault.fromGob64(vaultContent);
 
@@ -178,8 +191,10 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			);
 			disablePassphraseInput.current = false;
 
-			//Store the vault in session storage
-			decrypted.toSStore(SS_VAULT_KEY);
+			//Store the vault in the vault store
+			setVault(decrypted);
+
+			//Update the local state
 			setVaultState((prevState) => ({
 				...prevState,
 				hasVault: true
@@ -197,20 +212,18 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const handleLogin = async (e: React.FormEvent) => {
 		//Prevent the default form submission behavior
 		e.preventDefault();
-		if (!vaultState.vault) return;
+		if (!vault) return;
 
 		//Get the user's ID and keystore from the vault
-		const uid = vaultState.vault.subject;
-		const ks: typeof KeyStore = KeyStore.fromJSObject(vaultState.vault.kstore);
+		//TODO: pull from Zustand instead
+		const uid = vault.subject;
+		const ks: typeof KeyStore = KeyStore.fromJSObject(vault.kstore);
 
 		//Construct the login request
 		const loginReq: PKCRequest = {
 			id: uid,
 			pk: ks.pk
 		};
-
-		//TODO: tmp
-		setDummy("foobar2000");
 
 		//Step 1: Acquire a login request token
 		let token = "";
