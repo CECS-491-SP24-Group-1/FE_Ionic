@@ -19,11 +19,12 @@ func ExportVault() {
 	//Export vault
 	exp := ffi.NewStructExporter(
 		vault.Vault{}, vault_new,
-	).WithFactories(
+	).WithFactories(nil,
 		ffi.NewFactory("fromKS", vault_fromKS),
 		ffi.NewFactory("newBlank", vault_newBlank),
-	).WithMethods(
+	).WithMethods(nil,
 		ffi.NewMethod("encryptPassphrase", vault_ecrypt_pass),
+		ffi.NewMethod("hashcode", vault_hashcode),
 	//ffi.NewMethod("sign", ks_sign),
 	//ffi.NewMethod("verify", ks_verify),
 	).WithSetterHook(vault_setterHook)
@@ -80,6 +81,11 @@ func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value,
 		return js.ValueOf(nil), err
 	}
 	return jsutil.Parse(evjson), nil
+}
+
+//hashcode(): string
+func vault_hashcode(_ *vault.Vault, _ js.Value, _ []js.Value) (js.Value, error) {
+	return js.ValueOf("hashcode was overwritten successfully"), nil
 }
 
 //-- Hooks

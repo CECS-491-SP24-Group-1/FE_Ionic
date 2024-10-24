@@ -42,19 +42,19 @@ type StructExporter[T any] struct {
 	constructor Factory[T]
 
 	//Holds the static factory functions for the struct.
-	factories []FWrapper[T] //factory type
+	factories map[string]FWrapper[T] //factory type
 
 	//Holds the getters for the struct; the length must match up with `fieldNames`.
 	getters []Getter[T]
 
 	//Holds the methods for the struct.
-	methods []FWrapper[T] //method type
+	methods map[string]FWrapper[T] //method type
 
 	//Holds the setters for the struct; the length must match up with `fieldNames`.
 	setters []Setter[T]
 
 	//Holds the static functions for the struct.
-	statics []FWrapper[T] //static type
+	statics map[string]FWrapper[T] //static type
 
 	//Holds the function to call when a setter is invoked.
 	setterHook Hook[T]
@@ -100,6 +100,11 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 		flags:       flags,
 		fields:      fields,
 		constructor: constructor,
+
+		//Initialize maps
+		factories: make(map[string]FWrapper[T]),
+		methods: make(map[string]FWrapper[T]),
+		statics: make(map[string]FWrapper[T]),
 	}
 }
 
@@ -110,8 +115,8 @@ func (se *StructExporter[T]) WithFlags(flags Flags) *StructExporter[T] {
 }
 
 // Adds static factory functions to the struct.
-func (se *StructExporter[T]) WithFactories(factories ...FWrapper[T]) *StructExporter[T] {
-	se.factories = factories
+func (se *StructExporter[T]) WithFactories(opts *FuncOpts, factories ...FWrapper[T]) *StructExporter[T] {
+	withExtraFuncBackend(se.factories, opts, factories...)
 	return se
 }
 
@@ -129,8 +134,8 @@ func (se *StructExporter[T]) WithGetters(getters ...Getter[T]) *StructExporter[T
 }
 
 // Adds instance functions (methods) to the struct.
-func (se *StructExporter[T]) WithMethods(methods ...FWrapper[T]) *StructExporter[T] {
-	se.methods = methods
+func (se *StructExporter[T]) WithMethods(opts *FuncOpts, methods ...FWrapper[T]) *StructExporter[T] {
+	withExtraFuncBackend(se.methods, opts, methods...)
 	return se
 }
 
@@ -148,8 +153,8 @@ func (se *StructExporter[T]) WithSetters(setters ...Setter[T]) *StructExporter[T
 }
 
 // Adds static functions to the struct.
-func (se *StructExporter[T]) WithStatics(statics ...FWrapper[T]) *StructExporter[T] {
-	se.statics = statics
+func (se *StructExporter[T]) WithStatics(opts *FuncOpts, statics ...FWrapper[T]) *StructExporter[T] {
+	withExtraFuncBackend(se.statics, opts, statics...)
 	return se
 }
 
@@ -168,7 +173,7 @@ func (se StructExporter[T]) Export(name string) {
 	js.Global().Set(name, js.FuncOf(se.exportBackend))
 
 	//Add the built-in factory functions to the list
-	se.factories = append(se.factories,
+	se.WithFactories(builtinOpts(),
 		//Basic deserializers
 		NewFactory(FJsonName, se.fromJson),
 		NewFactory(FGobName, se.fromGob64),
@@ -182,7 +187,7 @@ func (se StructExporter[T]) Export(name string) {
 	)
 
 	//Add the built-in static functions to the list
-	se.statics = append(se.statics,
+	se.WithStatics(builtinOpts(),
 		//Webstorage checkers: GOB
 		NewStatic[T](ILSName, se.inLStore),
 		NewStatic[T](ISSName, se.inSStore),
@@ -382,7 +387,7 @@ func (se StructExporter[T]) wrapperBackend(obj *T) js.Value {
 	}
 
 	//Add the built-in instance methods to the list
-	se.methods = append(se.methods,
+	se.WithMethods(builtinOpts(),
 		//Serializers
 		NewMethod(TJsonName, se.toJson),
 		NewMethod(TGobName, se.toGob64),

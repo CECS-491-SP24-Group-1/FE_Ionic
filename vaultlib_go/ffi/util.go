@@ -40,3 +40,29 @@ func upperFirst(s string) string {
 	runes[idx] = unicode.ToUpper(runes[idx])
 	return string(runes)
 }
+
+//Serves as the backend for the factory, method, and static adders.
+func withExtraFuncBackend[T any](target map[string]FWrapper[T], opts *FuncOpts, functions ...FWrapper[T]){
+	//Sets the default options if none were provided
+	if opts == nil {
+        opts = DefaultOpts()
+    }
+
+	//Replace or append the new items
+    if !opts.Append {
+        clear(target)
+    }
+    
+	/*
+	Loop over the functions. The replacement strategy is as follows:
+	
+	If the method doesn't exist or if opts.ReplaceExisting is true,
+	then the incoming function is set, adding a new one or replacing
+	an existing one if allowed to do so.
+	*/
+    for _, function := range functions {
+        if _, exists := target[function.Name]; !exists || opts.ReplaceExisting {
+            target[function.Name] = function
+        }
+    }
+}
