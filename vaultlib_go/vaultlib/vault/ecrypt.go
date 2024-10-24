@@ -171,6 +171,7 @@ func (v Vault) encrypt(key crypto.Privseed) (*EVault, error) {
 	evault := EVault{
 		ID:          v.ID,
 		Subject:     v.Subject,
+		Hash:        v.Hash(),
 		PayloadSize: uint64(len(encrypted)),
 		Payload:     encrypted,
 	}

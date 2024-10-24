@@ -6,6 +6,7 @@
 export interface IEVault {
 	id: string;
 	subject: string;
+	hash: string;
 	sec_type: "NONE" | "ENC_KEY" | "PASSPHRASE" | "QR" | "BIOMETRICS" | "HW_KEY";
 	salt: string;
 	payload_size: number /* uint64 */;

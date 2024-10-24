@@ -103,8 +103,8 @@ func NewStructExporter[T any](v T, constructor Factory[T]) *StructExporter[T] {
 
 		//Initialize maps
 		factories: make(map[string]FWrapper[T]),
-		methods: make(map[string]FWrapper[T]),
-		statics: make(map[string]FWrapper[T]),
+		methods:   make(map[string]FWrapper[T]),
+		statics:   make(map[string]FWrapper[T]),
 	}
 }
 

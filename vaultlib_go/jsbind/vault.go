@@ -83,9 +83,10 @@ func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value,
 	return jsutil.Parse(evjson), nil
 }
 
-//hashcode(): string
-func vault_hashcode(_ *vault.Vault, _ js.Value, _ []js.Value) (js.Value, error) {
-	return js.ValueOf("hashcode was overwritten successfully"), nil
+// hashcode(): string
+func vault_hashcode(obj *vault.Vault, _ js.Value, _ []js.Value) (js.Value, error) {
+	//For safety in case built-in is returning the wrong value
+	return js.ValueOf(obj.Hash()), nil
 }
 
 //-- Hooks

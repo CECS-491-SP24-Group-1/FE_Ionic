@@ -1,11 +1,19 @@
 package io
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"reflect"
 	"regexp"
 	"runtime"
 	"strings"
 )
+
+// Calculates the SHA256 hash of a string.
+func DigestString(s string) string {
+	sum := sha256.Sum256([]byte(s))
+	return hex.EncodeToString(sum[:])
+}
 
 // Gets the name of a function.
 func GetFunctionName(f interface{}) string {

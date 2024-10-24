@@ -1,0 +1,5 @@
+v = Vault.fromKS(new KeyStore())
+console.log(v.toString())
+ev = v.encryptPassphrase("12345")
+console.log("ev hash:", ev.hash)
+console.log("v hash: ", v.hashcode())

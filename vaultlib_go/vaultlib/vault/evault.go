@@ -19,6 +19,7 @@ that was used to encrypt it.
 type EVault struct {
 	ID      util.UUID `json:"id"`      //The ID of this vault object.
 	Subject util.UUID `json:"subject"` //The ID of the user to whom this vault belongs.
+	Hash    string    `json:"hash"`    //The SHA256 hash of the encrypted vault.
 
 	SecType sectype.SecType `json:"sec_type"` //The type of security that this vault has.
 	Salt    string          `json:"salt"`     //The salt used when encrypting this vault with passphrase-based methods.

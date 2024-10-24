@@ -15,11 +15,10 @@ func ExportEVault() {
 	//Export vault
 	exp := ffi.NewStructExporter(
 		vault.EVault{}, nil,
-	).WithFactories(nil,
-	//Nada
-	).WithMethods(nil,
-		ffi.NewMethod("decryptPassphrase", evault_dcrypt_pass),
-	)
+	).WithFactories(nil). //Nada
+				WithMethods(nil,
+			ffi.NewMethod("decryptPassphrase", evault_dcrypt_pass),
+		)
 	exp.Export("EVault")
 }
 

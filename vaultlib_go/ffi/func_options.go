@@ -1,6 +1,6 @@
 package ffi
 
-//Options used when adding methods, statics, and factories.
+// Options used when adding methods, statics, and factories.
 type FuncOpts struct {
 	//Whether the incoming function list should be added onto the existing one or replace it.
 	Append bool
@@ -12,15 +12,15 @@ type FuncOpts struct {
 // Returns the default options: append and replace existing.
 func DefaultOpts() *FuncOpts {
 	return &FuncOpts{
-		Append: true,
+		Append:          true,
 		ReplaceExisting: true,
 	}
 }
 
-//Returns the options suitable for adding built-ins: append and do not replace existing.
+// Returns the options suitable for adding built-ins: append and do not replace existing.
 func builtinOpts() *FuncOpts {
 	return &FuncOpts{
-		Append: true,
+		Append:          true,
 		ReplaceExisting: false,
 	}
 }
