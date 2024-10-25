@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 import { IonReactRouter } from "@ionic/react-router";
 
 import App from "./App";
-import useVaultStore, { vaultInSS } from "./stores/vault_store";
+import useVaultStore, { evaultInLS, vaultInSS } from "./stores/vault_store";
 import useWasm from "./wasm_util/use_wasm";
 import usePageTrap from "./hooks/page_trap";
 import "./index.scss";
@@ -46,6 +46,7 @@ export function Root() {
 
 	//Set up vault checks and login gates
 	const hasVault = useRef(vaultInSS());
+	const hasEVault = useRef(evaultInLS());
 	const { shouldLogin, setShouldLogin } = useLoginGateStore((state) => ({
 		shouldLogin: state.shouldLogin,
 		setShouldLogin: state.setShouldLogin
@@ -55,8 +56,9 @@ export function Root() {
 	const [cookies] = useCookies();
 
 	//Vault store access; this makes the store available to all child components
-	const { populateVault } = useVaultStore((state) => ({
-		populateVault: state.vaultFromSS
+	const { populateVault, populateEVault } = useVaultStore((state) => ({
+		populateVault: state.vaultFromSS,
+		populateEVault: state.evaultFromLS
 	}));
 
 	//Initializes the WASM module
@@ -76,6 +78,11 @@ export function Root() {
 	useEffect(() => {
 		if (wasmLoaded) {
 			initWasm();
+
+			//Load the encrypted vault into the Zustand store
+			if (hasEVault.current) {
+				populateEVault();
+			}
 
 			//Vault check
 			if (hasVault.current) {

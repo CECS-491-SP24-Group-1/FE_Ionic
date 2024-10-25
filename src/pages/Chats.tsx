@@ -24,9 +24,10 @@ import { Room } from "@ptypes/room";
 import "./Chats.scss";
 
 const Chats: React.FC = () => {
-	const { myID, vault } = useVaultStore((state) => ({
+	const { myID, vault, evault } = useVaultStore((state) => ({
 		myID: state.myID,
-		vault: state.vault as Exclude<typeof state.vault, null | undefined> //Type is not null
+		vault: state.vault as Exclude<typeof state.vault, null | undefined>, //Type is not null
+		evault: state.evault as Exclude<typeof state.evault, null | undefined> //Type is not null
 	}));
 
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -56,6 +57,7 @@ const Chats: React.FC = () => {
 
 		console.log("vault from zsustand", vault.kstore.pk);
 		console.log("vault hashcode", vault.hashcode());
+		console.log("evault hash", evault.hash);
 	}, [getRoomList]);
 
 	useEffect(() => {
