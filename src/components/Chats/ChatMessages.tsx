@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Message } from "../../../types/chat";
+import { Message } from "@ptypes/chat";
 
 interface ChatMessagesProps {
 	messages: Message[]; // Update to use the Message type
@@ -31,8 +31,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
 					key={msg.id}
 					className={`chat-bubble ${msg.sender_id === "Me" ? "from-me" : "from-them"}`}>
 					<p>{msg.content}</p>
-					<span>{new Date(parseInt(msg.id)).toLocaleTimeString()}</span>{" "}
-					{/* Convert timestamp to readable time */}
+					<span>{new Date(parseInt(msg.id)).toLocaleTimeString()}</span>
 				</div>
 			))}
 			{/* Dummy div to ensure scroll to bottom */}

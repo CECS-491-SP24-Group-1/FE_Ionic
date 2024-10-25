@@ -1,8 +1,7 @@
 import React from "react";
 import { IonList, IonItem, IonAvatar, IonLabel, IonBadge } from "@ionic/react";
-import { useRoomStore } from "../../../stores/room_store"; // Import Zustand store
-import ChatsHeader from "./ChatsHeader"; // Adjust the import to make sure it points to the correct file
-import emptyFolderImage from "../../../assets/images/empty_folder.svg";
+import { useRoomStore } from "@/stores/room_store"; // Import Zustand store
+import emptyFolderImage from "@/assets/images/empty_folder.svg";
 
 interface ChatListProps {
 	onChatSelect: (chatId: string) => void;
@@ -16,9 +15,6 @@ const ChatList: React.FC<ChatListProps> = ({ onChatSelect }) => {
 
 	return (
 		<>
-			{/* Include the header at the top of the chat list */}
-			<ChatsHeader />
-
 			<IonList className={`chat-list ${isEmpty ? "empty" : ""}`}>
 				{isEmpty ? (
 					<div className="empty-container">
