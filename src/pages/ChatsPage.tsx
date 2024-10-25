@@ -26,7 +26,7 @@ import { HttpResponse } from "@ptypes/http_response";
 import { Room } from "@ptypes/room";
 import "./Chats.scss";
 
-const Chats: React.FC = () => {
+const ChatsPage: React.FC = () => {
 	const { myID, vault, evault } = useVaultStore((state) => ({
 		myID: state.myID,
 		vault: state.vault as Exclude<typeof state.vault, null | undefined>, //Type is not null
@@ -126,25 +126,25 @@ const Chats: React.FC = () => {
 	};
 
 	const handleSendMessage = (message: string) => {
-		if (selectedChatId) {
-			const chat = newChat(message, myID, selectedChatId); // Create a chat message
-			ws?.send(JSON.stringify(chat)); // Send the message over WebSocket
+		if (!message.trim() || !selectedChatId) return; // Check for empty message and selected chat
 
-			// Add the message to the Zustand store using the correct Message interface
-			useRoomStore.getState().addMessageToRoom(
-				selectedChatId,
-				new Date().getTime().toString(), // Generate unique message ID
-				{
-					id: new Date().getTime().toString(), // Unique message ID
-					type: "U_MSG", // Specify the message type, e.g., user message
-					sender_id: myID, // Sender's ID (the current user)
-					recipient_id: selectedChatId, // Chat room ID or recipient ID
-					content: message // The actual text message
-				}
-			);
+		const chat = newChat(message, myID, selectedChatId); // Create a chat message
+		ws?.send(JSON.stringify(chat)); // Send the message over WebSocket
 
-			setInputMessage(""); // Clear the input field after sending the message
-		}
+		// Add the message to the Zustand store using the correct Message interface
+		useRoomStore.getState().addMessageToRoom(
+			selectedChatId,
+			new Date().getTime().toString(), // Generate unique message ID
+			{
+				id: new Date().getTime().toString(), // Unique message ID
+				type: "U_MSG", // Specify the message type, e.g., user message
+				sender_id: myID, // Sender's ID (the current user)
+				recipient_id: selectedChatId, // Chat room ID or recipient ID
+				content: message // The actual text message
+			}
+		);
+
+		setInputMessage(""); // Clear the input field after sending the message
 	};
 
 	const handleSendImage = (imageData: string) => {
