@@ -26,9 +26,9 @@ func ExportKS() {
 		ffi.SNOP,
 		nil,
 		//jsbind.KS_setFingerprint,
-	).WithFactories(
+	).WithFactories(nil,
 		ffi.NewFactory("fromSK", ks_fromSK),
-	).WithMethods(
+	).WithMethods(nil,
 		ffi.NewMethod("sign", ks_sign),
 		ffi.NewMethod("verify", ks_verify),
 	).WithFlags(

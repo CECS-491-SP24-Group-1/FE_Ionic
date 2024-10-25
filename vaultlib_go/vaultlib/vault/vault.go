@@ -69,6 +69,11 @@ func (v Vault) Gob() (string, error) {
 	return string(gs), nil
 }
 
+// Returns the SHA256 of this vault.
+func (v Vault) Hash() string {
+	return io.DigestString(v.String())
+}
+
 // Serializes a vault to JSON.
 func (v Vault) JSON() (string, error) {
 	jb, err := json.Marshal(v)

@@ -10,7 +10,6 @@ import LRContainer from "./components/LRContainer";
 import "./LoginRegister.scss";
 import PassStrength from "./components/PassStrength";
 import PassInput from "./components/PassInput";
-import { LS_EVAULT_KEY } from "@/constants/WebStorageKeys";
 import { string2File } from "@/util/io";
 import { VAULT_SAVE_NAME_FMT } from "@/constants/Misc";
 import useVaultStore from "@/stores/vault_store";
@@ -26,14 +25,15 @@ enum VaultSecurityTypes {
 }
 
 const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
-	//State stuff
+	//Form data
 	const [secType, setSecType] = useState<VaultSecurityTypes>(
 		VaultSecurityTypes.PASSPHRASE
 	);
 	const [passphrase, setPassphrase] = useState(""); //State for passphrases
 	const [passphraseStrength, setPassphraseStrength] = useState(-1); // State for passphrase strength
+
+	//State stuff
 	const [shouldWarnStrength, setShouldWarnStrength] = useState(false);
-	const [evault, setEvault] = useState<typeof EVault | undefined>(undefined); //TODO: maybe move to Zustand
 
 	//Handles passphrase input change and update strength using `passphraseStrength`
 	const handleStrengthUpdate = (newPassphrase: string) => {
@@ -45,8 +45,10 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	};
 
 	//Vault state
-	const { setVault } = useVaultStore((state) => ({
-		setVault: state.setVault
+	const { setVault, evault, setEVault } = useVaultStore((state) => ({
+		setVault: state.setVault,
+		evault: state.evault,
+		setEVault: state.setEVault
 	}));
 
 	//Handles form submissions
@@ -78,8 +80,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 
 		//Encrypt the vault and store it in localstorage
 		const ev: typeof EVault = EVault.fromJSObject(vault.encryptPassphrase(passphrase));
-		ev.toLStore(LS_EVAULT_KEY);
-		setEvault(ev);
+		setEVault(ev);
 
 		//Set the vault in the Zustand store
 		setVault(vault);
