@@ -32,9 +32,15 @@ const ChatsPage: React.FC = () => {
 	}));
 
 	// Remove messages state, use Zustand directly for messages
-	const clearRoomMessages = useRoomStore((state) => state.clearRoomMessages);
-	const addRooms = useRoomStore((state) => state.addRooms);
-	const rooms = useRoomStore((state) => state.rooms); // Access rooms from Zustand
+	// const clearRoomMessages = useRoomStore((state) => state.clearRoomMessages);
+	// const addRooms = useRoomStore((state) => state.addRooms);
+	// const rooms = useRoomStore((state) => state.rooms); // Access rooms from Zustand
+
+	const { clearRoomMessages, addRooms, rooms } = useRoomStore((state) => ({
+		clearRoomMessages: state.clearRoomMessages,
+		addRooms: state.addRooms,
+		rooms: state.rooms
+	}));
 
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState<string>(""); // Initialize inputMessage state

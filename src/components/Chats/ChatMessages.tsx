@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Message } from "../../../types/chat"; // Import your Message interface
+import { Message } from "../../../types/chat";
 
 interface ChatMessagesProps {
 	messages: Message[]; // Update to use the Message type
