@@ -1,80 +1,78 @@
-#root {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 2rem;
-	text-align: center;
+// Styling for App.tsx
+.banner {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 10;
+	background-color: #3880ff;
+
+	.bannerContent{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		color: #ffff;
+		height: 100%; 
+		width: 100%;
+		padding: 10px 0; 
+	}	
 }
 
-.logo {
-	height: 6em;
-	padding: 1.5em;
-	will-change: filter;
-	transition: filter 300ms;
+/* Styles for the IonModal component */
+.custom-modal {
+    .modal-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center; /* Center the modal horizontally */
+        align-items: center; /* Center the modal vertically */
+        background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
+    }
+
+    .modal-content {
+		
+        position: relative;
+        background-color: #f0f0f0; /* Desired background color */
+        border-radius: 15px;
+        padding: 20px;
+        max-width: 90vw; /* Ensure it doesn't exceed the viewport width */
+        max-height: 80vh; /* Set maximum height */
+        overflow-y: auto; /* Enable vertical scrolling when content overflows */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column; /* Stack children vertically */
+        justify-content: space-between; /* Space between header/content and button */
+        text-align: center; /* Center text inside the modal */
+		background-image: none;
+
+        h2 {
+            margin-top: 0; /* Prevent extra top margin on heading */
+            font-size: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 20px; /* Space between paragraphs and content */
+            flex-grow: 1; /* Allow paragraph to take up remaining space */
+        }
+
+        .close-button {
+            background: none; /* No background */
+            border: none; /* No border */
+            font-size: 1.5rem; /* Button font size */
+            color: #333; /* Button color */
+            cursor: pointer; /* Pointer on hover */
+            padding: 10px; /* Button padding */
+            border-radius: 5px; /* Button border radius */
+            background-color: rgba(0, 0, 0, 0.1); /* Button background */
+            margin-top: 10px; /* Space above the button */
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.2); /* Darker on hover */
+            }
+        }
+    }
 }
 
-.logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-	filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	a:nth-of-type(2) .logo {
-		animation: logo-spin infinite 20s linear;
-	}
-}
-
-.card {
-	padding: 2em;
-}
-
-.read-the-docs {
-	color: #888;
-}
-
-.logoContainer {
-	display: flex;
-	justify-content: center;
-}
-
-.themed-text {
-	&.default {
-		font-size: 16px;
-		line-height: 24px;
-	}
-
-	&.defaultSemiBold {
-		font-size: 16px;
-		line-height: 24px;
-		font-weight: 600;
-	}
-
-	&.title {
-		font-size: 32px;
-		font-weight: bold;
-		line-height: 32px;
-	}
-
-	&.subtitle {
-		font-size: 20px;
-		font-weight: bold;
-	}
-
-	&.link {
-		line-height: 30px;
-		font-size: 16px;
-		color: #0a7ea4;
-	}
-}

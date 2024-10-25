@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
 	IonApp,
 	IonRouterOutlet,
@@ -5,11 +6,20 @@ import {
 	IonTabBar,
 	IonTabButton,
 	IonLabel,
-	IonIcon
+	IonIcon,
+	IonModal,
+	IonContent,
+	IonCard,
+	IonCardContent,
+	IonButton,
+	IonText,
+	IonHeader,
+	IonInput
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
 import { home, camera, settings, logIn, chatbubble } from "ionicons/icons";
+import useVaultStore from './stores/vault_store';
 
 // Import pages
 import Home from "./pages/Home";
@@ -19,11 +29,34 @@ import Chat from "./pages/Chats";
 import LandingPage from "./pages/LandingPage";
 import LRPage from "./pages/login_register/LRPage";
 import PostRegister from "./pages/login_register/PostRegister";
+import "./App.scss"
 
 const App: React.FC = () => {
+	// Handles the state of the vault saving modal
+	const [isSaveVaultModalOpen, setIsSaveVaultModalOpen] = useState(false);
+
+	// Determines whether the vault has unsaved changes
+	const [hasVaultUnsavedChanges, setHasVaultUnsavedChanges] = useState(false);
+
+	//Vault state
+	const { vault, evault, setEVault } = useVaultStore((state) => ({
+		vault: state.vault,
+		evault: state.evault,
+		setEVault: state.setEVault
+	}));
+
+	/* This handles the state of the banner. If the vault hash differs from the encrypted 
+	 * vault hash, open a modal that saves the new vault state and re-encrypts it. */
+	useEffect(() => {
+		//Invert Boolean!
+		setHasVaultUnsavedChanges(vault?.hashcode() === evault?.hash);
+	}, [vault, evault])
+
 	return (
 		<IonReactRouter>
 			<IonTabs>
+				
+
 				<IonRouterOutlet>
 					<>
 						{/* Define routes for each tab */}
@@ -67,6 +100,33 @@ const App: React.FC = () => {
 						<IonLabel>Settings</IonLabel>
 					</IonTabButton>
 				</IonTabBar>
+				
+				{/* Modal that allows the user to save the current vault state */}
+				<IonModal isOpen={isSaveVaultModalOpen} onDidDismiss={() => setIsSaveVaultModalOpen(false)} className='custom-modal'>
+					<div className="modal-wrapper">
+						<IonContent className="modal-content">
+							<h2>Enter Passphrase</h2>
+							<IonInput
+								//type={showPassphrase ? "text" : "password"}
+								//value={pass}
+								//onIonInput={handleInputChange} // Use onIonInput for real-time update
+								placeholder="Enter a passphrase"
+								//maxlength={maxLen ? maxLen : undefined}
+								//disabled={disable}
+								required
+							/>
+							<IonButton onClick={() => setIsSaveVaultModalOpen(false)} className="close-button">Encrypt Vault</IonButton>
+						</IonContent>
+					</div>
+				</IonModal>
+				
+				{/* Banner that shows whether there are unsaved vault changes */}
+				{hasVaultUnsavedChanges &&
+				(<IonCard onClick={() => setIsSaveVaultModalOpen(true)} className='banner'>
+					<IonCardContent className='bannerContent'>
+						<p>Your vault has unsaved changes. Please click here to re-encrypt your vault.</p>
+					</IonCardContent>
+				</IonCard>)}
 			</IonTabs>
 		</IonReactRouter>
 	);
