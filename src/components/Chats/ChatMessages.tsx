@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
+import { Message } from "@ptypes/chat";
 
 interface ChatMessagesProps {
-	messages: { to: string; from: string; text: string; time: string }[];
+	messages: Message[]; // Update to use the Message type
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
@@ -25,12 +26,12 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
 
 	return (
 		<div ref={messagesContainerRef} className="chat-messages">
-			{messages.map((msg, index) => (
+			{messages.map((msg) => (
 				<div
-					key={index}
-					className={`chat-bubble ${msg.from === "Me" ? "from-me" : "from-them"}`}>
-					<p>{msg.text}</p>
-					<span>{msg.time}</span>
+					key={msg.id}
+					className={`chat-bubble ${msg.sender_id === "Me" ? "from-me" : "from-them"}`}>
+					<p>{msg.content}</p>
+					<span>{new Date(parseInt(msg.id)).toLocaleTimeString()}</span>
 				</div>
 			))}
 			{/* Dummy div to ensure scroll to bottom */}

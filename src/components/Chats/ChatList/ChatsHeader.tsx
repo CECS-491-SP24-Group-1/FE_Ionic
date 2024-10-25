@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IonLabel, IonIcon, IonModal, IonButton } from "@ionic/react";
+import { IonLabel, IonIcon } from "@ionic/react";
 import { addCircle } from "ionicons/icons";
 import CreateChatRoom from "../CreateChatRoom";
 
@@ -26,15 +26,8 @@ const ChatsHeader: React.FC = () => {
 				/>
 			</div>
 
-			{/* Modal for creating a new chat room */}
-			<IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
-				<div className="modal-content">
-					<h2>Create a New Chat Room</h2>
-					{/* Render the CreateChatRoom component within the modal */}
-					<CreateChatRoom onRoomCreated={handleCloseModal} />
-					<IonButton onClick={handleCloseModal}>Close</IonButton>
-				</div>
-			</IonModal>
+			{/* Conditionally render the CreateChatRoom component */}
+			{showModal && <CreateChatRoom onRoomCreated={handleCloseModal} />}
 		</div>
 	);
 };

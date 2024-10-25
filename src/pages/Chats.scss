@@ -1,5 +1,6 @@
 $primary-color: #4b8fea;
 
+
 /* Chat Container */
 .chat-container {
 	display: flex;
@@ -23,7 +24,12 @@ $primary-color: #4b8fea;
 	z-index: 2;
 }
 
-/* Empty Chat display */
+.chat-list-item.selected {
+	--background: #3d3c3c !important;
+	border-left: 8px solid #4caf50;
+}
+
+/* Empty Chat List display */
 .empty-container {
 	position: relative;
 	height: 100%;
@@ -62,6 +68,51 @@ $primary-color: #4b8fea;
 	filter: invert(100%);
 }
 
+
+/* Empty chat view */
+.no-chat-selected {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	background-color: #1f2c33;
+	text-align: center;
+	color: #b0b3b8;
+}
+
+.empty-chat-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.empty-chat-image {
+	width: 250px;
+	/* Adjust size based on your image */
+	margin-bottom: -10px;
+	opacity: 0.8;
+	/* Slight transparency for subtle effect */
+}
+
+.no-chat-selected h2 {
+	font-size: 1.8rem;
+	margin-bottom: 10px;
+	color: #fff;
+	/* White color for better contrast */
+}
+
+.no-chat-selected p {
+	font-size: 1rem;
+	color: #b0b3b8;
+	/* Lighter text for descriptions */
+	max-width: 400px;
+	/* Limit width for readability */
+	line-height: 1.5;
+	/* Improve readability */
+}
+
+
 /* Searchbar */
 .chats-header .ion-searchbar {
 	width: 100%;
@@ -84,6 +135,7 @@ $primary-color: #4b8fea;
 
 /* Media Query for Small Screens (e.g., mobile devices) */
 @media (max-width: 768px) {
+
 	/* Hide the chat label (name and message) when below 768px */
 	.chat-list-name {
 		display: none;
@@ -166,6 +218,50 @@ $primary-color: #4b8fea;
 	z-index: 1;
 	background-color: white;
 }
+
+/* Chat Bubbles */
+// .chat-messages {
+// 	display: flex;
+// 	height: 90vh;
+// 	flex-direction: column;
+// 	padding: 15px;
+// 	overflow-y: auto;
+// }
+
+// /* Chat Bubble */
+// .chat-bubble {
+// 	max-width: 70%;
+// 	margin: 10px 0;
+// 	padding: 10px;
+// 	border-radius: 20px;
+// 	position: relative;
+// 	word-wrap: break-word;
+// }
+
+// /* My chat - aligned right */
+// .chat-bubble.from-me {
+// 	background-color: $primary-color;
+// 	color: white;
+// 	margin-left: auto;
+// 	/* Aligns my messages to the right */
+// 	border-bottom-right-radius: 0;
+// }
+
+// /* Their chat - aligned left */
+// .chat-bubble.from-them {
+// 	background-color: #e5e5ea;
+// 	color: black;
+// 	margin-right: auto;
+// 	/* Aligns their messages to the left */
+// 	border-bottom-left-radius: 0;
+// }
+
+// .chat-bubble span {
+// 	display: block;
+// 	font-size: 0.8rem;
+// 	text-align: right;
+// 	margin-top: 5px;
+// }
 
 /* Chat Bubbles */
 .chat-messages {
