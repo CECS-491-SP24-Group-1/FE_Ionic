@@ -54,8 +54,8 @@ const Chats: React.FC = () => {
 	useEffect(() => {
 		getRoomList();
 
-		console.log("vault from zsustand", vault.kstore.pk)
-		console.log("vault hashcode", vault.hashcode())
+		console.log("vault from zsustand", vault.kstore.pk);
+		console.log("vault hashcode", vault.hashcode());
 	}, [getRoomList]);
 
 	useEffect(() => {

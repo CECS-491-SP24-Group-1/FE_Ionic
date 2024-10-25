@@ -54,7 +54,7 @@ export function Root() {
 	//Cookies init
 	const [cookies] = useCookies();
 
-	//Vault store access
+	//Vault store access; this makes the store available to all child components
 	const { populateVault } = useVaultStore((state) => ({
 		populateVault: state.vaultFromSS
 	}));
@@ -72,6 +72,7 @@ export function Root() {
 	}, []);
 
 	//Initializes the WASM module when the component mounts
+	//TODO: add runOnce hook and use that to populate the vault state
 	useEffect(() => {
 		if (wasmLoaded) {
 			initWasm();

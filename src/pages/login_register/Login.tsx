@@ -30,7 +30,7 @@ interface VaultState {
 	hasEVault: boolean;
 	hasVault: boolean;
 	vaultFile: File | null;
-	evault: typeof EVault | null;
+	//evault: typeof EVault | null;
 }
 
 interface LoginProps {
@@ -50,18 +50,23 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const [vaultState, setVaultState] = useState<VaultState>({
 		hasEVault: EVault.inLStore(LS_EVAULT_KEY),
 		hasVault: Vault.inSStore(SS_VAULT_KEY),
-		vaultFile: null,
-		evault: null
+		vaultFile: null
+		//evault: null
 	});
 	const loadedEVault = useRef<boolean>(false);
 	const loadedVault = useRef<boolean>(false);
 
 	//Vault store
-	const { vault, setVault, vaultFromSS } = useVaultStore((state) => ({
-		vault: state.vault,
-		setVault: state.setVault,
-		vaultFromSS: state.vaultFromSS
-	}));
+	const { vault, setVault, vaultFromSS, evault, setEVault, evaultFromLS } = useVaultStore(
+		(state) => ({
+			vault: state.vault,
+			setVault: state.setVault,
+			vaultFromSS: state.vaultFromSS,
+			evault: state.evault,
+			setEVault: state.setEVault,
+			evaultFromLS: state.evaultFromLS
+		})
+	);
 
 	//Misc state stuff
 	const [secType, setSecType] = useState<VaultSecurityTypes>(
@@ -74,7 +79,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	useEffect(() => {
 		console.log("setForm called");
 		setForm(pickForm());
-	}, [vaultState, passphrase, vault]);
+	}, [vaultState, passphrase, vault, evault]);
 
 	/*
 	useEffect(() => {
@@ -114,8 +119,9 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		//Check for an encrypted vault
 		else if (vaultState.hasEVault === true) {
 			//Check if the encrypted vault is already loaded in memory
-			if (vaultState.evault) return formEVault;
+			if (evault) return formEVault;
 
+			/*
 			//Try to deserialize the encrypted vault
 			if (!loadedEVault.current) {
 				try {
@@ -127,7 +133,22 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 					toast.success("Successfully deserialized encrypted vault from localstorage.");
 					loadedEVault.current = true;
 					return formEVault;
-				} catch (e) {} //Fail silently
+				} catch (e) { } //Fail silently
+			}
+			*/
+
+			//Try to deserialize the encrypted vault
+			if (!loadedEVault.current) {
+				if (evaultFromLS()) {
+					//Alert the user
+					toast.success("Successfully deserialized encrypted vault from localstorage.");
+
+					//Mark the evault as loaded
+					loadedEVault.current = true;
+
+					//Show the encrypted vault form
+					return formEVault;
+				}
 			}
 		}
 
@@ -182,13 +203,11 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		}
 
 		//Attempt to decrypt the vault
-		if (!vaultState.evault) return; //This shouldn't be hit
+		if (!evault) return; //This shouldn't be hit
 		disablePassphraseInput.current = true;
 		try {
 			//Decrypt the vault
-			const decrypted = Vault.fromJSObject(
-				vaultState.evault.decryptPassphrase(passphrase)
-			);
+			const decrypted = Vault.fromJSObject(evault.decryptPassphrase(passphrase));
 			disablePassphraseInput.current = false;
 
 			//Store the vault in the vault store
@@ -215,7 +234,6 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		if (!vault) return;
 
 		//Get the user's ID and keystore from the vault
-		//TODO: pull from Zustand instead
 		const uid = vault.subject;
 		const ks: typeof KeyStore = KeyStore.fromJSObject(vault.kstore);
 
