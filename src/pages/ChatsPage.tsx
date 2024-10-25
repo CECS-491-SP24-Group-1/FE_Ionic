@@ -184,7 +184,11 @@ const ChatsPage: React.FC = () => {
 			<IonContent id="main-content">
 				<div className="chat-container">
 					<div className="chat-list">
-						<ChatList onChatSelect={handleChatSelect} />
+						<ChatList
+							rooms={rooms}
+							selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
+							onChatSelect={handleChatSelect}
+						/>{" "}
 					</div>
 
 					<div className="chat-view">
