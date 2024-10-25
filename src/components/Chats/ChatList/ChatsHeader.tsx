@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { IonLabel, IonIcon } from "@ionic/react";
-import { addCircle } from "ionicons/icons";
+import { IonLabel, IonIcon, IonModal, IonButton, IonInput } from "@ionic/react";
+import { addCircle, search } from "ionicons/icons"; // Add search icon
 import CreateChatRoom from "../CreateChatRoom";
 
-const ChatsHeader: React.FC = () => {
+interface ChatsHeaderProps {
+	onSearch: (searchQuery: string) => void; // Pass the search query to parent component
+}
+
+const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 	const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+	const [searchQuery, setSearchQuery] = useState(""); // State to handle search query
 
 	const handleOpenModal = () => {
 		setShowModal(true); // Open the modal
@@ -12,6 +17,13 @@ const ChatsHeader: React.FC = () => {
 
 	const handleCloseModal = () => {
 		setShowModal(false); // Close the modal
+	};
+
+	// Handle search input change
+	const handleSearchChange = (e: CustomEvent) => {
+		const query = e.detail.value!;
+		setSearchQuery(query);
+		onSearch(query); // Pass search query to parent for filtering
 	};
 
 	return (
@@ -26,8 +38,25 @@ const ChatsHeader: React.FC = () => {
 				/>
 			</div>
 
-			{/* Conditionally render the CreateChatRoom component */}
-			{showModal && <CreateChatRoom onRoomCreated={handleCloseModal} />}
+			{/* Search bar */}
+			<div className="chat-search-bar">
+				<IonIcon icon={search} className="search-icon" />
+				<IonInput
+					value={searchQuery}
+					placeholder="Search Messenger"
+					onIonChange={handleSearchChange}
+					className="chat-search-input"
+				/>
+			</div>
+
+			{/* Modal for creating a new chat room */}
+			<IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
+				<div className="modal-content">
+					<h2>Create a New Chat Room</h2>
+					<CreateChatRoom onRoomCreated={handleCloseModal} />
+					<IonButton onClick={handleCloseModal}>Close</IonButton>
+				</div>
+			</IonModal>
 		</div>
 	);
 };

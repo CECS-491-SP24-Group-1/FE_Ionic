@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { IonList, IonItem, IonAvatar, IonLabel, IonBadge } from "@ionic/react";
-import ChatsHeader from "./ChatsHeader"; // Adjust the import to make sure it points to the correct file
+import ChatsHeader from "./ChatsHeader";
 import emptyFolderImage from "@assets/images/empty_folder.svg";
 import { RoomCS } from "@ptypes/roomcs";
 
@@ -11,22 +11,30 @@ interface ChatListProps {
 }
 
 const ChatList: React.FC<ChatListProps> = ({ onChatSelect, selectedChatId, rooms }) => {
-	const isEmpty = Object.keys(rooms).length === 0;
+	const [searchQuery, setSearchQuery] = useState(""); // State to store the search query
+
+	// Filter rooms based on search query
+	const filteredRooms = Object.values(rooms).filter(
+		(room) => room.id.toLowerCase().includes(searchQuery.toLowerCase()) // Adjust this to filter based on room name or other properties if necessary
+	);
+
+	const isEmpty = filteredRooms.length === 0;
 
 	return (
 		<>
-			<ChatsHeader />
+			{/* Pass search handler to ChatsHeader */}
+			<ChatsHeader onSearch={(query) => setSearchQuery(query)} />
+
 			<IonList className={`chat-list ${isEmpty ? "empty" : ""}`}>
 				{isEmpty ? (
 					<div className="empty-container">
 						<div className="empty-chat-message">
-							<h2>You got no messages right now</h2>
-							<p>Create a new chat to view them!</p>
+							<h2>No chats found</h2>
 						</div>
 						<img src={emptyFolderImage} className="empty-image" alt="Empty folder" />
 					</div>
 				) : (
-					Object.values(rooms).map((room) => (
+					filteredRooms.map((room) => (
 						<IonItem
 							button
 							key={room.id}
@@ -37,8 +45,6 @@ const ChatList: React.FC<ChatListProps> = ({ onChatSelect, selectedChatId, rooms
 								}
 							}}
 							className={`chat-list-item ${room.id === selectedChatId ? "selected" : ""}`}>
-							{" "}
-							{/* Add 'selected' class */}
 							<IonAvatar slot="start" className="chat-list-avatar">
 								<img
 									src={`https://i.pravatar.cc/300?u=${room.id}`}
@@ -53,7 +59,10 @@ const ChatList: React.FC<ChatListProps> = ({ onChatSelect, selectedChatId, rooms
 							</IonLabel>
 							<IonBadge color="success" slot="end" className="chat-list-badge">
 								{room.last_message?.timestamp
-									? new Date(room.last_message.timestamp).toLocaleTimeString()
+									? new Date(room.last_message.timestamp).toLocaleTimeString([], {
+											hour: "2-digit",
+											minute: "2-digit"
+										})
 									: "N/A"}
 							</IonBadge>
 						</IonItem>
