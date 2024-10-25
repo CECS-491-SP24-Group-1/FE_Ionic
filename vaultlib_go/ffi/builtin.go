@@ -3,8 +3,6 @@
 package ffi
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"syscall/js"
@@ -172,16 +170,18 @@ func (se StructExporter[T]) hashcode(_ *T, this js.Value, _ []js.Value) (js.Valu
 	//Serialize this object to JSON
 	jsons := this.Call(TJsonName).String()
 
-	//Digest the JSON with SHA256
-	h := sha256.New()
-	_, err := h.Write([]byte(jsons))
-	if err != nil {
-		return js.ValueOf(""), err
-	}
+	/*
+		//Digest the JSON with SHA256
+		h := sha256.New()
+		_, err := h.Write([]byte(jsons))
+		if err != nil {
+			return js.ValueOf(""), err
+		}
 
-	//Get the final hash as a hex string
-	hash := hex.EncodeToString(h.Sum(nil))
-	return js.ValueOf(hash), nil
+		//Get the final hash as a hex string
+		hash := hex.EncodeToString(h.Sum(nil))
+	*/
+	return js.ValueOf(io.DigestString(jsons)), nil
 }
 
 // Generates the string equivalent of this object.

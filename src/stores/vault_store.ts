@@ -13,12 +13,17 @@ interface ChatRoom {
 interface VaultStore {
 	vault: typeof Vault | null;
 	hasVault: boolean;
-	setVault: (ev: typeof Vault) => void;
+	setVault: (v: typeof Vault) => void;
 	vaultFromSS: () => boolean;
 
 	//Managed by vault
 	keystore: typeof KeyStore | null;
 	myID: string; //TODO: use cookies???
+
+	evault: typeof EVault | null;
+	hasEVault: boolean;
+	setEVault: (ev: typeof EVault) => void;
+	evaultFromLS: () => boolean;
 
 	salt: string;
 	setSalt: (salt: string) => void;
@@ -46,6 +51,14 @@ const useVaultStore = create<VaultStore>((set: any, get: any) => {
 			hasVault: true,
 			keystore: KeyStore.fromJSObject(v.kstore),
 			myID: v.subject
+		});
+	};
+
+	const updateEVaultState = (ev: typeof EVault) => {
+		console.log("evaultqt");
+		set({
+			evault: ev,
+			hasEVault: true
 		});
 	};
 
@@ -84,6 +97,33 @@ const useVaultStore = create<VaultStore>((set: any, get: any) => {
 		//Managed by vault
 		keystore: null,
 		myID: "",
+
+		evault: null,
+		hasEVault: false,
+		setEVault: (ev: typeof EVault) => {
+			//Update the component state
+			updateEVaultState(ev);
+
+			//Persist the changes to local storage
+			(ev as typeof EVault).toLStore(LS_EVAULT_KEY);
+		},
+		evaultFromLS: () => {
+			//It is assumed that the encrypted vault is already in local storage
+			try {
+				//Load the evault from local storage
+				const loadedEVault = EVault.fromLStore(LS_EVAULT_KEY);
+
+				//Update the evault state
+				updateEVaultState(loadedEVault);
+
+				return true;
+			} catch (e: any) {
+				//Remove invalid local storage key
+				console.error("failed to load encrypted vault from local storage", e);
+				localStorage.removeItem(LS_EVAULT_KEY);
+				return false;
+			}
+		},
 
 		salt: "",
 		setSalt: (salt: string) => set({ salt: salt }),

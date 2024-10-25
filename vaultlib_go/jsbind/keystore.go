@@ -16,9 +16,9 @@ func ExportKS() {
 	//Export keystore
 	exp := ffi.NewStructExporter(
 		keystore.KeyStore{}, ks_new,
-	).WithFactories(
+	).WithFactories(nil,
 		ffi.NewFactory("fromSK", ks_fromSK),
-	).WithMethods(
+	).WithMethods(nil,
 		ffi.NewMethod("sign", ks_sign),
 		ffi.NewMethod("verify", ks_verify),
 	)

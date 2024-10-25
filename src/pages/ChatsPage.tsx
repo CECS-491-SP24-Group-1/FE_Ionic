@@ -26,9 +26,11 @@ import { HttpResponse } from "@ptypes/http_response";
 import { Room } from "@ptypes/room";
 import "./Chats.scss";
 
-const ChatsPage: React.FC = () => {
-	const { myID } = useVaultStore((state) => ({
-		myID: state.myID
+const Chats: React.FC = () => {
+	const { myID, vault, evault } = useVaultStore((state) => ({
+		myID: state.myID,
+		vault: state.vault as Exclude<typeof state.vault, null | undefined>, //Type is not null
+		evault: state.evault as Exclude<typeof state.evault, null | undefined> //Type is not null
 	}));
 
 	// Remove messages state, use Zustand directly for messages
@@ -69,6 +71,10 @@ const ChatsPage: React.FC = () => {
 
 	useEffect(() => {
 		getRoomList();
+
+		console.log("vault from zsustand", vault.kstore.pk);
+		console.log("vault hashcode", vault.hashcode());
+		console.log("evault hash", evault.hash);
 	}, [getRoomList]);
 
 	useEffect(() => {
