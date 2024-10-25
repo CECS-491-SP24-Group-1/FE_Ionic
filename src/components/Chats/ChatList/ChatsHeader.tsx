@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { IonLabel, IonIcon, IonModal, IonButton, IonInput } from "@ionic/react";
-import { addCircle, search } from "ionicons/icons"; // Add search icon
+import { createOutline, search } from "ionicons/icons"; // Add search icon
 import CreateChatRoom from "../CreateChatRoom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 interface ChatsHeaderProps {
-	onSearch: (searchQuery: string) => void; // Pass the search query to parent component
+	onSearch: (searchQuery: string) => void;
 }
 
 const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
@@ -30,12 +32,11 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 		<div className="chats-header">
 			<div className="chats-title">
 				<IonLabel>Chats</IonLabel>
-				<IonIcon
-					icon={addCircle}
-					size="large"
-					className="new-chat-icon"
-					onClick={handleOpenModal}
-				/>
+				<div className="new-chat-icon-container">
+					<div className="new-chat-icon" onClick={handleOpenModal}>
+						<FontAwesomeIcon icon={faEdit} />
+					</div>
+				</div>
 			</div>
 
 			{/* Search bar */}
@@ -48,15 +49,8 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 					className="chat-search-input"
 				/>
 			</div>
-
-			{/* Modal for creating a new chat room */}
-			<IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
-				<div className="modal-content">
-					<h2>Create a New Chat Room</h2>
-					<CreateChatRoom onRoomCreated={handleCloseModal} />
-					<IonButton onClick={handleCloseModal}>Close</IonButton>
-				</div>
-			</IonModal>
+			{/* Conditionally render the CreateChatRoom component */}
+			{showModal && <CreateChatRoom onRoomCreated={handleCloseModal} />}
 		</div>
 	);
 };
