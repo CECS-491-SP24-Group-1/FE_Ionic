@@ -1,17 +1,17 @@
+// src/hooks/useRoomList.ts
 import useSWR from "swr";
 import taxios from "@/util/token_refresh_hook";
-import { HttpResponse } from "@ptypes/http_response";
-import { Room } from "../../types/room"; // Import the Room type
-import { RoomCS } from "../../types/roomcs"; // Import the RoomCS type
+import { Room } from "../../types/room";
+import { RoomCS } from "../../types/roomcs";
+import { useRoomStore } from "@/stores/room_store";
 
 const api = import.meta.env.VITE_API_URL;
 
 const fetcher = async (url: string) => {
 	const response = await taxios.get(url);
-
 	const roomsArray: Room[] = (response.data.payloads as Room[]) || [];
 
-	// Transform Room data into RoomCS and convert it into an object with room IDs as keys
+	// Transform Room data into RoomCS
 	const roomsObject = roomsArray.reduce<Record<string, RoomCS>>((acc, room) => {
 		acc[room.id] = {
 			...room,
@@ -21,16 +21,21 @@ const fetcher = async (url: string) => {
 		return acc;
 	}, {});
 
-	return roomsObject; // Return rooms as an object (Record<string, RoomCS>)
+	return roomsObject; // Return rooms as an object
 };
 
 export const useRoomList = () => {
+	const addRooms = useRoomStore((state) => state.addRooms); // Get addRooms from Zustand
+
 	const { data, error, isLoading } = useSWR(`${api}/chat/room/list`, fetcher, {
-		revalidateOnFocus: false // Adjust revalidation based on your needs
+		revalidateOnFocus: false,
+		onSuccess: (data) => {
+			addRooms(Object.values(data)); // Update Zustand store with the fetched rooms
+		}
 	});
 
 	return {
-		rooms: data || {}, // Default to an empty object if data is undefined
+		rooms: data,
 		isLoading,
 		error
 	};

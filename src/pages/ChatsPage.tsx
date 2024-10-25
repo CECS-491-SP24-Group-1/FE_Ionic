@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+// src/pages/ChatsPage.tsx
+
+import React, { useEffect, useState } from "react";
 import {
 	IonContent,
 	IonPage,
@@ -19,69 +21,35 @@ import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
 import { LastMessage } from "../../types/chat";
-
 import { newChat } from "@/util/chat";
-import taxios from "@/util/token_refresh_hook";
-import { swallowError } from "@/util/http_util";
-import { HttpResponse } from "@ptypes/http_response";
-import { Room } from "@ptypes/room";
+import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
 import "./Chats.scss";
 
 const ChatsPage: React.FC = () => {
 	const { myID, vault, evault } = useVaultStore((state) => ({
 		myID: state.myID,
-		vault: state.vault as Exclude<typeof state.vault, null | undefined>, //Type is not null
-		evault: state.evault as Exclude<typeof state.evault, null | undefined> //Type is not null
+		vault: state.vault as Exclude<typeof state.vault, null | undefined>, // Type is not null
+		evault: state.evault as Exclude<typeof state.evault, null | undefined> // Type is not null
 	}));
 
-	// Remove messages state, use Zustand directly for messages
-	// const clearRoomMessages = useRoomStore((state) => state.clearRoomMessages);
-	// const addRooms = useRoomStore((state) => state.addRooms);
-	// const rooms = useRoomStore((state) => state.rooms); // Access rooms from Zustand
-
-	const { clearRoomMessages, addRooms, rooms } = useRoomStore((state) => ({
+	const { clearRoomMessages, rooms } = useRoomStore((state) => ({
 		clearRoomMessages: state.clearRoomMessages,
-		addRooms: state.addRooms,
 		rooms: state.rooms
 	}));
 
+	const { isLoading, error } = useRoomList(); // Use the custom hook
+
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-	const [inputMessage, setInputMessage] = useState<string>(""); // Initialize inputMessage state
+	const [inputMessage, setInputMessage] = useState<string>("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
 	const [showCamera, setShowCamera] = useState(false);
 	const api = import.meta.env.VITE_API_URL;
 
-	// Function to get room list
-	const getRoomList = useCallback(async () => {
-		try {
-			const response = await taxios.get(`${api}/chat/room/list`);
-			const rdata: HttpResponse<Room> = response.data;
-			const rooms = rdata.payloads.map((room) => ({
-				...room,
-				messages: {}, // Initialize an empty messages object
-				last_message: {} as LastMessage // Initialize an empty last_message (adjust if needed)
-			}));
-			console.log("Rooms list:", rooms);
-
-			addRooms(rooms);
-		} catch (error: any) {
-			const rtext = swallowError(error);
-			console.error("Error getting rooms list:", rtext);
-		}
-	}, [api, addRooms]);
-
+	// WebSocket setup
 	useEffect(() => {
-		getRoomList();
+		if (!selectedChatId) return;
 
-		console.log("vault from zsustand", vault.kstore.pk);
-		console.log("vault hashcode", vault.hashcode());
-		console.log("evault hash", evault.hash);
-	}, [getRoomList]);
-
-	useEffect(() => {
-		if (ws) ws.close();
-
-		const socket = new WebSocket(`${api}/chat/room/0192b623-fb80-7af2-8661-72541262c42d`);
+		const socket = new WebSocket(`${api}/chat/room/${selectedChatId}`);
 
 		socket.onopen = () => {
 			console.log("WebSocket connection established");
@@ -89,19 +57,10 @@ const ChatsPage: React.FC = () => {
 
 		socket.onmessage = (event) => {
 			console.log("Message from server:", event.data);
-			if (selectedChatId) {
-				useRoomStore.getState().addMessageToRoom(
-					selectedChatId,
-					new Date().getTime().toString(), // Generate unique message ID
-					{
-						id: new Date().getTime().toString(), // Generate a unique message ID
-						type: "U_MSG", // Set the type of the message based on your needs
-						sender_id: "WebSocket", // Assign the sender's ID
-						recipient_id: "Me", // Assign the recipient's ID
-						content: event.data // Use the received message as content
-					}
-				);
-			}
+			const data = JSON.parse(event.data);
+
+			// Add the incoming message to the Zustand store
+			useRoomStore.getState().addMessageToRoom(selectedChatId, data.id, data);
 		};
 
 		socket.onclose = () => {
@@ -113,6 +72,11 @@ const ChatsPage: React.FC = () => {
 		};
 
 		setWs(socket);
+
+		// Clean up the WebSocket when the component unmounts or selectedChatId changes
+		return () => {
+			socket.close();
+		};
 	}, [selectedChatId, api]);
 
 	// Function to handle chat selection
@@ -133,17 +97,13 @@ const ChatsPage: React.FC = () => {
 		ws?.send(JSON.stringify(chat)); // Send the message over WebSocket
 
 		// Add the message to the Zustand store using the correct Message interface
-		useRoomStore.getState().addMessageToRoom(
-			selectedChatId,
-			new Date().getTime().toString(), // Generate unique message ID
-			{
-				id: new Date().getTime().toString(), // Unique message ID
-				type: "U_MSG", // Specify the message type, e.g., user message
-				sender_id: myID, // Sender's ID (the current user)
-				recipient_id: selectedChatId, // Chat room ID or recipient ID
-				content: message // The actual text message
-			}
-		);
+		useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
+			id: chat.id, // Unique message ID
+			type: "U_MSG", // Specify the message type, e.g., user message
+			sender_id: myID, // Sender's ID (the current user)
+			recipient_id: selectedChatId, // Chat room ID or recipient ID
+			content: message // The actual text message
+		});
 
 		setInputMessage(""); // Clear the input field after sending the message
 	};
@@ -154,17 +114,13 @@ const ChatsPage: React.FC = () => {
 			ws?.send(JSON.stringify(chat)); // Send the image message over WebSocket
 
 			// Add the image message to the Zustand store using the correct Message interface
-			useRoomStore.getState().addMessageToRoom(
-				selectedChatId,
-				new Date().getTime().toString(), // Generate unique message ID
-				{
-					id: new Date().getTime().toString(), // Unique message ID
-					type: "U_MSG", // Specify the message type (you could use a specific type for images)
-					sender_id: myID, // Sender's ID (the current user)
-					recipient_id: selectedChatId, // Chat room ID or recipient ID
-					content: "[Image]" // Placeholder content for the image (you can use imageData here if needed)
-				}
-			);
+			useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
+				id: chat.id, // Unique message ID
+				type: "U_MSG", // Specify the message type (you could use a specific type for images)
+				sender_id: myID, // Sender's ID (the current user)
+				recipient_id: selectedChatId, // Chat room ID or recipient ID
+				content: "[Image]" // Placeholder content for the image (you can use imageData here if needed)
+			});
 		}
 	};
 
@@ -182,87 +138,95 @@ const ChatsPage: React.FC = () => {
 
 	return (
 		<IonPage>
-			<IonContent id="main-content">
-				<div className="chat-container">
-					<div className="chat-list">
-						<ChatList
-							rooms={rooms}
-							selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
-							onChatSelect={handleChatSelect}
-						/>{" "}
+			{isLoading ? (
+				<div>Loading chats...</div>
+			) : error ? (
+				<div>Error loading chats.</div>
+			) : (
+				<IonContent id="main-content">
+					<div className="chat-container">
+						<div className="chat-list">
+							<ChatList
+								rooms={rooms}
+								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
+								onChatSelect={handleChatSelect}
+							/>{" "}
+						</div>
+
+						<div className="chat-view">
+							{selectedChatId !== null ? (
+								<>
+									<div className="chat-header">
+										<ChatHeader selectedChatId={selectedChatId} />
+									</div>
+
+									<div className="chat-messages">
+										<ChatMessages
+											messages={Object.values(rooms[selectedChatId]?.messages || {})}
+										/>
+									</div>
+
+									<div className="chat-input">
+										<IonFooter className="chat-input">
+											<IonToolbar>
+												<IonInput
+													value={inputMessage}
+													placeholder="Write a message..."
+													onIonChange={(e: CustomEvent) =>
+														setInputMessage(e.detail.value!)
+													}
+													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
+												/>
+												<IonButton
+													onClick={() => handleSendMessage(inputMessage)}
+													slot="end"
+													fill="clear">
+													<IonIcon icon={send} />
+												</IonButton>
+												<IonButton slot="end" fill="clear">
+													<IonIcon icon={mic} />
+												</IonButton>
+												<IonButton
+													slot="end"
+													fill="clear"
+													onClick={() => setShowCamera(true)}>
+													<IonIcon icon={camera} />
+												</IonButton>
+												<IonButton slot="end" fill="clear">
+													<IonIcon icon={attach} />
+												</IonButton>
+											</IonToolbar>
+										</IonFooter>
+									</div>
+								</>
+							) : (
+								<div className="no-chat-selected">
+									<div className="empty-chat-container">
+										<img src={logo} className="empty-chat-image" />
+										<h2>Wraith Web</h2>
+										<p>Please select a chat or create a new one to start messaging.</p>
+										<p>
+											You can create and organize your conversations here. Stay connected!
+										</p>
+									</div>
+								</div>
+							)}
+						</div>
 					</div>
 
-					<div className="chat-view">
-						{selectedChatId !== null ? (
-							<>
-								<div className="chat-header">
-									<ChatHeader selectedChatId={selectedChatId} />
-								</div>
+					<ChatMenu selectedChatId={selectedChatId} />
 
-								<div className="chat-messages">
-									<ChatMessages
-										messages={Object.values(rooms[selectedChatId]?.messages || {})}
-									/>
-								</div>
-
-								<div className="chat-input">
-									<IonFooter className="chat-input">
-										<IonToolbar>
-											<IonInput
-												value={inputMessage}
-												placeholder="Write a message..."
-												onIonChange={(e: CustomEvent) => setInputMessage(e.detail.value!)}
-												onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
-											/>
-											<IonButton
-												onClick={() => handleSendMessage(inputMessage)}
-												slot="end"
-												fill="clear">
-												<IonIcon icon={send} />
-											</IonButton>
-											<IonButton slot="end" fill="clear">
-												<IonIcon icon={mic} />
-											</IonButton>
-											<IonButton
-												slot="end"
-												fill="clear"
-												onClick={() => setShowCamera(true)}>
-												<IonIcon icon={camera} />
-											</IonButton>
-											<IonButton slot="end" fill="clear">
-												<IonIcon icon={attach} />
-											</IonButton>
-										</IonToolbar>
-									</IonFooter>
-								</div>
-							</>
-						) : (
-							<div className="no-chat-selected">
-								<div className="empty-chat-container">
-									<img src={logo} className="empty-chat-image" />
-									<h2>Wraith Web</h2>
-									<p>Please select a chat or create a new one to start messaging.</p>
-									<p>
-										You can create and organize your conversations here. Stay connected!
-									</p>
-								</div>
-							</div>
-						)}
-					</div>
-				</div>
-
-				<ChatMenu selectedChatId={selectedChatId} />
-
-				{/* Camera Modal */}
-				<IonModal isOpen={showCamera} onDidDismiss={() => setShowCamera(false)}>
-					<Camera
-						onCapture={(imageData: string) => {
-							handleSendImage(imageData);
-							setShowCamera(false);
-						}}
-					/>
-				</IonModal>
-			</IonContent>
+					{/* Camera Modal */}
+					<IonModal isOpen={showCamera} onDidDismiss={() => setShowCamera(false)}>
+						<Camera
+							onCapture={(imageData: string) => {
+								handleSendImage(imageData);
+								setShowCamera(false);
+							}}
+						/>
+					</IonModal>
+				</IonContent>
+			)}
 		</IonPage>
 	);
 };
