@@ -10,6 +10,7 @@ import {
 	IonToolbar
 } from "@ionic/react";
 import { send, attach, mic, camera } from "ionicons/icons";
+import logo from "@assets/images/glock_primary.svg";
 import ChatList from "../components/Chats/ChatList/ChatList";
 import ChatMessages from "../components/Chats/ChatMessages";
 import ChatHeader from "../components/Chats/ChatHeader";
@@ -237,7 +238,14 @@ const ChatsPage: React.FC = () => {
 							</>
 						) : (
 							<div className="no-chat-selected">
-								<p>Please select a chat to view messages.</p>
+								<div className="empty-chat-container">
+									<img src={logo} className="empty-chat-image" />
+									<h2>Wraith Web</h2>
+									<p>Please select a chat or create a new one to start messaging.</p>
+									<p>
+										You can create and organize your conversations here. Stay connected!
+									</p>
+								</div>
 							</div>
 						)}
 					</div>
