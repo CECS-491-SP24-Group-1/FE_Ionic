@@ -13,9 +13,10 @@ import { useRoomStore } from "@/stores/room_store";
 
 interface ChatHeaderProps {
 	selectedChatId: string;
+	membersOnline: number;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ selectedChatId }) => {
+const ChatHeader: React.FC<ChatHeaderProps> = ({ selectedChatId, membersOnline }) => {
 	// Retrieve the selected chat from Zustand
 	const selectedChat = useRoomStore((state) => state.rooms[selectedChatId]);
 
@@ -38,7 +39,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ selectedChatId }) => {
 			</IonAvatar>
 			<IonLabel>
 				<h2>{selectedChatId}</h2> {/* temporary display selectedChatId as the title */}
-				<p>Click here for contact information</p>
+				<p>Current members online: <strong>{membersOnline}</strong></p>
 			</IonLabel>
 			<div className="chat-header-icons">
 				<IonButton fill="clear">

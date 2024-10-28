@@ -1,6 +1,6 @@
 // src/pages/ChatsPage.tsx
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	IonContent,
 	IonPage,
@@ -20,10 +20,11 @@ import ChatMenu from "./chats/Menu/ChatMenu";
 import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
-import { LastMessage } from "../../types/chat";
+import { LastMessage, MembershipChange } from "../../types/chat";
 import { newChat } from "@/util/chat";
 import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
 import "./Chats.scss";
+import { Message } from "@ptypes/chat";
 
 const ChatsPage: React.FC = () => {
 	const { myID, vault, evault } = useVaultStore((state) => ({
@@ -36,6 +37,7 @@ const ChatsPage: React.FC = () => {
 		clearRoomMessages: state.clearRoomMessages,
 		rooms: state.rooms
 	}));
+	const membersOnline = useRef(0);
 
 	const { isLoading, error } = useRoomList(); // Use the custom hook
 
@@ -56,11 +58,26 @@ const ChatsPage: React.FC = () => {
 		};
 
 		socket.onmessage = (event) => {
+			//Get the message from the server and log the event
 			console.log("Message from server:", event.data);
-			const data = JSON.parse(event.data);
+			const msg: Message = JSON.parse(event.data);
 
-			// Add the incoming message to the Zustand store
-			useRoomStore.getState().addMessageToRoom(selectedChatId, data.id, data);
+			//Switch over the message type
+			switch (msg.type) {
+				//User join/quit event
+				case "JOIN_EVENT": case "QUIT_EVENT": {
+					const delta = JSON.parse(msg.content) as MembershipChange;
+					membersOnline.current = delta.new;
+					break;
+				}
+
+				//Default handler
+				default: {
+					//Add the incoming message to the Zustand store
+					useRoomStore.getState().addMessageToRoom(selectedChatId, msg.id, msg);
+					break;
+				}
+			}
 		};
 
 		socket.onclose = () => {
@@ -157,7 +174,7 @@ const ChatsPage: React.FC = () => {
 							{selectedChatId !== null ? (
 								<>
 									<div className="chat-header">
-										<ChatHeader selectedChatId={selectedChatId} />
+										<ChatHeader selectedChatId={selectedChatId} membersOnline={membersOnline.current} />
 									</div>
 
 									<div className="chat-messages">
