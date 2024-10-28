@@ -13,10 +13,10 @@ import {
 } from "@ionic/react";
 import { send, attach, mic, camera } from "ionicons/icons";
 import logo from "@assets/images/glock_primary.svg";
-import ChatList from "../components/Chats/ChatList/ChatList";
-import ChatMessages from "../components/Chats/ChatMessages";
-import ChatHeader from "../components/Chats/ChatHeader";
-import ChatMenu from "../components/Chats/Menu/ChatMenu";
+import ChatList from "./chats/ChatList/ChatList";
+import ChatMessages from "./chats/ChatMessages";
+import ChatHeader from "./chats/ChatHeader";
+import ChatMenu from "./chats/Menu/ChatMenu";
 import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
