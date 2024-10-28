@@ -37,7 +37,7 @@ const ChatsPage: React.FC = () => {
 		clearRoomMessages: state.clearRoomMessages,
 		rooms: state.rooms
 	}));
-	const membersOnline = useRef(0);
+	const [membersOnline, setMembersOnline] = useState<number>(0)
 
 	const { isLoading, error } = useRoomList(); // Use the custom hook
 
@@ -67,7 +67,8 @@ const ChatsPage: React.FC = () => {
 				//User join/quit event
 				case "JOIN_EVENT": case "QUIT_EVENT": {
 					const delta = JSON.parse(msg.content) as MembershipChange;
-					membersOnline.current = delta.new;
+					setMembersOnline(delta.new);
+					console.log(`membership change: old ${delta.old}, new ${delta.new}`);
 					break;
 				}
 
@@ -174,7 +175,7 @@ const ChatsPage: React.FC = () => {
 							{selectedChatId !== null ? (
 								<>
 									<div className="chat-header">
-										<ChatHeader selectedChatId={selectedChatId} membersOnline={membersOnline.current} />
+										<ChatHeader selectedChatId={selectedChatId} membersOnline={membersOnline} />
 									</div>
 
 									<div className="chat-messages">
