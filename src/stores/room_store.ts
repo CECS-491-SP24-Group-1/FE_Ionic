@@ -1,16 +1,15 @@
-// src/store/useRoomStore.ts
 import { createWithEqualityFn as create } from "zustand/traditional";
 import { RoomCS } from "../../types/roomcs";
 import { Message, LastMessage } from "../../types/chat";
 
-// src/store/useRoomStore.ts
 interface RoomStore {
 	rooms: Record<string, RoomCS>;
 	addRoom: (room: RoomCS) => void;
-	addRooms: (rooms: RoomCS[]) => void; // New function to add multiple rooms
+	addRooms: (rooms: RoomCS[]) => void;
 	addMessageToRoom: (roomId: string, messageId: string, message: Message) => void;
 	updateLastMessage: (roomId: string, lastMessage: LastMessage) => void;
 	clearRoomMessages: (roomId: string) => void;
+	updateTypingStatus: (roomId: string, userId: string | null) => void; // New function to update typing status
 }
 
 export const useRoomStore = create<RoomStore>((set) => ({
@@ -24,7 +23,6 @@ export const useRoomStore = create<RoomStore>((set) => ({
 			}
 		})),
 
-	// New action to add multiple rooms at once
 	addRooms: (rooms: RoomCS[]) =>
 		set((state) => {
 			const newRooms = rooms.reduce(
@@ -96,10 +94,31 @@ export const useRoomStore = create<RoomStore>((set) => ({
 				return state;
 			}
 
-			// Clear the messages in the room, but keep the room in the store
 			const updatedRoom = {
 				...room,
-				messages: {} // Clear the messages
+				messages: {}
+			};
+
+			return {
+				rooms: {
+					...state.rooms,
+					[roomId]: updatedRoom
+				}
+			};
+		}),
+
+	// New action to update typing status in a room
+	updateTypingStatus: (roomId: string, userId: string | null) =>
+		set((state) => {
+			const room = state.rooms[roomId];
+			if (!room) {
+				console.error(`Room with ID ${roomId} not found.`);
+				return state;
+			}
+
+			const updatedRoom = {
+				...room,
+				typingUser: userId // Update the typingUser field with the current typing user ID or null
 			};
 
 			return {

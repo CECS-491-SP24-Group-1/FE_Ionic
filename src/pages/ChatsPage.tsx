@@ -1,5 +1,3 @@
-// src/pages/ChatsPage.tsx
-
 import React, { useEffect, useState } from "react";
 import {
 	IonContent,
@@ -22,28 +20,32 @@ import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
 import { LastMessage } from "../../types/chat";
 import { newChat } from "@/util/chat";
-import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
+import { useRoomList } from "@/hooks/useRoomList";
 import "./Chats.scss";
 
 const ChatsPage: React.FC = () => {
 	const { myID, vault, evault } = useVaultStore((state) => ({
 		myID: state.myID,
-		vault: state.vault as Exclude<typeof state.vault, null | undefined>, // Type is not null
-		evault: state.evault as Exclude<typeof state.evault, null | undefined> // Type is not null
+		vault: state.vault as Exclude<typeof state.vault, null | undefined>,
+		evault: state.evault as Exclude<typeof state.evault, null | undefined>
 	}));
 
-	const { clearRoomMessages, rooms } = useRoomStore((state) => ({
+	const { clearRoomMessages, rooms, updateTypingStatus } = useRoomStore((state) => ({
 		clearRoomMessages: state.clearRoomMessages,
-		rooms: state.rooms
+		rooms: state.rooms,
+		updateTypingStatus: state.updateTypingStatus // Zustand action to update typing status
 	}));
 
-	const { isLoading, error } = useRoomList(); // Use the custom hook
+	const { isLoading, error } = useRoomList();
 
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState<string>("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
 	const [showCamera, setShowCamera] = useState(false);
+	const [isTyping, setIsTyping] = useState(false); // Track typing state
 	const api = import.meta.env.VITE_API_URL;
+
+	let typingTimeout: ReturnType<typeof setTimeout>;
 
 	// WebSocket setup
 	useEffect(() => {
@@ -59,8 +61,13 @@ const ChatsPage: React.FC = () => {
 			console.log("Message from server:", event.data);
 			const data = JSON.parse(event.data);
 
-			// Add the incoming message to the Zustand store
-			useRoomStore.getState().addMessageToRoom(selectedChatId, data.id, data);
+			if (data.type === "typing" && data.chatId === selectedChatId) {
+				// Update typing status in Zustand store
+				updateTypingStatus(data.userId, data.isTyping);
+			} else {
+				// Handle regular message data
+				useRoomStore.getState().addMessageToRoom(selectedChatId, data.id, data);
+			}
 		};
 
 		socket.onclose = () => {
@@ -73,46 +80,40 @@ const ChatsPage: React.FC = () => {
 
 		setWs(socket);
 
-		// Clean up the WebSocket when the component unmounts or selectedChatId changes
 		return () => {
 			socket.close();
 		};
-	}, [selectedChatId, api]);
+	}, [selectedChatId, api, updateTypingStatus]);
 
 	// Function to handle chat selection
 	const handleChatSelect = (chatId: string) => {
-		// If there's a currently selected chat, clear its messages
 		if (selectedChatId) {
-			clearRoomMessages(selectedChatId); // Clear the previous chat's messages when switching
+			clearRoomMessages(selectedChatId);
 		}
-
-		// Switch to the new chat room
 		setSelectedChatId(chatId);
 	};
 
 	const handleSendMessage = (message: string) => {
-		if (!message.trim() || !selectedChatId) return; // Check for empty message and selected chat
+		if (!message.trim() || !selectedChatId) return;
 
-		const chat = newChat(message, myID, selectedChatId); // Create a chat message
-		ws?.send(JSON.stringify(chat)); // Send the message over WebSocket
+		const chat = newChat(message, myID, selectedChatId);
+		ws?.send(JSON.stringify(chat));
 
-		// Add the message to the Zustand store using the correct Message interface
 		useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
-			id: chat.id, // Unique message ID
-			type: "U_MSG", // Specify the message type, e.g., user message
-			sender_id: myID, // Sender's ID (the current user)
-			recipient_id: selectedChatId, // Chat room ID or recipient ID
-			content: message // The actual text message
+			id: chat.id,
+			type: "U_MSG",
+			sender_id: myID,
+			recipient_id: selectedChatId,
+			content: message
 		});
 
-		setInputMessage(""); // Clear the input field after sending the message
+		setInputMessage("");
 	};
-
 	const handleSendImage = (imageData: string) => {
 		if (selectedChatId) {
 			const chat = newChat(imageData, myID, selectedChatId); // Create a chat message for the image
 			ws?.send(JSON.stringify(chat)); // Send the image message over WebSocket
-
+	
 			// Add the image message to the Zustand store using the correct Message interface
 			useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
 				id: chat.id, // Unique message ID
@@ -124,7 +125,33 @@ const ChatsPage: React.FC = () => {
 		}
 	};
 
-	// Function to handle key down for the input
+	// Function to send typing status
+	const sendTypingStatus = (status: boolean) => {
+		if (ws && selectedChatId) {
+			ws.send(JSON.stringify({
+				type: "typing",
+				isTyping: status,
+				chatId: selectedChatId,
+				userId: myID
+			}));
+		}
+	};
+
+	// Handle typing input
+	const handleTyping = () => {
+		if (!isTyping) {
+			setIsTyping(true);
+			sendTypingStatus(true);
+		}
+
+		clearTimeout(typingTimeout);
+
+		typingTimeout = setTimeout(() => {
+			setIsTyping(false);
+			sendTypingStatus(false);
+		}, 2000);
+	};
+
 	const handleKeyDown = (event: React.KeyboardEvent) => {
 		const inputElement = event.target as HTMLIonInputElement;
 		const message = inputElement.value?.toString().trim();
@@ -148,9 +175,9 @@ const ChatsPage: React.FC = () => {
 						<div className="chat-list">
 							<ChatList
 								rooms={rooms}
-								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
+								selectedChatId={selectedChatId}
 								onChatSelect={handleChatSelect}
-							/>{" "}
+							/>
 						</div>
 
 						<div className="chat-view">
@@ -164,6 +191,11 @@ const ChatsPage: React.FC = () => {
 										<ChatMessages
 											messages={Object.values(rooms[selectedChatId]?.messages || {})}
 										/>
+										{rooms[selectedChatId]?.typingUser && (
+											<div className="typing-notification">
+												{rooms[selectedChatId].typingUser} is typing...
+											</div>
+										)}
 									</div>
 
 									<div className="chat-input">
@@ -175,6 +207,7 @@ const ChatsPage: React.FC = () => {
 													onIonChange={(e: CustomEvent) =>
 														setInputMessage(e.detail.value!)
 													}
+													onIonInput={handleTyping} // Detect typing
 													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
 												/>
 												<IonButton
@@ -205,9 +238,7 @@ const ChatsPage: React.FC = () => {
 										<img src={logo} className="empty-chat-image" />
 										<h2>Wraith Web</h2>
 										<p>Please select a chat or create a new one to start messaging.</p>
-										<p>
-											You can create and organize your conversations here. Stay connected!
-										</p>
+										<p>Stay connected!</p>
 									</div>
 								</div>
 							)}
@@ -216,7 +247,6 @@ const ChatsPage: React.FC = () => {
 
 					<ChatMenu selectedChatId={selectedChatId} />
 
-					{/* Camera Modal */}
 					<IonModal isOpen={showCamera} onDidDismiss={() => setShowCamera(false)}>
 						<Camera
 							onCapture={(imageData: string) => {
