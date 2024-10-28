@@ -1,6 +1,5 @@
 $primary-color: #4b8fea;
 
-
 /* Chat Container */
 .chat-container {
 	display: flex;
@@ -32,7 +31,6 @@ $primary-color: #4b8fea;
 		/* Change background on hover */
 	}
 }
-
 
 /* Chat List (Sidebar) */
 .chat-list {
@@ -89,7 +87,6 @@ $primary-color: #4b8fea;
 	filter: invert(100%);
 }
 
-
 /* Empty chat view */
 .no-chat-selected {
 	display: flex;
@@ -133,7 +130,6 @@ $primary-color: #4b8fea;
 	/* Improve readability */
 }
 
-
 /* Searchbar */
 .chats-header .ion-searchbar {
 	width: 100%;
@@ -157,7 +153,6 @@ $primary-color: #4b8fea;
 
 /* Media Query for Small Screens (e.g., mobile devices) */
 @media (max-width: 768px) {
-
 	/* Hide the chat label (name and message) when below 768px */
 	.chat-list-name {
 		display: none;
@@ -294,7 +289,6 @@ $primary-color: #4b8fea;
 	outline: none;
 	/* Remove focus outline */
 }
-
 
 /* Chat Bubbles */
 // .chat-messages {

@@ -1,78 +1,140 @@
 // Styling for App.tsx
-.banner {
+.unsaved-changes-banner {
+	$height: 2em;
+	$dark-orange: #ce7100; // Dark orange color
+
 	position: fixed;
 	top: 0;
-	width: 100%;
-	z-index: 10;
-	background-color: #3880ff;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	padding: 0 !important;
+	min-height: $height;
+	max-height: $height;
+	height: $height;
+	background-color: $dark-orange; // Set background color to dark orange
 
-	.bannerContent{
+	.toolbar-background,
+	.toolbar-background:host {
+		min-height: $height !important;
+		max-height: $height !important;
+		height: $height !important;
+		background-color: transparent !important; // Make toolbar background transparent
+	}
+
+	ion-toolbar {
+		--background: transparent; // Ensure toolbar is transparent
+		--min-height: #{$height};
+		--max-height: #{$height};
+	}
+
+	.bannerContent {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		text-align: center;
-		color: #ffff;
-		height: 100%; 
+		flex-direction: column;
+		color: #ffffff; // White text for contrast
+		height: 100%;
 		width: 100%;
-		padding: 10px 0; 
-	}	
+		padding: 0 10px; // Add some horizontal padding
+
+		.bannerText {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			ion-icon {
+				margin-right: 8px; // Add some space between the icon and text
+			}
+
+			p {
+				margin: 0; // Remove default paragraph margin
+			}
+		}
+	}
+}
+
+ion-content {
+	--padding-top: var(--unsaved-changes-banner-height, 0px);
 }
 
 /* Styles for the IonModal component */
 .custom-modal {
-    .modal-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center; /* Center the modal horizontally */
-        align-items: center; /* Center the modal vertically */
-        background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
-    }
+	.modal-wrapper {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		/* Center the modal horizontally */
+		align-items: center;
+		/* Center the modal vertically */
+		background-color: rgba(0, 0, 0, 0.8);
+		/* Dark overlay */
+	}
 
-    .modal-content {
-		
-        position: relative;
-        background-color: #f0f0f0; /* Desired background color */
-        border-radius: 15px;
-        padding: 20px;
-        max-width: 90vw; /* Ensure it doesn't exceed the viewport width */
-        max-height: 80vh; /* Set maximum height */
-        overflow-y: auto; /* Enable vertical scrolling when content overflows */
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        display: flex;
-        flex-direction: column; /* Stack children vertically */
-        justify-content: space-between; /* Space between header/content and button */
-        text-align: center; /* Center text inside the modal */
+	.modal-content {
+		position: relative;
+		background-color: #f0f0f0;
+		/* Desired background color */
+		border-radius: 15px;
+		padding: 20px;
+		max-width: 90vw;
+		/* Ensure it doesn't exceed the viewport width */
+		max-height: 80vh;
+		/* Set maximum height */
+		overflow-y: auto;
+		/* Enable vertical scrolling when content overflows */
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+		display: flex;
+		flex-direction: column;
+		/* Stack children vertically */
+		justify-content: space-between;
+		/* Space between header/content and button */
+		text-align: center;
+		/* Center text inside the modal */
 		background-image: none;
 
-        h2 {
-            margin-top: 0; /* Prevent extra top margin on heading */
-            font-size: 1.5rem;
-        }
+		h2 {
+			margin-top: 0;
+			/* Prevent extra top margin on heading */
+			font-size: 1.5rem;
+		}
 
-        p {
-            margin-bottom: 20px; /* Space between paragraphs and content */
-            flex-grow: 1; /* Allow paragraph to take up remaining space */
-        }
+		p {
+			margin-bottom: 20px;
+			/* Space between paragraphs and content */
+			flex-grow: 1;
+			/* Allow paragraph to take up remaining space */
+		}
 
-        .close-button {
-            background: none; /* No background */
-            border: none; /* No border */
-            font-size: 1.5rem; /* Button font size */
-            color: #333; /* Button color */
-            cursor: pointer; /* Pointer on hover */
-            padding: 10px; /* Button padding */
-            border-radius: 5px; /* Button border radius */
-            background-color: rgba(0, 0, 0, 0.1); /* Button background */
-            margin-top: 10px; /* Space above the button */
+		.close-button {
+			background: none;
+			/* No background */
+			border: none;
+			/* No border */
+			font-size: 1.5rem;
+			/* Button font size */
+			color: #333;
+			/* Button color */
+			cursor: pointer;
+			/* Pointer on hover */
+			padding: 10px;
+			/* Button padding */
+			border-radius: 5px;
+			/* Button border radius */
+			background-color: rgba(0, 0, 0, 0.1);
+			/* Button background */
+			margin-top: 10px;
+			/* Space above the button */
 
-            &:hover {
-                background-color: rgba(0, 0, 0, 0.2); /* Darker on hover */
-            }
-        }
-    }
+			&:hover {
+				background-color: rgba(0, 0, 0, 0.2);
+				/* Darker on hover */
+			}
+		}
+	}
 }
-
