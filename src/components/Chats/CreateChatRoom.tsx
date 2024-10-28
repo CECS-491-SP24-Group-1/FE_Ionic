@@ -16,7 +16,6 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 	const [success, setSuccess] = useState("");
 
 	const addChatRoom = useVaultStore((state) => state.addChatRoom);
-	const history = useHistory();
 	const addRoom = useRoomStore((state) => state.addRoom);
 	const api = import.meta.env.VITE_API_URL;
 
