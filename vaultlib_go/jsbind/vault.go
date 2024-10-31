@@ -71,7 +71,12 @@ func vault_newBlank(_ []js.Value) (*vault.Vault, error) {
 
 // encryptPassphrase(pass: string): EVault
 func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value, error) {
+	//Get the password from the arguments
 	pass := args[0].String()
+
+	//Setup a promise for JS
+	//prom := promise.New()
+
 	ev, err := obj.EncryptPassphrase(pass)
 	if err != nil {
 		return js.ValueOf(nil), err

@@ -12,6 +12,11 @@ import (
 	"github.com/norunners/vert"
 )
 
+var (
+	// Represents a nil value.
+	Nil = js.ValueOf(nil)
+)
+
 // Converts a JS object to a Go object using Vert.
 func Cast[T any](val js.Value) T {
 	v := vert.ValueOf(val)
@@ -43,6 +48,15 @@ func HasPropertySafe(obj js.Value, prop string) (has bool, err error) {
 	}()
 	has = !obj.Get(prop).IsUndefined()
 	return
+}
+
+// Mimics a ternary operator found in other languages.
+func If[T any](cond bool, tval, fval T) T {
+	if cond {
+		return tval
+	} else {
+		return fval
+	}
 }
 
 // Creates a Golang array from a JS array.
@@ -136,7 +150,7 @@ func Stringify(val js.Value) string {
 	return js.Global().Get("JSON").Call("stringify", val).String()
 }
 
-// Throws a JS exception.
+// Throws a JS exception. Requires backing support from `wasm_exec.js` via a patch.
 //
 //go:wasmimport gojs wraith.me/vaultlib/jsutil.Throw
 func Throw(message string)

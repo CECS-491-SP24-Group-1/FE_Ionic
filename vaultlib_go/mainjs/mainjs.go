@@ -21,6 +21,7 @@ func main() {
 
 	//Configure the FFI
 	ffi.TagName = "json"
+	jsutil.PackageName = ""
 
 	//
 	// PUT ALL JS FUNCTIONS & VARS TO EXPORT BELOW THIS BLOCK
@@ -29,6 +30,7 @@ func main() {
 	jsutil.ExportF("",
 		jsbind.HKDF,
 	)
+
 	jsutil.ExportV("",
 		jsutil.NV("HKDF_SALT", jsbind.HKDF_SALT),
 	)
