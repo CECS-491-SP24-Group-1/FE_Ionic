@@ -11,7 +11,7 @@ import (
 	"wraith.me/vaultlib/vaultlib/crypto"
 )
 
-// argon2id(passphrase: string, salt: string): Promise<string>
+// async argon2id(passphrase: string, salt: string): Promise<string>
 func Argon2id(_ js.Value, args []js.Value) interface{} {
 	//Get the input args
 	passphrase := args[0].String()
@@ -42,7 +42,7 @@ func Argon2id(_ js.Value, args []js.Value) interface{} {
 
 // argonSalt(): string
 func ArgonSalt(_ js.Value, args []js.Value) interface{} {
-	salt := make([]byte, crypto.PRIVKEY_SEED_SIZE/2)
+	salt := make([]byte, crypto.ARGON_SALT_SIZE)
 	if _, err := rand.Read(salt); err != nil {
 		jsutil.Throw(err.Error())
 	}

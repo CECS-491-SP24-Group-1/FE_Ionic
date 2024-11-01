@@ -69,7 +69,7 @@ func vault_newBlank(_ []js.Value) (*vault.Vault, error) {
 
 //-- Methods
 
-// encryptPassphrase(pass: string): Promise<EVault>
+// async encryptPassphrase(pass: string): Promise<EVault>
 func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value, error) {
 	//Get the password from the arguments
 	pass := args[0].String()
