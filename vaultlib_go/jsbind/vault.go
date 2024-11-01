@@ -69,23 +69,26 @@ func vault_newBlank(_ []js.Value) (*vault.Vault, error) {
 
 //-- Methods
 
-// encryptPassphrase(pass: string): EVault
+// encryptPassphrase(pass: string): Promise<EVault>
 func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value, error) {
 	//Get the password from the arguments
 	pass := args[0].String()
 
-	//Setup a promise for JS
-	//prom := promise.New()
+	//Setup the promise action to run
+	fun := func() (js.Value, error) {
+		ev, err := obj.EncryptPassphrase(pass)
+		if err != nil {
+			return jsutil.Nil, err
+		}
+		evjson, err := ev.JSON()
+		if err != nil {
+			return jsutil.Nil, err
+		}
+		return jsutil.Parse(evjson), nil
+	}
 
-	ev, err := obj.EncryptPassphrase(pass)
-	if err != nil {
-		return js.ValueOf(nil), err
-	}
-	evjson, err := ev.JSON()
-	if err != nil {
-		return js.ValueOf(nil), err
-	}
-	return jsutil.Parse(evjson), nil
+	//Construct and return the promise
+	return jsutil.Promise(fun), nil
 }
 
 // hashcode(): string

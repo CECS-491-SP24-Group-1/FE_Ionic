@@ -28,16 +28,24 @@ func ExportEVault() {
 
 //-- Methods
 
-// decryptPassphrase(pass: string): Vault
+// decryptPassphrase(pass: string): Promise<Vault>
 func evault_dcrypt_pass(obj *vault.EVault, _ js.Value, args []js.Value) (js.Value, error) {
+	//Get the password from the arguments
 	pass := args[0].String()
-	v, err := obj.DecryptPassphrase(pass)
-	if err != nil {
-		return js.ValueOf(nil), err
+
+	//Setup the promise action to run
+	fun := func() (js.Value, error) {
+		v, err := obj.DecryptPassphrase(pass)
+		if err != nil {
+			return jsutil.Nil, err
+		}
+		vjson, err := v.JSON()
+		if err != nil {
+			return jsutil.Nil, err
+		}
+		return jsutil.Parse(vjson), nil
 	}
-	vjson, err := v.JSON()
-	if err != nil {
-		return js.ValueOf(nil), err
-	}
-	return jsutil.Parse(vjson), nil
+
+	//Construct and return the promise
+	return jsutil.Promise(fun), nil
 }

@@ -69,10 +69,17 @@ func (ev EVault) DecryptPassphrase(passphrase string) (*Vault, error) {
 	return ev.decrypt(key)
 }
 
+//May not be necessary
+/*
+func (ev EVault) DecryptPassphraseDetached(passphrase, salt string) (*Vault, error) {
+
+}
+*/
+
 // Encrypts a vault using the passphrase method.
 func (v Vault) EncryptPassphrase(passphrase string) (*EVault, error) {
 	//Generate a salt for the passphrase; salt length is set to 16 bytes
-	salt := make([]byte, crypto.PRIVKEY_SEED_SIZE/2)
+	salt := make([]byte, crypto.PRIVKEY_SEED_SIZE/2) //TODO: make this a const
 	if _, err := rand.Read(salt); err != nil {
 		return nil, err
 	}
@@ -95,6 +102,12 @@ func (v Vault) EncryptPassphrase(passphrase string) (*EVault, error) {
 	ev.Salt = base64.StdEncoding.EncodeToString(salt)
 	return ev, nil
 }
+
+/*
+func (v Vault) EncryptPassphraseDetached(passphrase string, salt []byte) (*EVault, error) {
+
+}
+*/
 
 //
 //-- Backend crypto routines
