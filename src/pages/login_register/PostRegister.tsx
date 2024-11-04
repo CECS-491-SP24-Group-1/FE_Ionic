@@ -45,10 +45,12 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	};
 
 	//Vault state
-	const { setVault, evault, setEVault } = useVaultStore((state) => ({
+	const { setVault, evault, setEVault, setSalt, setEKey } = useVaultStore((state) => ({
 		setVault: state.setVault,
 		evault: state.evault,
-		setEVault: state.setEVault
+		setEVault: state.setEVault,
+		setSalt: state.setSalt,
+		setEKey: state.setEKey
 	}));
 
 	//Handles form submissions
@@ -78,14 +80,24 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 			return;
 		}
 
+		//Generate two salts: one to encrypt the vault and another for re-encryption
+		const saltNow = vaultlib.argonSalt();
+		const saltLater = vaultlib.argonSalt();
+
+		//Run Argon2id twice: once to decrypt the vault and again to get a re-encryption key
+		const keyNow = await vaultlib.argon2id(passphrase, saltNow);
+		const keyLater = await vaultlib.argon2id(passphrase, saltLater);
+
 		//Encrypt the vault and store it in localstorage
-		const ev: typeof EVault = EVault.fromJSObject(
-			await vault.encryptPassphrase(passphrase)
-		);
+		const ev = EVault.fromJSObject(await vault.encryptPassphrasePrecomp(keyNow, saltNow));
 		setEVault(ev);
 
 		//Set the vault in the Zustand store
 		setVault(vault);
+
+		//Store the re-encryption salt and key in Zustand for later
+		setSalt(saltLater);
+		setEKey(keyLater);
 
 		//Announce the successful encryption
 		toast.success("Vault was encrypted successfully!");
