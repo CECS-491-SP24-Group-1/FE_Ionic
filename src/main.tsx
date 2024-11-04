@@ -31,6 +31,7 @@ import "@ionic/react/css/palettes/dark.always.css";
 import "./variables.scss";
 import LRPage from "./pages/login_register/LRPage";
 import useLoginGateStore from "./stores/login_gate";
+import Cookies from "js-cookie";
 
 /* Run init stuff here */
 setupIonicReact();
@@ -56,9 +57,10 @@ export function Root() {
 	const [cookies] = useCookies();
 
 	//Vault store access; this makes the store available to all child components
-	const { populateVault, populateEVault } = useVaultStore((state) => ({
+	const { populateVault, populateEVault, setCanReencrypt } = useVaultStore((state) => ({
 		populateVault: state.vaultFromSS,
-		populateEVault: state.evaultFromLS
+		populateEVault: state.evaultFromLS,
+		setCanReencrypt: state.setCanReencrypt
 	}));
 
 	//Initializes the WASM module
@@ -79,14 +81,33 @@ export function Root() {
 		if (wasmLoaded) {
 			initWasm();
 
-			//Load the encrypted vault into the Zustand store
+			//Load the encrypted vault and ensure the salt and symmetric key are available
 			if (hasEVault.current) {
-				console.log("has evault!!!");
-				if (!populateEVault()) {
-					console.error(
-						"Failed to populate the encrypted vault into Zustand. Re-encryption will not succeed!"
-					);
-				}
+				const canReencrypt = () => {
+					//Load the encrypted vault
+					console.log("has evault!!!");
+					if (!populateEVault()) {
+						console.error(
+							"Failed to populate the encrypted vault into Zustand. Re-encryption will not succeed!"
+						);
+						return false;
+					}
+
+					//Ensure the salt and symmetric key are available
+					if (
+						!Cookies.get(import.meta.env.VITE_VSALT_COOKIE_NAME) ||
+						!Cookies.get(import.meta.env.VITE_VEKEY_COOKIE_NAME)
+					) {
+						console.error(
+							"Failed to find a salt and/or symmetric key. Re-encryption will not succeed!"
+						);
+						return false;
+					}
+
+					//Nothing went wrong; re-encryption is possible
+					return true;
+				};
+				setCanReencrypt(canReencrypt());
 			}
 
 			//Vault check

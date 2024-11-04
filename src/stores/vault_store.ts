@@ -32,6 +32,8 @@ interface VaultStore {
 	setSalt: (salt: string) => void;
 	ekey: string;
 	setEKey: (ekey: string) => void;
+	canReencrypt: boolean;
+	setCanReencrypt: (canReencrypt: boolean) => void;
 
 	// TEMP Map of UUIDs to ChatRoom objects
 	chatRooms: Record<string, ChatRoom>;
@@ -129,6 +131,7 @@ const useVaultStore = create<VaultStore>((set: any, get: any) => {
 		},
 
 		//Re-encryption support
+		canReencrypt: false,
 		salt: Cookies.get(import.meta.env.VITE_VSALT_COOKIE_NAME) ?? "",
 		setSalt: (salt: string) => {
 			setCookie(import.meta.env.VITE_VSALT_COOKIE_NAME, salt);
@@ -139,6 +142,7 @@ const useVaultStore = create<VaultStore>((set: any, get: any) => {
 			setCookie(import.meta.env.VITE_VEKEY_COOKIE_NAME, ekey);
 			set({ ekey: ekey });
 		},
+		setCanReencrypt: (canReencrypt: boolean) => set({ canReencrypt: canReencrypt }),
 
 		// Initialize chatRooms as an empty map
 		chatRooms: {},

@@ -66,7 +66,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		setEVault,
 		evaultFromLS,
 		setSalt,
-		setEKey
+		setEKey,
+		setCanReencrypt
 	} = useVaultStore((state) => ({
 		vault: state.vault,
 		setVault: state.setVault,
@@ -75,7 +76,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		setEVault: state.setEVault,
 		evaultFromLS: state.evaultFromLS,
 		setSalt: state.setSalt,
-		setEKey: state.setEKey
+		setEKey: state.setEKey,
+		setCanReencrypt: state.setCanReencrypt
 	}));
 
 	//Misc state stuff
@@ -219,6 +221,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 			//Store the vault in the vault store
 			setVault(decrypted);
+			setCanReencrypt(true);
 
 			//Update the local state
 			setVaultState((prevState) => ({

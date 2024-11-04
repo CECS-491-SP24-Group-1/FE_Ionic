@@ -45,13 +45,15 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	};
 
 	//Vault state
-	const { setVault, evault, setEVault, setSalt, setEKey } = useVaultStore((state) => ({
-		setVault: state.setVault,
-		evault: state.evault,
-		setEVault: state.setEVault,
-		setSalt: state.setSalt,
-		setEKey: state.setEKey
-	}));
+	const { setVault, evault, setEVault, setSalt, setEKey, setCanReencrypt } =
+		useVaultStore((state) => ({
+			setVault: state.setVault,
+			evault: state.evault,
+			setEVault: state.setEVault,
+			setSalt: state.setSalt,
+			setEKey: state.setEKey,
+			setCanReencrypt: state.setCanReencrypt
+		}));
 
 	//Handles form submissions
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -98,6 +100,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 		//Store the re-encryption salt and key in Zustand for later
 		setSalt(saltLater);
 		setEKey(keyLater);
+		setCanReencrypt(true);
 
 		//Announce the successful encryption
 		toast.success("Vault was encrypted successfully!");
