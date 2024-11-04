@@ -122,8 +122,8 @@ func (v Vault) EncryptPassphraseSalt(passphrase string, salt []byte) (*EVault, e
 	return v.EncryptPassphrasePrecomp(*key, salt)
 }
 
-//Handles the keygen process for the passphrase crypt method.
-func pass2key(passphrase string, salt []byte) (*crypto.Privseed, error){
+// Handles the keygen process for the passphrase crypt method.
+func pass2key(passphrase string, salt []byte) (*crypto.Privseed, error) {
 	//Derive a symmetric key via Argon2id on the passphrase
 	keyb, err := crypto.Argon([]byte(passphrase), salt, crypto.PRIVKEY_SEED_SIZE)
 	if err != nil {

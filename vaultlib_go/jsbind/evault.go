@@ -30,7 +30,7 @@ func ExportEVault() {
 
 // async decryptPassphrase(pass: string): Promise<Vault>
 func evault_dcrypt_pass(obj *vault.EVault, _ js.Value, args []js.Value) (js.Value, error) {
-	//Get the password from the arguments
+	//Get the passphrase from the arguments
 	pass := args[0].String()
 
 	//Setup the promise action to run

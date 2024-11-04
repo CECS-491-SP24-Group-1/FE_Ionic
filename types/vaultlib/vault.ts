@@ -27,6 +27,6 @@ export interface IVault<T extends any> {
 	last_mod: string;
 	dev_ident: string;
 	note: string;
-	rooms: { [key: string]: Room};
+	rooms: { [key: string]: Room };
 	kstore: T;
 }

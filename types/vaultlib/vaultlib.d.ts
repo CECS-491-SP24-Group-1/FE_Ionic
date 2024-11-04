@@ -12,7 +12,7 @@ declare global {
 	/** Represents a keystore, which contains a public and private Ed25519 key. */
 	interface MKeyStore extends FFI<KeyStore>, IKeyStore {
 		/** Creates a new keystore object. */
-		new(): MKeyStore;
+		new (): MKeyStore;
 
 		/** Signs a given message with the private key of the keystore. */
 		sign(message: string): string; //TODO: make this async
@@ -26,7 +26,7 @@ declare global {
 	/** Represents a vault, which contains a keystore, conversations, sessions, etc. */
 	interface MVault extends FFI<Vault>, IVault<KeyStore> {
 		/** Creates a new vault object. */
-		new(subject: string, devIdent: string): MVault;
+		new (subject: string, devIdent: string): MVault;
 
 		/** Creates a new vault object out of an existing keystore. */
 		fromKS(ks: KeyStore): MVault;
@@ -34,20 +34,23 @@ declare global {
 		/** Creates a new blank vault object. */
 		newBlank(): MVault;
 
-		/** Encrypts a vault using a given passphrase. */
-		async encryptPassphrase(pass: string): Promise<EVault>;
+		/** ASYNC: Encrypts a vault using a given passphrase. */
+		encryptPassphrase(pass: string): Promise<EVault>;
+
+		/** ASYNC: Encrypts a vault using a precomputed symmetric key and salt had via a detached Argon2id run. */
+		encryptPassphrasePrecomp(key: string, salt: string): Promise<EVault>;
 	}
 	/** Use `InstanceType<typeof Vault>` to use this as a type in TS. */
 	const Vault: MVault;
 
 	/** Represents an encrypted vault. */
 	interface MEVault extends FFI<EVault>, IEVault {
-		/** Decrypts a vault using a given passphrase. */
-		async decryptPassphrase(pass: string): Promise<Vault>;
+		/** ASYNC: Decrypts a vault using a given passphrase. */
+		decryptPassphrase(pass: string): Promise<Vault>;
 	}
 	/** Use `InstanceType<typeof EVault>` to use this as a type in TS. */
 	const EVault: MEVault;
 }
 
 //This empty export is necessary to make this a module
-export { };
+export {};

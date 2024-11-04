@@ -3,12 +3,14 @@
 package jsbind
 
 import (
+	"encoding/base64"
 	"strings"
 	"syscall/js"
 	"time"
 
 	"wraith.me/vaultlib/ffi"
 	"wraith.me/vaultlib/jsutil"
+	"wraith.me/vaultlib/vaultlib/crypto"
 	"wraith.me/vaultlib/vaultlib/keystore"
 	"wraith.me/vaultlib/vaultlib/util"
 	"wraith.me/vaultlib/vaultlib/vault"
@@ -24,6 +26,7 @@ func ExportVault() {
 		ffi.NewFactory("newBlank", vault_newBlank),
 	).WithMethods(nil,
 		ffi.NewMethod("encryptPassphrase", vault_ecrypt_pass),
+		ffi.FWrapper[vault.Vault](ffi.NewMethod("encryptPassphrasePrecomp", vault_ecrypt_pass_precomp)),
 		ffi.NewMethod("hashcode", vault_hashcode),
 	//ffi.NewMethod("sign", ks_sign),
 	//ffi.NewMethod("verify", ks_verify),
@@ -71,7 +74,7 @@ func vault_newBlank(_ []js.Value) (*vault.Vault, error) {
 
 // async encryptPassphrase(pass: string): Promise<EVault>
 func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value, error) {
-	//Get the password from the arguments
+	//Get the passphrase from the arguments
 	pass := args[0].String()
 
 	//Setup the promise action to run
@@ -80,6 +83,42 @@ func vault_ecrypt_pass(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value,
 		if err != nil {
 			return jsutil.Nil, err
 		}
+		evjson, err := ev.JSON()
+		if err != nil {
+			return jsutil.Nil, err
+		}
+		return jsutil.Parse(evjson), nil
+	}
+
+	//Construct and return the promise
+	return jsutil.Promise(fun), nil
+}
+
+// async encryptPassphrasePrecomp(key: string, salt: string): Promise<EVault>
+func vault_ecrypt_pass_precomp(obj *vault.Vault, _ js.Value, args []js.Value) (js.Value, error) {
+	//Get the key and salt from the arguments
+	keyStr := args[0].String()
+	saltStr := args[1].String()
+
+	//Setup the promise action to run
+	fun := func() (js.Value, error) {
+		//Derive a crypto key and salt from the arguments
+		key, err := crypto.ParsePrivseedBytes(keyStr)
+		if err != nil {
+			return jsutil.Nil, err
+		}
+		salt, err := base64.StdEncoding.DecodeString(saltStr)
+		if err != nil {
+			return jsutil.Nil, err
+		}
+
+		//Encrypt the vault
+		ev, err := obj.EncryptPassphrasePrecomp(key, salt)
+		if err != nil {
+			return jsutil.Nil, err
+		}
+
+		//Return the encrypted vault as JSON
 		evjson, err := ev.JSON()
 		if err != nil {
 			return jsutil.Nil, err

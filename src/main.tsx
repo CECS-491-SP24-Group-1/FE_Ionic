@@ -81,7 +81,10 @@ export function Root() {
 
 			//Load the encrypted vault into the Zustand store
 			if (hasEVault.current) {
-				populateEVault();
+				console.log("has evault!!!");
+				if (!populateEVault()) {
+					console.error("Failed to populate the encrypted vault into Zustand.Re-encryption will not succeed!")
+				}
 			}
 
 			//Vault check

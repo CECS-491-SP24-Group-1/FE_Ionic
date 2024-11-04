@@ -115,6 +115,7 @@ const useVaultStore = create<VaultStore>((set: any, get: any) => {
 
 				//Update the evault state
 				updateEVaultState(loadedEVault);
+				console.log(loadedEVault.toString())
 
 				return true;
 			} catch (e: any) {
