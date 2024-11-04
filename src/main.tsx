@@ -83,7 +83,9 @@ export function Root() {
 			if (hasEVault.current) {
 				console.log("has evault!!!");
 				if (!populateEVault()) {
-					console.error("Failed to populate the encrypted vault into Zustand.Re-encryption will not succeed!")
+					console.error(
+						"Failed to populate the encrypted vault into Zustand.Re-encryption will not succeed!"
+					);
 				}
 			}
 

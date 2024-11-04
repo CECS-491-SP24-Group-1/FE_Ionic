@@ -12,7 +12,7 @@ declare global {
 	/** Represents a keystore, which contains a public and private Ed25519 key. */
 	interface MKeyStore extends FFI<KeyStore>, IKeyStore {
 		/** Creates a new keystore object. */
-		new(): MKeyStore;
+		new (): MKeyStore;
 
 		/** Signs a given message with the private key of the keystore. */
 		sign(message: string): string; //TODO: make this async
@@ -26,7 +26,7 @@ declare global {
 	/** Represents a vault, which contains a keystore, conversations, sessions, etc. */
 	interface MVault extends FFI<Vault>, IVault<KeyStore> {
 		/** Creates a new vault object. */
-		new(subject: string, devIdent: string): MVault;
+		new (subject: string, devIdent: string): MVault;
 
 		/** Creates a new vault object out of an existing keystore. */
 		fromKS(ks: KeyStore): MVault;
@@ -56,4 +56,4 @@ declare global {
 }
 
 //This empty export is necessary to make this a module
-export { };
+export {};
