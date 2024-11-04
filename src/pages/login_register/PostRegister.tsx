@@ -62,7 +62,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	};
 
 	//Encrypts the vault
-	const handleEncrypt = () => {
+	const handleEncrypt = async () => {
 		//Prevent encryptions with blank passphrases
 		if (!passphrase) {
 			toast.error("Please enter a passphrase to encrypt the vault with.");
@@ -79,7 +79,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 		}
 
 		//Encrypt the vault and store it in localstorage
-		const ev: typeof EVault = EVault.fromJSObject(vault.encryptPassphrase(passphrase));
+		const ev: typeof EVault = EVault.fromJSObject(await vault.encryptPassphrase(passphrase));
 		setEVault(ev);
 
 		//Set the vault in the Zustand store
