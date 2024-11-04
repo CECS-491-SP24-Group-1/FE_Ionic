@@ -194,7 +194,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	};
 
 	//Handles vault decryption
-	const handleDecrypt = () => {
+	const handleDecrypt = async () => {
 		//Prevent decryptions with blank passphrases
 		if (disablePassphraseInput.current) return;
 		if (!passphrase) {
@@ -207,7 +207,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		disablePassphraseInput.current = true;
 		try {
 			//Decrypt the vault
-			const decrypted = Vault.fromJSObject(evault.decryptPassphrase(passphrase));
+			const decrypted = Vault.fromJSObject(await evault.decryptPassphrase(passphrase));
 			disablePassphraseInput.current = false;
 
 			//Store the vault in the vault store

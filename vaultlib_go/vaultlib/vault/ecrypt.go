@@ -68,12 +68,20 @@ func (ev EVault) DecryptPassphrase(passphrase string) (*Vault, error) {
 	return ev.decrypt(*key)
 }
 
-//May not be necessary
 /*
-func (ev EVault) DecryptPassphraseDetached(passphrase, salt string) (*Vault, error) {
-
-}
+Decrypts a vault using the passphrase method. This function takes in a
+pre-computed Argon2id symmetric key. The salt is not needed for this
+operation.
 */
+func (ev EVault) DecryptPassphrasePrecomp(key crypto.Privseed) (*Vault, error) {
+	//Ensure the security type is valid before proceeding
+	if err := assertCorrectMethod(ev.SecType, sectype.SecTypePASSPHRASE); err != nil {
+		return nil, err
+	}
+
+	//Decrypt the vault
+	return ev.decrypt(key)
+}
 
 /*
 Encrypts a vault using the passphrase method. This function supplies its

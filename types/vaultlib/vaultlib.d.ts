@@ -12,7 +12,7 @@ declare global {
 	/** Represents a keystore, which contains a public and private Ed25519 key. */
 	interface MKeyStore extends FFI<KeyStore>, IKeyStore {
 		/** Creates a new keystore object. */
-		new (): MKeyStore;
+		new(): MKeyStore;
 
 		/** Signs a given message with the private key of the keystore. */
 		sign(message: string): string; //TODO: make this async
@@ -26,7 +26,7 @@ declare global {
 	/** Represents a vault, which contains a keystore, conversations, sessions, etc. */
 	interface MVault extends FFI<Vault>, IVault<KeyStore> {
 		/** Creates a new vault object. */
-		new (subject: string, devIdent: string): MVault;
+		new(subject: string, devIdent: string): MVault;
 
 		/** Creates a new vault object out of an existing keystore. */
 		fromKS(ks: KeyStore): MVault;
@@ -47,10 +47,13 @@ declare global {
 	interface MEVault extends FFI<EVault>, IEVault {
 		/** ASYNC: Decrypts a vault using a given passphrase. */
 		decryptPassphrase(pass: string): Promise<Vault>;
+
+		/** ASYNC: Decrypts a vault using a precomputed symmetric key had via a detached Argon2id run. The salt is not used for this operation. */
+		decryptPassphrasePrecomp(key: string): Promise<Vault>;
 	}
 	/** Use `InstanceType<typeof EVault>` to use this as a type in TS. */
 	const EVault: MEVault;
 }
 
 //This empty export is necessary to make this a module
-export {};
+export { };
