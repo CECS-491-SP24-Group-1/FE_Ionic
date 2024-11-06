@@ -155,6 +155,10 @@ const ChatsPage: React.FC = () => {
 		}
 	};
 
+	const handleExitChat = () => {
+		setSelectedChatId(null); // Deselect the chat
+	};
+
 	return (
 		<IonPage>
 			{isLoading ? (
@@ -179,6 +183,7 @@ const ChatsPage: React.FC = () => {
 										<ChatHeader
 											selectedChatId={selectedChatId}
 											membersOnline={membersOnline}
+											onExitChat={handleExitChat}
 										/>
 									</div>
 
