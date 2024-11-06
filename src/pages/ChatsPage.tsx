@@ -170,6 +170,9 @@ const ChatsPage: React.FC = () => {
 				throw new Error("Failed to leave the room");
 			}
 
+			// Remove the room from Zustand store after a successful API call
+			useRoomStore.getState().removeRoom(chatId);
+
 			// Update UI upon successful room leave
 			setSelectedChatId(null);
 			alert("Successfully left the room");
