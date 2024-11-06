@@ -159,6 +159,26 @@ const ChatsPage: React.FC = () => {
 		setSelectedChatId(null); // Deselect the chat
 	};
 
+	const handleLeaveRoom = async (chatId: string) => {
+		try {
+			const response = await fetch(`${api}/chat/room/${chatId}/leave`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				}
+			});
+			if (!response.ok) {
+				throw new Error("Failed to leave the room");
+			}
+			// Handle UI update, e.g., refresh the chat list or deselect the chat
+			setSelectedChatId(null);
+			alert("Successfully left the room");
+		} catch (error) {
+			console.error(error);
+			alert("An error occurred while trying to leave the room");
+		}
+	};
+
 	return (
 		<IonPage>
 			{isLoading ? (
@@ -173,6 +193,7 @@ const ChatsPage: React.FC = () => {
 								rooms={rooms}
 								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
 								onChatSelect={handleChatSelect}
+								onLeaveRoom={handleLeaveRoom}
 							/>{" "}
 						</div>
 

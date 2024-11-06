@@ -1,21 +1,46 @@
 import React, { useState } from "react";
-import { IonList, IonItem, IonAvatar, IonLabel, IonBadge } from "@ionic/react";
+import {
+	IonList,
+	IonItem,
+	IonAvatar,
+	IonLabel,
+	IonBadge,
+	IonButton,
+	IonIcon,
+	IonPopover
+} from "@ionic/react";
+import { ellipsisHorizontal } from "ionicons/icons";
 import ChatsHeader from "./ChatsHeader";
 import emptyFolderImage from "@assets/images/empty_folder.svg";
 import { RoomCS } from "@ptypes/roomcs";
 
 interface ChatListProps {
 	onChatSelect: (chatId: string) => void;
-	selectedChatId: string | null; // Added to know which chat is currently selected
-	rooms: Record<string, RoomCS>; // Pass the fetched rooms as a prop
+	selectedChatId: string | null;
+	rooms: Record<string, RoomCS>;
+	onLeaveRoom: (chatId: string) => void; // Add a new prop for handling leave room action
 }
 
-const ChatList: React.FC<ChatListProps> = ({ onChatSelect, selectedChatId, rooms }) => {
-	const [searchQuery, setSearchQuery] = useState(""); // State to store the search query
+const ChatList: React.FC<ChatListProps> = ({
+	onChatSelect,
+	selectedChatId,
+	rooms,
+	onLeaveRoom
+}) => {
+	const [searchQuery, setSearchQuery] = useState(""); // State for search query
+	const [popoverState, setPopoverState] = useState<{
+		open: boolean;
+		event: Event | undefined;
+		chatId: string | null;
+	}>({
+		open: false,
+		event: undefined,
+		chatId: null
+	});
 
 	// Filter rooms based on search query
-	const filteredRooms = Object.values(rooms).filter(
-		(room) => room.id.toLowerCase().includes(searchQuery.toLowerCase()) // Adjust this to filter based on room name or other properties if necessary
+	const filteredRooms = Object.values(rooms).filter((room) =>
+		room.id.toLowerCase().includes(searchQuery.toLowerCase())
 	);
 
 	const isEmpty = filteredRooms.length === 0;
@@ -39,7 +64,6 @@ const ChatList: React.FC<ChatListProps> = ({ onChatSelect, selectedChatId, rooms
 							button
 							key={room.id}
 							onClick={() => {
-								// Prevent clicking on the already selected chat
 								if (room.id !== selectedChatId) {
 									onChatSelect(room.id);
 								}
@@ -65,10 +89,36 @@ const ChatList: React.FC<ChatListProps> = ({ onChatSelect, selectedChatId, rooms
 										})
 									: "N/A"}
 							</IonBadge>
+							<IonButton
+								fill="clear"
+								slot="end"
+								onClick={(e) =>
+									setPopoverState({ open: true, event: e.nativeEvent, chatId: room.id })
+								}>
+								<IonIcon icon={ellipsisHorizontal} />
+							</IonButton>
 						</IonItem>
 					))
 				)}
 			</IonList>
+
+			<IonPopover
+				isOpen={popoverState.open}
+				event={popoverState.event}
+				onDidDismiss={() =>
+					setPopoverState({ open: false, event: undefined, chatId: null })
+				}>
+				<IonItem
+					button
+					onClick={() => {
+						if (popoverState.chatId) {
+							onLeaveRoom(popoverState.chatId);
+						}
+						setPopoverState({ open: false, event: undefined, chatId: null });
+					}}>
+					Leave Room
+				</IonItem>
+			</IonPopover>
 		</>
 	);
 };
