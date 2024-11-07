@@ -180,3 +180,4 @@ export function evaultInLS(): boolean {
 }
 
 export default useVaultStore;
+(window as any).useVaultStore = useVaultStore; //Exports the symbol to the global namespace (for console debugging) `const state = window.useVaultStore.getState();`
