@@ -42,6 +42,11 @@ const ChatsPage: React.FC = () => {
 
 	const { isLoading, error } = useRoomList(); // Use the custom hook
 
+	//Typing notif
+	const [isTyping, setIsTyping] = useState(false);
+	let typingTimeout: ReturnType<typeof setTimeout>;
+
+
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState<string>("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
@@ -71,6 +76,16 @@ const ChatsPage: React.FC = () => {
 					const delta = JSON.parse(msg.content) as MembershipChange;
 					setMembersOnline(delta.new);
 					console.log(`membership change: old ${delta.old}, new ${delta.new}`);
+					break;
+				}
+				// Handle typing event
+				case "UNKNOWN": {
+					// Parse the content to get typing status and user ID
+					const typingData = JSON.parse(msg.content);
+					const { isTyping, userId } = typingData;
+
+					// Update the typingUser in the Zustand store
+					useRoomStore.getState().updateTypingStatus(selectedChatId, isTyping ? userId : null);
 					break;
 				}
 
@@ -156,6 +171,38 @@ const ChatsPage: React.FC = () => {
 		}
 	};
 
+//TODO: merge conflict here
+/*
+	//Function to send typing status
+	const sendTypingStatus = (status: boolean) => {
+		if (ws && selectedChatId) {
+			ws.send(JSON.stringify({
+				type: "typing",
+				isTyping: status,
+				chatId: selectedChatId,
+				userId: myID
+			}));
+		}
+	};
+
+	// Handle input changes to detect typing
+	const handleTyping = () => {
+		if (!isTyping) {
+			setIsTyping(true);
+			sendTypingStatus(true); // Notify others the user started typing
+		}
+
+		// Clear the existing timeout
+		clearTimeout(typingTimeout);
+
+		// Set a new timeout to send 'stopped typing' after a delay
+		typingTimeout = setTimeout(() => {
+			setIsTyping(false);
+			sendTypingStatus(false); // Notify others the user stopped typing
+		}, 2000); // Stop typing notification after 2 seconds of inactivity
+   };
+*/
+  
 	const handleExitChat = () => {
 		setSelectedChatId(null); // Deselect the chat
 	};
@@ -227,6 +274,7 @@ const ChatsPage: React.FC = () => {
 													onIonChange={(e: CustomEvent) =>
 														setInputMessage(e.detail.value!)
 													}
+													onIonInput={handleTyping} // Detect typing
 													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
 												/>
 												<IonButton

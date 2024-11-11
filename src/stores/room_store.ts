@@ -10,6 +10,7 @@ interface RoomStore {
 	addMessageToRoom: (roomId: string, messageId: string, message: Message) => void;
 	updateLastMessage: (roomId: string, lastMessage: LastMessage) => void;
 	clearRoomMessages: (roomId: string) => void;
+	updateTypingStatus: (roomId: string, userId: string | null) => void;
 	removeRoom: (roomId: string) => void;
 }
 
@@ -107,6 +108,26 @@ export const useRoomStore = create<RoomStore>((set) => ({
 				}
 			};
 		}),
+
+	updateTypingStatus: (roomId: string, userId: string | null) =>
+		set((state) => {
+			const room = state.rooms[roomId];
+			if (!room) {
+				console.error(`Room with ID ${roomId} not found.`);
+				return state;
+			}
+
+			const updatedRoom = {
+				...room,
+				typingUser: userId // Update the typingUser field with the current typing user ID or null
+			};
+
+			return {
+				rooms: {
+					...state.rooms,
+					[roomId]: updatedRoom
+				}
+       };
 
 	removeRoom: (roomId: string) =>
 		set((state) => {
