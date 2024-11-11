@@ -15,7 +15,7 @@ import {
 	IonMenuToggle
 } from "@ionic/react";
 import { close } from "ionicons/icons";
-import { chatList } from "../../../data/ChatListData";
+import { chatList } from "../../../data/ChatListData"; //TODO: replace with actual data
 
 interface ChatMenuProps {
 	selectedChatId: string | null;

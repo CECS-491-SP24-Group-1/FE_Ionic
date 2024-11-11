@@ -3,14 +3,11 @@ import { IKeyStore } from "./keystore";
 import { IEVault, IVault } from "./vault";
 
 declare global {
-	/*
+	//Generic functions/constants
 	export namespace vaultlib {
-		const HKDF_SALT: string;
-		function HKDF(password: string): string;
-		// Add any other functions exported by your WASM module here
-		// For example:
-		// function someOtherFunction(arg: number): boolean;
-	}*/
+		async function argon2id(passphrase: string, salt: string): Promise<string>;
+		function argonSalt(): string;
+	}
 
 	/** Represents a keystore, which contains a public and private Ed25519 key. */
 	interface MKeyStore extends FFI<KeyStore>, IKeyStore {
@@ -18,10 +15,10 @@ declare global {
 		new (): MKeyStore;
 
 		/** Signs a given message with the private key of the keystore. */
-		sign(message: string): string;
+		sign(message: string): string; //TODO: make this async
 
 		/** Verifies that a given message and signature were signed by this keystore's private key. */
-		verify(message: string, signature: string): boolean;
+		verify(message: string, signature: string): boolean; //TODO: make this async
 	}
 	/** Use `InstanceType<typeof KeyStore>` to use this as a type in TS. */
 	const KeyStore: MKeyStore;
@@ -37,16 +34,22 @@ declare global {
 		/** Creates a new blank vault object. */
 		newBlank(): MVault;
 
-		/** Encrypts a vault using a given passphrase. */
-		encryptPassphrase(pass: string): EVault;
+		/** ASYNC: Encrypts a vault using a given passphrase. */
+		encryptPassphrase(pass: string): Promise<EVault>;
+
+		/** ASYNC: Encrypts a vault using a precomputed symmetric key and salt had via a detached Argon2id run. */
+		encryptPassphrasePrecomp(key: string, salt: string): Promise<EVault>;
 	}
 	/** Use `InstanceType<typeof Vault>` to use this as a type in TS. */
 	const Vault: MVault;
 
 	/** Represents an encrypted vault. */
 	interface MEVault extends FFI<EVault>, IEVault {
-		/** Decrypts a vault using a given passphrase. */
-		decryptPassphrase(pass: string): Vault;
+		/** ASYNC: Decrypts a vault using a given passphrase. */
+		decryptPassphrase(pass: string): Promise<Vault>;
+
+		/** ASYNC: Decrypts a vault using a precomputed symmetric key had via a detached Argon2id run. The salt is not used for this operation. */
+		decryptPassphrasePrecomp(key: string): Promise<Vault>;
 	}
 	/** Use `InstanceType<typeof EVault>` to use this as a type in TS. */
 	const EVault: MEVault;

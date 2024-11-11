@@ -3,15 +3,15 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 import { RoomCS } from "../../types/roomcs";
 import { Message, LastMessage } from "../../types/chat";
 
-// src/store/useRoomStore.ts
 interface RoomStore {
 	rooms: Record<string, RoomCS>;
 	addRoom: (room: RoomCS) => void;
-	addRooms: (rooms: RoomCS[]) => void; // New function to add multiple rooms
+	addRooms: (rooms: RoomCS[]) => void;
 	addMessageToRoom: (roomId: string, messageId: string, message: Message) => void;
 	updateLastMessage: (roomId: string, lastMessage: LastMessage) => void;
 	clearRoomMessages: (roomId: string) => void;
 	updateTypingStatus: (roomId: string, userId: string | null) => void;
+	removeRoom: (roomId: string) => void;
 }
 
 export const useRoomStore = create<RoomStore>((set) => ({
@@ -25,7 +25,6 @@ export const useRoomStore = create<RoomStore>((set) => ({
 			}
 		})),
 
-	// New action to add multiple rooms at once
 	addRooms: (rooms: RoomCS[]) =>
 		set((state) => {
 			const newRooms = rooms.reduce(
@@ -97,7 +96,6 @@ export const useRoomStore = create<RoomStore>((set) => ({
 				return state;
 			}
 
-			// Clear the messages in the room, but keep the room in the store
 			const updatedRoom = {
 				...room,
 				messages: {} // Clear the messages
@@ -110,6 +108,7 @@ export const useRoomStore = create<RoomStore>((set) => ({
 				}
 			};
 		}),
+
 	updateTypingStatus: (roomId: string, userId: string | null) =>
 		set((state) => {
 			const room = state.rooms[roomId];
@@ -128,6 +127,15 @@ export const useRoomStore = create<RoomStore>((set) => ({
 					...state.rooms,
 					[roomId]: updatedRoom
 				}
+       };
+
+	removeRoom: (roomId: string) =>
+		set((state) => {
+			const updatedRooms = { ...state.rooms };
+			delete updatedRooms[roomId];
+
+			return {
+				rooms: updatedRooms
 			};
 		})
 }));

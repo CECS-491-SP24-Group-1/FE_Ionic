@@ -16,11 +16,17 @@ export interface IEVault {
 //////////
 // source: vault.go
 
+export interface Room {
+	room_id: string;
+	members: string[];
+	messages: string[];
+}
 export interface IVault<T extends any> {
 	id: string;
 	subject: string;
 	last_mod: string;
 	dev_ident: string;
 	note: string;
+	rooms: { [key: string]: Room };
 	kstore: T;
 }

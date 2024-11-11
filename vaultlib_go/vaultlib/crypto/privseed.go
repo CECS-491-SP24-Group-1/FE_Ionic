@@ -1,4 +1,4 @@
-// --|==== This file is sourced from '../../SMS/message_server/crypto/privseed.go'; DO NOT EDIT ====|--
+// --|==== This file is sourced from '../../SMS/message_server/pkg/crypto/privseed.go'; DO NOT EDIT ====|--
 
 package crypto
 

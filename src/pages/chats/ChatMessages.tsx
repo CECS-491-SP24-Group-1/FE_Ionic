@@ -15,7 +15,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
 
 	//Vault state
 	const { myID } = useVaultStore((state) => ({
-		myID: state.myID,
+		myID: state.myID
 	}));
 
 	// Scroll to the bottom of the messages container when the messages change,

@@ -15,6 +15,7 @@ import { send, attach, mic, camera } from "ionicons/icons";
 import logo from "@assets/images/glock_primary.svg";
 import ChatList from "./chats/ChatList/ChatList";
 import ChatMessages from "./chats/ChatMessages";
+import taxios from "@/util/token_refresh_hook";
 import ChatHeader from "./chats/ChatHeader";
 import ChatMenu from "./chats/Menu/ChatMenu";
 import Camera from "@/pages/Camera";
@@ -37,7 +38,7 @@ const ChatsPage: React.FC = () => {
 		clearRoomMessages: state.clearRoomMessages,
 		rooms: state.rooms
 	}));
-	const [membersOnline, setMembersOnline] = useState<number>(0)
+	const [membersOnline, setMembersOnline] = useState<number>(0);
 
 	const { isLoading, error } = useRoomList(); // Use the custom hook
 
@@ -170,6 +171,8 @@ const ChatsPage: React.FC = () => {
 		}
 	};
 
+//TODO: merge conflict here
+/*
 	//Function to send typing status
 	const sendTypingStatus = (status: boolean) => {
 		if (ws && selectedChatId) {
@@ -197,6 +200,34 @@ const ChatsPage: React.FC = () => {
 			setIsTyping(false);
 			sendTypingStatus(false); // Notify others the user stopped typing
 		}, 2000); // Stop typing notification after 2 seconds of inactivity
+   };
+*/
+  
+	const handleExitChat = () => {
+		setSelectedChatId(null); // Deselect the chat
+	};
+
+	const handleLeaveRoom = async (chatId: string) => {
+		try {
+			const response = await taxios.post(`${api}/chat/room/${chatId}/leave`);
+
+			if (response.status !== 200) {
+				// Log the error response for more context
+				console.error(`Error leaving room: ${response.status} - ${response.data}`);
+				throw new Error("Failed to leave the room");
+			}
+
+			// Remove the room from Zustand store after a successful API call
+			useRoomStore.getState().removeRoom(chatId);
+
+			// Update UI upon successful room leave
+			setSelectedChatId(null);
+			alert("Successfully left the room");
+		} catch (error) {
+			// Catch and log any errors that occurred during the fetch
+			console.error("An error occurred while trying to leave the room:", error);
+			alert("An error occurred while trying to leave the room");
+		}
 	};
 
 	return (
@@ -213,6 +244,7 @@ const ChatsPage: React.FC = () => {
 								rooms={rooms}
 								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
 								onChatSelect={handleChatSelect}
+								onLeaveRoom={handleLeaveRoom}
 							/>{" "}
 						</div>
 
@@ -220,7 +252,11 @@ const ChatsPage: React.FC = () => {
 							{selectedChatId !== null ? (
 								<>
 									<div className="chat-header">
-										<ChatHeader selectedChatId={selectedChatId} membersOnline={membersOnline} />
+										<ChatHeader
+											selectedChatId={selectedChatId}
+											membersOnline={membersOnline}
+											onExitChat={handleExitChat}
+										/>
 									</div>
 
 									<div className="chat-messages">

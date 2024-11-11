@@ -11,7 +11,10 @@ require (
 	golang.org/x/crypto v0.27.0
 )
 
-require github.com/jonhteper/wasm v0.0.0-20201211011055-0e115c3b3eb9 // indirect
+require (
+	github.com/jonhteper/wasm v0.0.0-20201211011055-0e115c3b3eb9 // indirect
+	github.com/nlepage/go-js-promise v1.1.0 // indirect
+)
 
 // indirect
 require golang.org/x/sys v0.25.0 // indirect

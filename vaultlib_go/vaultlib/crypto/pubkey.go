@@ -1,20 +1,14 @@
-// --|==== This file is sourced from '../../SMS/message_server/crypto/pubkey.go'; DO NOT EDIT ====|--
+// --|==== This file is sourced from '../../SMS/message_server/pkg/crypto/pubkey.go'; DO NOT EDIT ====|--
 
 package crypto
 
 import (
-	"crypto/ed25519"
 	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-)
-
-const (
-	//The size of a public key in bytes.
-	PUBKEY_SIZE = ed25519.PublicKeySize
 )
 
 //

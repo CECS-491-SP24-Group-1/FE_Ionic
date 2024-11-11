@@ -15,10 +15,29 @@ var PackageName = "vaultlib"
 // Defines the expected structure of an exportable JS bridge function.
 type Func func(this js.Value, args []js.Value) any
 
+// Contains a function to export and its name.
+type F struct {
+	N string
+	V Func
+}
+
 // Contains a value to export and its name.
 type V struct {
 	N string
 	V interface{}
+}
+
+/*
+Defines a union type that allows acceptance of either plain JS functions
+or ones with an associated name.
+*/
+type funcLike interface {
+	func(this js.Value, args []js.Value) any | F
+}
+
+// Creates a new "F" wrapper for a function and its name.
+func NF(n string, v Func) F {
+	return F{N: n, V: v}
 }
 
 // Creates a new "V" wrapper for a variable and its name.
@@ -26,8 +45,17 @@ func NV(n string, v interface{}) V {
 	return V{N: n, V: v}
 }
 
-// Utility function to export Go functions to JS.
+// Utility function to export unnamed Go functions to JS.
 func ExportF(namespace string, targets ...Func) {
+	funcs := make([]F, len(targets))
+	for i, fun := range targets {
+		funcs[i] = NF(io.GetFunctionName(fun), fun)
+	}
+	ExportFN(namespace, funcs...)
+}
+
+// Utility function to export named Go functions to JS.
+func ExportFN(namespace string, targets ...F) {
 	//Get the namespace to export to
 	if namespace == "" {
 		namespace = PackageName
@@ -36,7 +64,11 @@ func ExportF(namespace string, targets ...Func) {
 
 	//Loop over the functions to export
 	for _, target := range targets {
-		ns.Set(io.GetFunctionName(target), js.FuncOf(target))
+		f := target.V
+		fname := target.N
+
+		//Export the function
+		ns.Set(fname, js.FuncOf(f))
 	}
 }
 

@@ -10,17 +10,28 @@ import (
 )
 
 /*
+Represents a chat room that holds the room id, members, and messages if a recipient user is offline.
+This struct will be used when storing chat rooms in a user's vault.
+*/
+type Room struct {
+	RoomID   util.UUID   `json:"room_id"`
+	Members  []util.UUID `json:"members"`
+	Messages []util.UUID `json:"messages"` // Only stores messages when a recipient user is offline.
+}
+
+/*
 Represents a vault that holds a user's messages and cryptographic keys. This
 struct serves as a model for a vault that is decrypted and available for use.
 When not in use, objects of this struct should be encrypted to produce an
 `EVault` object.
 */
 type Vault struct {
-	ID       util.UUID `json:"id"`        //The ID of this vault object.
-	Subject  util.UUID `json:"subject"`   //The ID of the user to whom this vault belongs.
-	LastMod  time.Time `json:"last_mod"`  //The at which this vault was last changed.
-	DevIdent string    `json:"dev_ident"` //The user agent of the user that created this vault.
-	Note     string    `json:"note"`      //An optional note about the contents of the vault.
+	ID       util.UUID          `json:"id"`        //The ID of this vault object.
+	Subject  util.UUID          `json:"subject"`   //The ID of the user to whom this vault belongs.
+	LastMod  time.Time          `json:"last_mod"`  //The at which this vault was last changed.
+	DevIdent string             `json:"dev_ident"` //The user agent of the user that created this vault.
+	Note     string             `json:"note"`      //An optional note about the contents of the vault.
+	Rooms    map[util.UUID]Room `json:"rooms"`     //Maps room ID to room structs
 
 	KStore keystore.KeyStore `json:"kstore"` //Holds the user's public and private keys.
 	//MStore keystore.KeyStore `json:"mstore"` //Holds the user's conversations and associated states.
@@ -90,4 +101,14 @@ func (v Vault) String() string {
 		panic(err)
 	}
 	return js
+}
+
+// Adds a new room to the vault
+func (v *Vault) addRoom(roomID util.UUID, members []util.UUID, messages []util.UUID) {
+	v.Rooms[roomID] = Room{
+		RoomID:   roomID,
+		Members:  members,
+		Messages: messages,
+	}
+	v.LastMod = time.Now()
 }

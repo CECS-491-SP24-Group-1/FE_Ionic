@@ -45,11 +45,15 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	};
 
 	//Vault state
-	const { setVault, evault, setEVault } = useVaultStore((state) => ({
-		setVault: state.setVault,
-		evault: state.evault,
-		setEVault: state.setEVault
-	}));
+	const { setVault, evault, setEVault, setSalt, setEKey, setCanReencrypt } =
+		useVaultStore((state) => ({
+			setVault: state.setVault,
+			evault: state.evault,
+			setEVault: state.setEVault,
+			setSalt: state.setSalt,
+			setEKey: state.setEKey,
+			setCanReencrypt: state.setCanReencrypt
+		}));
 
 	//Handles form submissions
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -62,7 +66,7 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 	};
 
 	//Encrypts the vault
-	const handleEncrypt = () => {
+	const handleEncrypt = async () => {
 		//Prevent encryptions with blank passphrases
 		if (!passphrase) {
 			toast.error("Please enter a passphrase to encrypt the vault with.");
@@ -78,12 +82,25 @@ const PostRegister: React.FC<PostRegisterProps> = ({ vault, togglePage }) => {
 			return;
 		}
 
+		//Generate two salts: one to encrypt the vault and another for re-encryption
+		const saltNow = vaultlib.argonSalt();
+		const saltLater = vaultlib.argonSalt();
+
+		//Run Argon2id twice: once to decrypt the vault and again to get a re-encryption key
+		const keyNow = await vaultlib.argon2id(passphrase, saltNow);
+		const keyLater = await vaultlib.argon2id(passphrase, saltLater);
+
 		//Encrypt the vault and store it in localstorage
-		const ev: typeof EVault = EVault.fromJSObject(vault.encryptPassphrase(passphrase));
+		const ev = EVault.fromJSObject(await vault.encryptPassphrasePrecomp(keyNow, saltNow));
 		setEVault(ev);
 
 		//Set the vault in the Zustand store
 		setVault(vault);
+
+		//Store the re-encryption salt and key in Zustand for later
+		setSalt(saltLater);
+		setEKey(keyLater);
+		setCanReencrypt(true);
 
 		//Announce the successful encryption
 		toast.success("Vault was encrypted successfully!");

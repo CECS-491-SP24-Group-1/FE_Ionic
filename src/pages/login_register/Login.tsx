@@ -20,6 +20,7 @@ import { PKCRequest, PKCSignedRequest } from "@ptypes/request_types";
 import useVaultStore from "@/stores/vault_store";
 import useLoginGateStore from "@/stores/login_gate";
 import { addMiscCookies } from "@/util/manage_misc_cookies";
+import { es } from "@faker-js/faker/.";
 
 /** Holds the types of security that the vault is to be encrypted with. */
 enum VaultSecurityTypes {
@@ -57,16 +58,27 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const loadedVault = useRef<boolean>(false);
 
 	//Vault store
-	const { vault, setVault, vaultFromSS, evault, setEVault, evaultFromLS } = useVaultStore(
-		(state) => ({
-			vault: state.vault,
-			setVault: state.setVault,
-			vaultFromSS: state.vaultFromSS,
-			evault: state.evault,
-			setEVault: state.setEVault,
-			evaultFromLS: state.evaultFromLS
-		})
-	);
+	const {
+		vault,
+		setVault,
+		vaultFromSS,
+		evault,
+		setEVault,
+		evaultFromLS,
+		setSalt,
+		setEKey,
+		setCanReencrypt
+	} = useVaultStore((state) => ({
+		vault: state.vault,
+		setVault: state.setVault,
+		vaultFromSS: state.vaultFromSS,
+		evault: state.evault,
+		setEVault: state.setEVault,
+		evaultFromLS: state.evaultFromLS,
+		setSalt: state.setSalt,
+		setEKey: state.setEKey,
+		setCanReencrypt: state.setCanReencrypt
+	}));
 
 	//Misc state stuff
 	const [secType, setSecType] = useState<VaultSecurityTypes>(
@@ -121,22 +133,6 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			//Check if the encrypted vault is already loaded in memory
 			if (evault) return formEVault;
 
-			/*
-			//Try to deserialize the encrypted vault
-			if (!loadedEVault.current) {
-				try {
-					const loaded = EVault.fromLStore(LS_EVAULT_KEY);
-					setVaultState((prevState) => ({
-						...prevState,
-						evault: loaded
-					}));
-					toast.success("Successfully deserialized encrypted vault from localstorage.");
-					loadedEVault.current = true;
-					return formEVault;
-				} catch (e) { } //Fail silently
-			}
-			*/
-
 			//Try to deserialize the encrypted vault
 			if (!loadedEVault.current) {
 				if (evaultFromLS()) {
@@ -179,8 +175,9 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			const vaultContent: string = await readText(vaultState.vaultFile);
 			const loaded = EVault.fromGob64(vaultContent);
 
-			//Persist the encrypted vault to localstorage
-			loaded.toLStore(LS_EVAULT_KEY);
+			//Persist the encrypted vault to localstorage via Zustand
+			//loaded.toLStore(LS_EVAULT_KEY);
+			setEVault(loaded);
 
 			//Update the vault state
 			setVaultState((prevState) => ({
@@ -194,7 +191,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	};
 
 	//Handles vault decryption
-	const handleDecrypt = () => {
+	const handleDecrypt = async () => {
 		//Prevent decryptions with blank passphrases
 		if (disablePassphraseInput.current) return;
 		if (!passphrase) {
@@ -206,12 +203,25 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		if (!evault) return; //This shouldn't be hit
 		disablePassphraseInput.current = true;
 		try {
+			//Get the salt from the encrypted vault and a new one for re-encryption
+			const dsalt = evault.salt;
+			const esalt = vaultlib.argonSalt();
+
+			//Run Argon2id twice: once to decrypt the vault and again to get a re-encryption key
+			const dkey = await vaultlib.argon2id(passphrase, dsalt);
+			const ekey = await vaultlib.argon2id(passphrase, esalt);
+
 			//Decrypt the vault
-			const decrypted = Vault.fromJSObject(evault.decryptPassphrase(passphrase));
+			const decrypted = Vault.fromJSObject(await evault.decryptPassphrasePrecomp(dkey));
 			disablePassphraseInput.current = false;
+
+			//Store the re-encryption salt and key in Zustand for later
+			setSalt(esalt);
+			setEKey(ekey);
 
 			//Store the vault in the vault store
 			setVault(decrypted);
+			setCanReencrypt(true);
 
 			//Update the local state
 			setVaultState((prevState) => ({

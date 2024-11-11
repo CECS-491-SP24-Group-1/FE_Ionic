@@ -30,4 +30,14 @@ export interface Message {
 //////////
 // source: type.go
 
-export type Type = "UNKNOWN" | "U_MSG" | "S_MSG" | "S_ERR" | "JOIN_EVENT" | "QUIT_EVENT" | "MEMBERSHIP" | "EK" | "KEX1" | "KEX2";
+export type Type =
+	| "UNKNOWN"
+	| "U_MSG"
+	| "S_MSG"
+	| "S_ERR"
+	| "JOIN_EVENT"
+	| "QUIT_EVENT"
+	| "MEMBERSHIP"
+	| "EK"
+	| "KEX1"
+	| "KEX2";

@@ -1,4 +1,4 @@
-// --|==== This file is sourced from '../../SMS/message_server/util/uuid.go'; DO NOT EDIT ====|--
+// --|==== This file is sourced from '../../SMS/message_server/pkg/util/uuid.go'; DO NOT EDIT ====|--
 
 //Adapted from: https://gist.github.com/saniales/532774ca61a17980431890fbef9438ad
 
@@ -92,6 +92,22 @@ func NilUUID() UUID {
 	return UUID{[16]byte{}}
 }
 
+// Returns a UUID parsed from the input string.
+func ParseUUIDv7(input string) (UUID, error) {
+	//Parse the UUID
+	id, err := uuid.Parse(input)
+	if err != nil {
+		return NilUUID(), err
+	}
+
+	//Ensure its a version 7
+	if id.Version() != 7 {
+		return NilUUID(), fmt.Errorf("must be a UUIDv7; got version %d", id.Version())
+	}
+
+	return UUID{id}, nil
+}
+
 /*
 Returns a UUID parsed from the input string, or a nil UUID if the input
 string is not a valid UUID.
@@ -115,7 +131,7 @@ func (id UUID) Bytes() [16]byte {
 	return id.UUID
 }
 
-// Determines if a UUID is a nil uuid.
+// Determines if a UUID is a nil UUID.
 func (id UUID) IsNil() bool {
 	return id.Bytes() == [16]byte{}
 }
@@ -144,6 +160,12 @@ func (id *UUID) UnmarshalText(text []byte) error {
 // Outputs a UUID with no separation hyphens.
 func (id UUID) ShortString() string {
 	return strings.ReplaceAll(id.String(), "-", "")
+}
+
+// Returns the time contained in the UUID.
+func (id UUID) Time() time.Time {
+	uuid := uuid.UUID(id.Bytes())
+	return time.Unix(uuid.Time().UnixTime())
 }
 
 // Tests if a UUID is valid. This is shorthand for `uuid.Validate() == nil`.

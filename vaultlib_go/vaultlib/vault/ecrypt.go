@@ -58,32 +58,51 @@ func (ev EVault) DecryptPassphrase(passphrase string) (*Vault, error) {
 		return nil, fmt.Errorf("salt decode error: %s", err)
 	}
 
-	//Derive a symmetric key via Argon2id on the passphrase
-	keyb, err := crypto.Argon([]byte(passphrase), salt, crypto.PRIVKEY_SEED_SIZE)
+	//Get the symmetric key from the passphrase and salt
+	key, err := pass2key(passphrase, salt)
 	if err != nil {
 		return nil, err
 	}
-	key := crypto.Privseed(keyb[:crypto.PRIVKEY_SEED_SIZE])
+
+	//Decrypt the vault
+	return ev.decrypt(*key)
+}
+
+/*
+Decrypts a vault using the passphrase method. This function takes in a
+pre-computed Argon2id symmetric key. The salt is not needed for this
+operation.
+*/
+func (ev EVault) DecryptPassphrasePrecomp(key crypto.Privseed) (*Vault, error) {
+	//Ensure the security type is valid before proceeding
+	if err := assertCorrectMethod(ev.SecType, sectype.SecTypePASSPHRASE); err != nil {
+		return nil, err
+	}
 
 	//Decrypt the vault
 	return ev.decrypt(key)
 }
 
-// Encrypts a vault using the passphrase method.
+/*
+Encrypts a vault using the passphrase method. This function supplies its
+own salt for the keygen operation.
+*/
 func (v Vault) EncryptPassphrase(passphrase string) (*EVault, error) {
 	//Generate a salt for the passphrase; salt length is set to 16 bytes
-	salt := make([]byte, crypto.PRIVKEY_SEED_SIZE/2)
+	salt := make([]byte, crypto.ARGON_SALT_SIZE)
 	if _, err := rand.Read(salt); err != nil {
 		return nil, err
 	}
 
-	//Derive a symmetric key via Argon2id on the passphrase
-	keyb, err := crypto.Argon([]byte(passphrase), salt, crypto.PRIVKEY_SEED_SIZE)
-	if err != nil {
-		return nil, err
-	}
-	key := crypto.Privseed(keyb[:crypto.PRIVKEY_SEED_SIZE])
+	//Encrypt the vault
+	return v.EncryptPassphraseSalt(passphrase, salt)
+}
 
+/*
+Encrypts a vault using the passphrase method. This function takes in a
+pre-computed Argon2id symmetric key and salt provided by the user.
+*/
+func (v Vault) EncryptPassphrasePrecomp(key crypto.Privseed, salt []byte) (*EVault, error) {
 	//Encrypt the vault
 	ev, err := v.encrypt(key)
 	if err != nil {
@@ -94,6 +113,32 @@ func (v Vault) EncryptPassphrase(passphrase string) (*EVault, error) {
 	ev.SecType = sectype.SecTypePASSPHRASE
 	ev.Salt = base64.StdEncoding.EncodeToString(salt)
 	return ev, nil
+}
+
+/*
+Encrypts a vault using the passphrase method. This function takes in a
+salt provided by the user.
+*/
+func (v Vault) EncryptPassphraseSalt(passphrase string, salt []byte) (*EVault, error) {
+	//Get the symmetric key from the passphrase and salt
+	key, err := pass2key(passphrase, salt)
+	if err != nil {
+		return nil, err
+	}
+
+	//Encrypt the vault
+	return v.EncryptPassphrasePrecomp(*key, salt)
+}
+
+// Handles the keygen process for the passphrase crypt method.
+func pass2key(passphrase string, salt []byte) (*crypto.Privseed, error) {
+	//Derive a symmetric key via Argon2id on the passphrase
+	keyb, err := crypto.Argon([]byte(passphrase), salt, crypto.PRIVKEY_SEED_SIZE)
+	if err != nil {
+		return nil, err
+	}
+	key := crypto.Privseed(keyb[:crypto.PRIVKEY_SEED_SIZE])
+	return &key, nil
 }
 
 //

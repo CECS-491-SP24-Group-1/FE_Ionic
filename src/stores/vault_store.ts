@@ -1,5 +1,7 @@
 import { createWithEqualityFn as create } from "zustand/traditional";
 import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys";
+import Cookies from "js-cookie";
+import { setCookie } from "@/util/manage_misc_cookies";
 
 //TODO: move this elsewhere; separate concerns
 interface ChatRoom {
@@ -25,11 +27,13 @@ interface VaultStore {
 	setEVault: (ev: typeof EVault) => void;
 	evaultFromLS: () => boolean;
 
+	//Re-encryption support
 	salt: string;
 	setSalt: (salt: string) => void;
-
-	vaultEKey: string;
-	setVaultEKey: (key: string) => void;
+	ekey: string;
+	setEKey: (ekey: string) => void;
+	canReencrypt: boolean;
+	setCanReencrypt: (canReencrypt: boolean) => void;
 
 	// TEMP Map of UUIDs to ChatRoom objects
 	chatRooms: Record<string, ChatRoom>;
@@ -115,6 +119,7 @@ const useVaultStore = create<VaultStore>((set: any, get: any) => {
 
 				//Update the evault state
 				updateEVaultState(loadedEVault);
+				console.log(loadedEVault.toString());
 
 				return true;
 			} catch (e: any) {
@@ -125,11 +130,19 @@ const useVaultStore = create<VaultStore>((set: any, get: any) => {
 			}
 		},
 
-		salt: "",
-		setSalt: (salt: string) => set({ salt: salt }),
-
-		vaultEKey: "",
-		setVaultEKey: (key: string) => set({ vaultEKey: key }),
+		//Re-encryption support
+		canReencrypt: false,
+		salt: Cookies.get(import.meta.env.VITE_VSALT_COOKIE_NAME) ?? "",
+		setSalt: (salt: string) => {
+			setCookie(import.meta.env.VITE_VSALT_COOKIE_NAME, salt);
+			set({ salt: salt });
+		},
+		ekey: Cookies.get(import.meta.env.VITE_VEKEY_COOKIE_NAME) ?? "",
+		setEKey: (ekey: string) => {
+			setCookie(import.meta.env.VITE_VEKEY_COOKIE_NAME, ekey);
+			set({ ekey: ekey });
+		},
+		setCanReencrypt: (canReencrypt: boolean) => set({ canReencrypt: canReencrypt }),
 
 		// Initialize chatRooms as an empty map
 		chatRooms: {},
@@ -167,3 +180,4 @@ export function evaultInLS(): boolean {
 }
 
 export default useVaultStore;
+(window as any).useVaultStore = useVaultStore; //Exports the symbol to the global namespace (for console debugging) `const state = window.useVaultStore.getState();`

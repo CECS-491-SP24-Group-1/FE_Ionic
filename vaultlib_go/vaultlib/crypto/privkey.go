@@ -1,4 +1,4 @@
-// --|==== This file is sourced from '../../SMS/message_server/crypto/privkey.go'; DO NOT EDIT ====|--
+// --|==== This file is sourced from '../../SMS/message_server/pkg/crypto/privkey.go'; DO NOT EDIT ====|--
 
 package crypto
 
@@ -12,17 +12,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-)
-
-const (
-	//The size of a private key in bytes.
-	PRIVKEY_SIZE = ed25519.PrivateKeySize
-
-	//The size of a private key's seed portion in bytes.
-	PRIVKEY_SEED_SIZE = ed25519.SeedSize
-
-	//The size of a private key's public portion in bytes.
-	PRIVKEY_PUB_SIZE = ed25519.PublicKeySize
 )
 
 //

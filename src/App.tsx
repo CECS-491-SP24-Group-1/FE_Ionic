@@ -45,6 +45,8 @@ const App: React.FC = () => {
 	 * vault hash, open a modal that saves the new vault state and re-encrypts it. */
 	useEffect(() => {
 		//Invert Boolean!
+		console.log("vhash: ", vault?.hashcode());
+		console.log("evhash:", evault?.hash);
 		setHasVaultUnsavedChanges(vault?.hashcode() !== evault?.hash);
 	}, [vault, evault]);
 

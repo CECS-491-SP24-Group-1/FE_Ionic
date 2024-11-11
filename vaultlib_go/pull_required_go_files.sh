@@ -2,7 +2,7 @@
 ## This script pulls in dependencies from the serverside utils ##
 
 # Define constants
-BASE_SRC="../../SMS/message_server"
+BASE_SRC="../../SMS/message_server/pkg"
 BASE_DST="./vaultlib"
 
 # Copies a list of files and adds a header
@@ -23,7 +23,7 @@ copy_files() {
 }
 
 # Copy the crypto files
-crypto_files=("privkey.go" "privseed.go" "pubkey.go" "signature.go" "utils.go")
+crypto_files=("consts.go" "privkey.go" "privseed.go" "pubkey.go" "signature.go" "utils.go")
 copy_files "crypto" "${crypto_files[@]}"
 
 # Copy the util files
