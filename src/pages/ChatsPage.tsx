@@ -46,7 +46,6 @@ const ChatsPage: React.FC = () => {
 	const [isTyping, setIsTyping] = useState(false);
 	let typingTimeout: ReturnType<typeof setTimeout>;
 
-
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState<string>("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
@@ -85,7 +84,9 @@ const ChatsPage: React.FC = () => {
 					const { isTyping, userId } = typingData;
 
 					// Update the typingUser in the Zustand store
-					useRoomStore.getState().updateTypingStatus(selectedChatId, isTyping ? userId : null);
+					useRoomStore
+						.getState()
+						.updateTypingStatus(selectedChatId, isTyping ? userId : null);
 					break;
 				}
 
@@ -171,8 +172,8 @@ const ChatsPage: React.FC = () => {
 		}
 	};
 
-//TODO: merge conflict here
-/*
+	//TODO: merge conflict here
+	/*
 	//Function to send typing status
 	const sendTypingStatus = (status: boolean) => {
 		if (ws && selectedChatId) {
@@ -202,7 +203,7 @@ const ChatsPage: React.FC = () => {
 		}, 2000); // Stop typing notification after 2 seconds of inactivity
    };
 */
-  
+
 	const handleExitChat = () => {
 		setSelectedChatId(null); // Deselect the chat
 	};

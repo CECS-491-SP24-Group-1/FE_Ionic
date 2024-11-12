@@ -127,7 +127,8 @@ export const useRoomStore = create<RoomStore>((set) => ({
 					...state.rooms,
 					[roomId]: updatedRoom
 				}
-       };
+			};
+		}),
 
 	removeRoom: (roomId: string) =>
 		set((state) => {
