@@ -172,8 +172,6 @@ const ChatsPage: React.FC = () => {
 		}
 	};
 
-	//TODO: merge conflict here
-	/*
 	//Function to send typing status
 	const sendTypingStatus = (status: boolean) => {
 		if (ws && selectedChatId) {
@@ -201,8 +199,7 @@ const ChatsPage: React.FC = () => {
 			setIsTyping(false);
 			sendTypingStatus(false); // Notify others the user stopped typing
 		}, 2000); // Stop typing notification after 2 seconds of inactivity
-   };
-*/
+	};
 
 	const handleExitChat = () => {
 		setSelectedChatId(null); // Deselect the chat
