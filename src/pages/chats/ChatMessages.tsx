@@ -38,7 +38,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
 					key={msg.id}
 					className={`chat-bubble ${msg.sender_id === myID ? "from-me" : "from-them"}`}>
 					<p>{msg.content}</p>
-					<span>{uuidv72Date(msg.id).toLocaleTimeString()}</span>
+					{ /* <span>{uuidv72Date(msg.id).toLocaleTimeString()}</span> */}
+					<span>msg</span>
 				</div>
 			))}
 			{/* Dummy div to ensure scroll to bottom */}

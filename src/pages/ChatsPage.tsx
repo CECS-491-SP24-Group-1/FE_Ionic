@@ -77,6 +77,8 @@ const ChatsPage: React.FC = () => {
 					console.log(`membership change: old ${delta.old}, new ${delta.new}`);
 					break;
 				}
+
+				/*
 				// Handle typing event
 				case "UNKNOWN": {
 					// Parse the content to get typing status and user ID
@@ -89,6 +91,7 @@ const ChatsPage: React.FC = () => {
 						.updateTypingStatus(selectedChatId, isTyping ? userId : null);
 					break;
 				}
+				*/
 
 				//Default handler
 				default: {
@@ -161,6 +164,7 @@ const ChatsPage: React.FC = () => {
 	};
 
 	// Function to handle key down for the input
+	//TODO: handle typing events here
 	const handleKeyDown = (event: React.KeyboardEvent) => {
 		const inputElement = event.target as HTMLIonInputElement;
 		const message = inputElement.value?.toString().trim();
@@ -184,7 +188,9 @@ const ChatsPage: React.FC = () => {
 		}
 	};
 
+	//TODO: this could be done better
 	// Handle input changes to detect typing
+	/*
 	const handleTyping = () => {
 		if (!isTyping) {
 			setIsTyping(true);
@@ -200,6 +206,7 @@ const ChatsPage: React.FC = () => {
 			sendTypingStatus(false); // Notify others the user stopped typing
 		}, 2000); // Stop typing notification after 2 seconds of inactivity
 	};
+	*/
 
 	const handleExitChat = () => {
 		setSelectedChatId(null); // Deselect the chat
@@ -272,7 +279,7 @@ const ChatsPage: React.FC = () => {
 													onIonChange={(e: CustomEvent) =>
 														setInputMessage(e.detail.value!)
 													}
-													onIonInput={handleTyping} // Detect typing
+													//onIonInput={handleTyping} // Detect typing
 													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
 												/>
 												<IonButton
