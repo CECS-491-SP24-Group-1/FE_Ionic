@@ -6,9 +6,12 @@ const SettingsHeader: React.FC = () => {
 	const [activeTab, setActiveTab] = useState("personalInfo");
 
 	const tabs = [
-		{ id: "menteeProfile", label: "Mentee Profile" },
-		{ id: "personalInfo", label: "Personal Info" },
-		{ id: "loginSecurity", label: "Login & Security" }
+		{ id: "account", label: "Account" },
+		{ id: "notifications", label: "Notifications" },
+		{ id: "appearance", label: "Appearance" },
+		{ id: "privacySecurity", label: "Privacy & Security" },
+		{ id: "contactUs", label: "Contact Us" },
+		{ id: "support", label: "Support" }
 	];
 
 	return (
@@ -22,7 +25,7 @@ const SettingsHeader: React.FC = () => {
 					<button
 						key={tab.id}
 						onClick={() => setActiveTab(tab.id)}
-						className={`text-gray-600 font-medium ${
+						className={`bg-transparent text-gray-300 font-medium ${
 							activeTab === tab.id
 								? "text-blue-600 border-b-2 border-blue-600"
 								: "hover:text-blue-600"
