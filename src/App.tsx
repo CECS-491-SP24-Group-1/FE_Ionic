@@ -22,7 +22,7 @@ import useVaultStore from "./stores/vault_store";
 // TODO: suffix other pages name to match ChatsPage
 import Home from "./pages/Home";
 import CameraPage from "./pages/Camera";
-import Settings from "./pages/Settings";
+import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import ChatsPage from "./pages/ChatsPage";
 import LandingPage from "./pages/LandingPage";
 import "./App.scss";
@@ -85,7 +85,7 @@ const App: React.FC = () => {
 							<Route path="/home" component={Home} exact={true} />
 							{/* <Route path="/login" component={LRPage} exact={true} /> */}
 							<Route path="/camera" component={CameraPage} exact={true} />
-							<Route path="/settings" component={Settings} exact={true} />
+							<Route path="/settings" component={SettingsPage} exact={true} />
 							<Route path="/chat" component={ChatsPage} exact={true} />
 							<Route path="/LandingPage" component={LandingPage} exact={true} />
 							{/* <Route path="/PostRegister" component={PostRegister} exact={true} /> */}
