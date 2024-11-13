@@ -10,6 +10,21 @@ export interface Auth {
 export interface LoginReq {
 	token: string;
 }
+export interface Session {
+	id: string;
+	is_current: boolean;
+	created: string;
+	expires: string;
+	ip: string;
+	string: string;
+}
+export interface AccessSession {
+	id: string;
+	created: string;
+	expires: string;
+	parent: Session;
+}
+export type SessionsList = { [key: string]: Session};
 
 //////////
 // source: registered_user.go
