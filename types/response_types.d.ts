@@ -20,3 +20,13 @@ export interface RegisteredUser {
 	redacted_email: string;
 	pk_fingerprint: string;
 }
+
+//////////
+// source: userinfo.go
+
+export interface UInfo {
+	id: string;
+	pubkey: string;
+	username: string;
+	display_name: string;
+}
