@@ -1,12 +1,10 @@
-/**
- * I took the chatInput fragment from here and moved it over to the
- * main Chats.tsx page. The separate file was not as easy for me to comprehend
- * when working on the echo websocketing. I left this file here in case we want
- * to go back to using it this way. -Michael K.
- */
 import React, { useState } from "react";
-import { IonInput, IonButton, IonIcon, IonToolbar, IonFooter } from "@ionic/react";
-import { send, attach, mic } from "ionicons/icons";
+import { IconButton, TextField, Toolbar } from "@mui/material";
+import {
+	Send as SendIcon,
+	AttachFile as AttachIcon,
+	Mic as MicIcon
+} from "@mui/icons-material";
 
 interface ChatInputProps {
 	onSendMessage: (message: string) => void;
@@ -23,24 +21,30 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
 	};
 
 	return (
-		<IonFooter className="chat-input">
-			<IonToolbar>
-				<IonInput
+		<div className="fixed bottom-0 w-full bg-white dark:bg-gray-800">
+			<Toolbar className="flex items-center px-4 py-2">
+				<TextField
 					value={message}
+					onChange={(e) => setMessage(e.target.value)}
 					placeholder="Write a message..."
-					onIonChange={(e: CustomEvent) => setMessage(e.detail.value!)}
+					variant="outlined"
+					fullWidth
+					className="mr-4"
+					InputProps={{
+						className: "text-gray-700 dark:text-gray-200"
+					}}
 				/>
-				<IonButton onClick={handleSendMessage} slot="end" fill="clear">
-					<IonIcon icon={send} />
-				</IonButton>
-				<IonButton slot="end" fill="clear">
-					<IonIcon icon={mic} />
-				</IonButton>
-				<IonButton slot="end" fill="clear">
-					<IonIcon icon={attach} />
-				</IonButton>
-			</IonToolbar>
-		</IonFooter>
+				<IconButton onClick={handleSendMessage} color="primary">
+					<SendIcon />
+				</IconButton>
+				<IconButton color="default">
+					<MicIcon />
+				</IconButton>
+				<IconButton color="default">
+					<AttachIcon />
+				</IconButton>
+			</Toolbar>
+		</div>
 	);
 };
 

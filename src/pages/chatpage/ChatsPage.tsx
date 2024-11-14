@@ -33,8 +33,7 @@ import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
 import { LastMessage, MembershipChange } from "types/chat";
 import { newChat } from "@/util/chat";
-import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
-import "./Chats.scss";
+import { useRoomList } from "@/hooks/useRoomList";
 import { Message } from "@ptypes/chat";
 
 const ChatsPage: React.FC = () => {
