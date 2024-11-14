@@ -13,15 +13,15 @@ import {
 } from "@ionic/react";
 import { send, attach, mic, camera } from "ionicons/icons";
 import logo from "@assets/images/glock_primary.svg";
-import ChatList from "./chats/ChatList/ChatList";
-import ChatMessages from "./chats/ChatMessages";
+import ChatList from "./ChatList/ChatList";
+import ChatMessages from "./ChatMessages";
 import taxios from "@/util/token_refresh_hook";
-import ChatHeader from "./chats/ChatHeader";
-import ChatMenu from "./chats/Menu/ChatMenu";
+import ChatHeader from "./ChatHeader";
+import ChatMenu from "./Menu/ChatMenu";
 import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
-import { LastMessage, MembershipChange } from "../../types/chat";
+import { LastMessage, MembershipChange } from "types/chat";
 import { newChat } from "@/util/chat";
 import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
 import "./Chats.scss";
@@ -179,12 +179,14 @@ const ChatsPage: React.FC = () => {
 	//Function to send typing status
 	const sendTypingStatus = (status: boolean) => {
 		if (ws && selectedChatId) {
-			ws.send(JSON.stringify({
-				type: "typing",
-				isTyping: status,
-				chatId: selectedChatId,
-				userId: myID
-			}));
+			ws.send(
+				JSON.stringify({
+					type: "typing",
+					isTyping: status,
+					chatId: selectedChatId,
+					userId: myID
+				})
+			);
 		}
 	};
 

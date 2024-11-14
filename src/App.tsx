@@ -22,8 +22,8 @@ import useVaultStore from "./stores/vault_store";
 // TODO: suffix other pages name to match ChatsPage
 import Home from "./pages/Home";
 import CameraPage from "./pages/Camera";
-import SettingsPage from "./pages/SettingsPage/SettingsPage";
-import ChatsPage from "./pages/ChatsPage";
+import SettingsPage from "./pages/settingpage/SettingsPage";
+import ChatsPage from "./pages/chatpage/ChatsPage";
 import LandingPage from "./pages/LandingPage";
 import "./App.scss";
 

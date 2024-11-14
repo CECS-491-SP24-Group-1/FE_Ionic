@@ -153,6 +153,7 @@ $primary-color: #4b8fea;
 
 /* Media Query for Small Screens (e.g., mobile devices) */
 @media (max-width: 768px) {
+
 	/* Hide the chat label (name and message) when below 768px */
 	.chat-list-name {
 		display: none;
@@ -213,7 +214,7 @@ $primary-color: #4b8fea;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-image: url("../assets/images/chat_background.jpg");
+		background-image: url("@/assets/images/chat_background.jpg");
 		background-size: cover;
 		background-position: center;
 		filter: invert(100%);

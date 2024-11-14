@@ -1,7 +1,7 @@
 // SettingsPage.tsx
 
 import React, { useState } from "react";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "@/components/Sidebar";
 import SettingsHeader from "./components/SettingsHeader";
 import AccountTab from "./components/AccountTab";
 import NotificationsTab from "./components/NotificationsTab";
