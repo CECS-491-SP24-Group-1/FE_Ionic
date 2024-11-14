@@ -4,7 +4,7 @@ import React from "react";
 
 const PrivacySecurityTab: React.FC = () => {
 	return (
-		<div className="p-4 bg-backgroundHighlight text-textPrimary dark:bg-backgroundHighlight-light dark:text-textPrimary-light rounded-lg shadow-md">
+		<div className="p-4 bg-backgroundHighlight bg-opacity-50 text-textPrimary dark:bg-backgroundHighlight-light dark:text-textPrimary-light rounded-lg shadow-md">
 			<h2 className="text-xl font-semibold mb-4">Privacy & Security</h2>
 			<p className="text-textSecondary dark:text-textSecondary-light mb-2">
 				Manage your privacy and security settings here.

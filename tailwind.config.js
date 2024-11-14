@@ -49,7 +49,7 @@ module.exports = {
 
 				// Background highlights (e.g., for cards or elevated sections)
 				backgroundHighlight: {
-					DEFAULT: "#2d2d40", // Default dark mode highlight background (slightly lighter gray)
+					DEFAULT: "#444444", // Default dark mode highlight background (slightly lighter gray)
 					light: "#ffffff" // Light mode highlight background (pure white)
 				},
 
