@@ -1,37 +1,62 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
 	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+	darkMode: "class", // Enable dark mode using the 'class' strategy
 	theme: {
 		extend: {
 			fontSize: {
 				"2xs": ["0.625rem", "0.75rem"],
 				"3xs": ["0.5rem", "0.5rem"]
-			}
-		}
-	},
-	plugins: []
-};
-
-module.exports = {
-	darkMode: "class", // Enable dark mode using the 'dark' class
-	theme: {
-		extend: {
+			},
 			colors: {
+				// Dark mode as default
 				primary: {
-					DEFAULT: "#3880ff", // Light mode primary background color
-					dark: "#428cff" // Dark mode primary background color
+					DEFAULT: "#1e1e2f", // Default dark mode primary background color
+					light: "#f0f4f8" // Light mode primary background color
 				},
 				secondary: {
-					DEFAULT: "#3dc2ff", // Light mode secondary background color
-					dark: "#50c8ff" // Dark mode secondary background color
+					DEFAULT: "#2a2a3c", // Default dark mode secondary background color
+					light: "#e2e8f0" // Light mode secondary background color
 				},
+				accent: {
+					DEFAULT: "#60a5fa", // Default dark mode accent color
+					light: "#3b82f6" // Light mode accent color
+				},
+
+				// Text colors
 				textPrimary: {
-					DEFAULT: "#1a1a1a", // Light mode primary text color (dark gray)
-					dark: "#f5f5f5" // Dark mode primary text color (light gray)
+					DEFAULT: "#e4e4e7", // Default dark mode primary text color (soft white)
+					light: "#1a1a1a" // Light mode primary text color (dark gray)
 				},
 				textSecondary: {
-					DEFAULT: "#4b5563", // Light mode secondary text color (gray)
-					dark: "#9ca3af" // Dark mode secondary text color (lighter gray)
+					DEFAULT: "#9ca3af", // Default dark mode secondary text color (lighter gray)
+					light: "#4b5563" // Light mode secondary text color (gray for subtext)
+				},
+				textAccent: {
+					DEFAULT: "#60a5fa", // Default dark mode accent text color (lighter blue)
+					light: "#3b82f6" // Light mode accent text color (blue for actionable text)
+				},
+
+				// Border colors
+				borderPrimary: {
+					DEFAULT: "#3f3f52", // Default dark mode border color (dark gray)
+					light: "#d1d5db" // Light mode border color (soft gray)
+				},
+				borderAccent: {
+					DEFAULT: "#60a5fa", // Default dark mode accent border color (lighter blue)
+					light: "#3b82f6" // Light mode accent border color (blue)
+				},
+
+				// Background highlights (e.g., for cards or elevated sections)
+				backgroundHighlight: {
+					DEFAULT: "#2d2d40", // Default dark mode highlight background (slightly lighter gray)
+					light: "#ffffff" // Light mode highlight background (pure white)
+				},
+
+				// Muted colors for placeholders, disabled states, etc.
+				muted: {
+					DEFAULT: "#6b7280", // Default dark mode muted color (dark gray)
+					light: "#9ca3af" // Light mode muted color (medium gray)
 				}
 			}
 		}
