@@ -23,7 +23,7 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable }) => {
 	);
 };
 
-const Account: React.FC = () => {
+const AccountTab: React.FC = () => {
 	const infoFields = [
 		{ label: "Name", value: "Thomas Shelby", isEditable: true },
 		{ label: "Country", value: "USA", isEditable: true },
@@ -75,4 +75,4 @@ const Account: React.FC = () => {
 	);
 };
 
-export default Account;
+export default AccountTab;

@@ -1,10 +1,13 @@
 // SettingsHeader.tsx
 
-import React, { useState } from "react";
+import React from "react";
 
-const SettingsHeader: React.FC = () => {
-	const [activeTab, setActiveTab] = useState("personalInfo");
+interface SettingsHeaderProps {
+	activeTab: string;
+	setActiveTab: (tab: string) => void;
+}
 
+const SettingsHeader: React.FC<SettingsHeaderProps> = ({ activeTab, setActiveTab }) => {
 	const tabs = [
 		{ id: "account", label: "Account" },
 		{ id: "notifications", label: "Notifications" },
