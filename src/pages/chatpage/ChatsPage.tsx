@@ -11,7 +11,17 @@ import {
 	IonModal,
 	IonToolbar
 } from "@ionic/react";
-import { send, attach, mic, camera } from "ionicons/icons";
+import {
+	Container,
+	AppBar,
+	Toolbar,
+	Typography,
+	TextField,
+	IconButton,
+	Dialog,
+	CircularProgress
+} from "@mui/material";
+import { Send, Mic, CameraAlt, AttachFile } from "@mui/icons-material";
 import logo from "@assets/images/glock_primary.svg";
 import ChatList from "./ChatList/ChatList";
 import ChatMessages from "./ChatMessages";
@@ -238,87 +248,79 @@ const ChatsPage: React.FC = () => {
 	};
 
 	return (
-		<IonPage>
+		<Container disableGutters className="w-full h-screen flex flex-col">
 			{isLoading ? (
-				<div>Loading chats...</div>
+				<CircularProgress />
 			) : error ? (
-				<div>Error loading chats.</div>
+				<Typography color="error">Error loading chats.</Typography>
 			) : (
-				<IonContent id="main-content">
-					<div className="chat-container">
-						<div className="chat-list">
-							<ChatList
-								rooms={rooms}
-								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
-								onChatSelect={handleChatSelect}
-								onLeaveRoom={handleLeaveRoom}
-							/>{" "}
-						</div>
+				<div className="flex h-full">
+					{/* Chat List */}
+					<div className="max-h-screen bg-gray-800 overflow-y-auto">
+						<ChatList
+							rooms={rooms}
+							selectedChatId={selectedChatId}
+							onChatSelect={handleChatSelect}
+							onLeaveRoom={handleLeaveRoom}
+						/>{" "}
+					</div>
 
-						<div className="chat-view">
-							{selectedChatId !== null ? (
-								<>
-									<div className="chat-header">
-										<ChatHeader
-											selectedChatId={selectedChatId}
-											membersOnline={membersOnline}
-											onExitChat={handleExitChat}
-										/>
-									</div>
-
-									<div className="chat-messages">
-										<ChatMessages
-											messages={Object.values(rooms[selectedChatId]?.messages || {})}
-										/>
-									</div>
-
-									<div className="chat-input">
-										<IonFooter className="chat-input">
-											<IonToolbar>
-												<IonInput
-													value={inputMessage}
-													placeholder="Write a message..."
-													onIonChange={(e: CustomEvent) =>
-														setInputMessage(e.detail.value!)
-													}
-													//onIonInput={handleTyping} // Detect typing
-													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
-												/>
-												<IonButton
-													onClick={() => handleSendMessage(inputMessage)}
-													slot="end"
-													fill="clear">
-													<IonIcon icon={send} />
-												</IonButton>
-												<IonButton slot="end" fill="clear">
-													<IonIcon icon={mic} />
-												</IonButton>
-												<IonButton
-													slot="end"
-													fill="clear"
-													onClick={() => setShowCamera(true)}>
-													<IonIcon icon={camera} />
-												</IonButton>
-												<IonButton slot="end" fill="clear">
-													<IonIcon icon={attach} />
-												</IonButton>
-											</IonToolbar>
-										</IonFooter>
-									</div>
-								</>
-							) : (
-								<div className="no-chat-selected">
-									<div className="empty-chat-container">
-										<img src={logo} className="empty-chat-image" />
-										<h2>Wraith Web</h2>
-										<p>Please select a chat or create a new one to start messaging.</p>
-										<p>
-											You can create and organize your conversations here. Stay connected!
-										</p>
-									</div>
+					{/* Chat View */}
+					<div className="flex-grow flex flex-col bg-chat-bg">
+						{selectedChatId !== null ? (
+							<>
+								<div className="flex-shrink-0 sticky top-0 z-10">
+									<ChatHeader
+										selectedChatId={selectedChatId}
+										membersOnline={membersOnline}
+										onExitChat={handleExitChat}
+									/>
 								</div>
-							)}
-						</div>
+
+								{/* Chat Messages */}
+								<div className="flex-grow overflow-y-auto p-4">
+									<ChatMessages
+										messages={Object.values(rooms[selectedChatId]?.messages || {})}
+									/>
+								</div>
+
+								{/* Input Area */}
+								<Toolbar className="bg-white w-full sticky bottom-0">
+									<TextField
+										value={inputMessage}
+										placeholder="Write a message..."
+										onChange={(e) => setInputMessage(e.target.value)}
+										fullWidth
+										onKeyDown={(e) =>
+											e.key === "Enter" && handleSendMessage(inputMessage)
+										}
+									/>
+									<IconButton onClick={() => handleSendMessage(inputMessage)}>
+										<Send />
+									</IconButton>
+									<IconButton onClick={() => setShowCamera(true)}>
+										<CameraAlt />
+									</IconButton>
+									<IconButton>
+										<Mic />
+									</IconButton>
+									<IconButton>
+										<AttachFile />
+									</IconButton>
+								</Toolbar>
+							</>
+						) : (
+							<div className="flex flex-col items-center justify-center h-full bg-gray-700 text-center text-gray-300">
+								<img src={logo} className="w-48 mb-4 opacity-80" />
+								<h2 className="text-2xl text-white">Wraith Web</h2>
+								<p className="text-lg max-w-md mt-2">
+									Please select a chat or create a new one to start messaging.
+								</p>
+								<p className="text-lg max-w-md mt-2">
+									You can create and organize your conversations here. Stay connected!
+								</p>
+							</div>
+						)}
 					</div>
 
 					<ChatMenu selectedChatId={selectedChatId} />
@@ -332,9 +334,9 @@ const ChatsPage: React.FC = () => {
 							}}
 						/>
 					</IonModal>
-				</IonContent>
+				</div>
 			)}
-		</IonPage>
+		</Container>
 	);
 };
 

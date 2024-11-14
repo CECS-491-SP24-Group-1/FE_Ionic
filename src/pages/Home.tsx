@@ -1,31 +1,31 @@
-import {
-	IonPage,
-	IonHeader,
-	IonToolbar,
-	IonTitle,
-	IonContent,
-	IonText,
-	IonButton
-} from "@ionic/react";
+import React from "react";
+import { Typography, Button, Container } from "@mui/material";
+import { useHistory } from "react-router-dom";
 
-const Home: React.FC = () => (
-	<IonPage>
-		<IonContent className="ion-padding">
+const Home: React.FC = () => {
+	const history = useHistory();
+
+	const navigateToCamera = () => {
+		history.push("/camera");
+	};
+
+	return (
+		<Container maxWidth="sm" style={{ padding: "16px", textAlign: "center" }}>
 			{/* Welcome Message */}
-			<IonText color="primary">
-				<h1>Welcome to Wraith</h1>
-			</IonText>
+			<Typography variant="h4" color="primary" gutterBottom>
+				Welcome to Wraith
+			</Typography>
 
-			<IonText>
-				<p>Use the tabs below to navigate between different sections of the app.</p>
-			</IonText>
+			<Typography variant="body1" paragraph>
+				Use the tabs below to navigate between different sections of the app.
+			</Typography>
 
 			{/* Button to explore other parts */}
-			<IonButton expand="full" routerLink="/camera">
+			<Button variant="contained" color="primary" fullWidth onClick={navigateToCamera}>
 				Go to Camera
-			</IonButton>
-		</IonContent>
-	</IonPage>
-);
+			</Button>
+		</Container>
+	);
+};
 
 export default Home;

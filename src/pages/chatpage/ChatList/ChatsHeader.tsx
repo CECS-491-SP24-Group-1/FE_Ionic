@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { IonLabel, IonIcon, IonModal, IonButton, IonInput } from "@ionic/react";
-import { createOutline, search } from "ionicons/icons"; // Add search icon
+import { Dialog, IconButton, InputBase, Typography } from "@mui/material";
+import { Search as SearchIcon, Edit as EditIcon } from "@mui/icons-material";
 import CreateChatRoom from "../CreateChatRoom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -10,47 +10,51 @@ interface ChatsHeaderProps {
 }
 
 const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
-	const [showModal, setShowModal] = useState(false); // State to control the modal visibility
-	const [searchQuery, setSearchQuery] = useState(""); // State to handle search query
+	const [showModal, setShowModal] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 
 	const handleOpenModal = () => {
-		setShowModal(true); // Open the modal
+		setShowModal(true);
 	};
 
 	const handleCloseModal = () => {
-		setShowModal(false); // Close the modal
+		setShowModal(false);
 	};
 
-	// Handle search input change
-	const handleSearchChange = (e: CustomEvent) => {
-		const query = e.detail.value!;
+	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const query = event.target.value;
 		setSearchQuery(query);
-		onSearch(query); // Pass search query to parent for filtering
+		onSearch(query);
 	};
 
 	return (
-		<div className="chats-header">
-			<div className="chats-title">
-				<IonLabel>Chats</IonLabel>
-				<div className="new-chat-icon-container">
-					<div className="new-chat-icon" onClick={handleOpenModal}>
-						<FontAwesomeIcon icon={faEdit} />
-					</div>
-				</div>
+		<div className="flex flex-col p-4 bg-gray-800 dark:bg-gray-900 border-b border-gray-700">
+			{/* Header Title and New Chat Icon */}
+			<div className="flex justify-between items-center mb-4">
+				<Typography variant="h6" className="text-white">
+					Chats
+				</Typography>
+				<IconButton onClick={handleOpenModal} className="text-primary">
+					<FontAwesomeIcon icon={faEdit} size="lg" />
+				</IconButton>
 			</div>
 
-			{/* Search bar */}
-			<div className="chat-search-bar">
-				<IonIcon icon={search} className="search-icon" />
-				<IonInput
+			{/* Search Bar */}
+			<div className="flex items-center bg-gray-700 dark:bg-gray-800 rounded-full px-4 py-2">
+				<SearchIcon className="text-gray-400 mr-2" />
+				<InputBase
 					value={searchQuery}
+					onChange={handleSearchChange}
 					placeholder="Search Messenger"
-					onIonChange={handleSearchChange}
-					className="chat-search-input"
+					className="flex-grow text-gray-300 placeholder-gray-400"
+					inputProps={{ "aria-label": "search messenger" }}
 				/>
 			</div>
-			{/* Conditionally render the CreateChatRoom component */}
-			{showModal && <CreateChatRoom onRoomCreated={handleCloseModal} />}
+
+			{/* Modal for Create Chat Room */}
+			<Dialog open={showModal} onClose={handleCloseModal}>
+				<CreateChatRoom onRoomCreated={handleCloseModal} />
+			</Dialog>
 		</div>
 	);
 };

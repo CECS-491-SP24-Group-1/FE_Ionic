@@ -31,6 +31,7 @@
 		"@fortawesome/react-fontawesome": "^0.2.2",
 		"@ionic/react": "^8.2.7",
 		"@ionic/react-router": "^8.2.7",
+		"@mui/icons-material": "^6.1.7",
 		"@mui/material": "^6.1.7",
 		"@types/express": "^5.0.0",
 		"@types/ws": "^8.5.12",

@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import {
-	IonList,
-	IonItem,
-	IonAvatar,
-	IonLabel,
-	IonBadge,
-	IonButton,
-	IonIcon,
-	IonPopover
-} from "@ionic/react";
-import { ellipsisHorizontal } from "ionicons/icons";
+	List,
+	ListItem,
+	ListItemButton,
+	ListItemAvatar,
+	ListItemText,
+	ListItemSecondaryAction,
+	Avatar,
+	Badge,
+	IconButton,
+	Popover,
+	Typography,
+	Button
+} from "@mui/material";
+import { MoreVert } from "@mui/icons-material";
 import ChatsHeader from "./ChatsHeader";
 import emptyFolderImage from "@assets/images/empty_folder.svg";
 import { RoomCS } from "@ptypes/roomcs";
@@ -18,7 +22,7 @@ interface ChatListProps {
 	onChatSelect: (chatId: string) => void;
 	selectedChatId: string | null;
 	rooms: Record<string, RoomCS>;
-	onLeaveRoom: (chatId: string) => void; // Add a new prop for handling leave room action
+	onLeaveRoom: (chatId: string) => void;
 }
 
 const ChatList: React.FC<ChatListProps> = ({
@@ -27,18 +31,24 @@ const ChatList: React.FC<ChatListProps> = ({
 	rooms,
 	onLeaveRoom
 }) => {
-	const [searchQuery, setSearchQuery] = useState(""); // State for search query
-	const [popoverState, setPopoverState] = useState<{
-		open: boolean;
-		event: Event | undefined;
-		chatId: string | null;
-	}>({
-		open: false,
-		event: undefined,
-		chatId: null
-	});
+	const [searchQuery, setSearchQuery] = useState("");
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [popoverChatId, setPopoverChatId] = useState<string | null>(null);
 
-	// Filter rooms based on search query
+	const handlePopoverOpen = (
+		event: React.MouseEvent<HTMLButtonElement>,
+		chatId: string
+	) => {
+		event.stopPropagation(); // Prevents triggering the ListItemButton onClick
+		setAnchorEl(event.currentTarget);
+		setPopoverChatId(chatId);
+	};
+
+	const handlePopoverClose = () => {
+		setAnchorEl(null);
+		setPopoverChatId(null);
+	};
+
 	const filteredRooms = Object.values(rooms).filter((room) =>
 		room.id.toLowerCase().includes(searchQuery.toLowerCase())
 	);
@@ -50,75 +60,80 @@ const ChatList: React.FC<ChatListProps> = ({
 			{/* Pass search handler to ChatsHeader */}
 			<ChatsHeader onSearch={(query) => setSearchQuery(query)} />
 
-			<IonList className={`chat-list ${isEmpty ? "empty" : ""}`}>
-				{isEmpty ? (
-					<div className="empty-container">
-						<div className="empty-chat-message">
-							<h2>No chats found</h2>
-						</div>
-						<img src={emptyFolderImage} className="empty-image" alt="Empty folder" />
+			{isEmpty ? (
+				<div className="empty-container">
+					<div className="empty-chat-message">
+						<h2>No chats found</h2>
 					</div>
-				) : (
-					filteredRooms.map((room) => (
-						<IonItem
-							button
+					<img src={emptyFolderImage} className="empty-image" alt="Empty folder" />
+				</div>
+			) : (
+				<List className={`chat-list ${isEmpty ? "empty" : ""}`}>
+					{filteredRooms.map((room) => (
+						<ListItem
 							key={room.id}
-							onClick={() => {
-								if (room.id !== selectedChatId) {
-									onChatSelect(room.id);
-								}
-							}}
-							className={`chat-list-item ${room.id === selectedChatId ? "selected" : ""}`}>
-							<IonAvatar slot="start" className="chat-list-avatar">
-								<img
-									src={`https://i.pravatar.cc/300?u=${room.id}`}
-									alt={`Chat room ${room.id}`}
+							disablePadding
+							className={`chat-list-item ${
+								room.id === selectedChatId ? "selected" : ""
+							}`}>
+							<ListItemButton
+								selected={room.id === selectedChatId}
+								onClick={() => {
+									if (room.id !== selectedChatId) {
+										onChatSelect(room.id);
+									}
+								}}>
+								<ListItemAvatar>
+									<Avatar
+										src={`https://i.pravatar.cc/300?u=${room.id}`}
+										alt={`Chat room ${room.id}`}
+									/>
+								</ListItemAvatar>
+								<ListItemText
+									primary={`Room ${room.id}`}
+									secondary={room.last_message?.content || "No messages yet"}
 								/>
-							</IonAvatar>
-							<IonLabel className="chat-list-label">
-								<h2 className="chat-list-name">Room {room.id}</h2>
-								<p className="chat-list-message">
-									{room.last_message?.content || "No messages yet"}
-								</p>
-							</IonLabel>
-							<IonBadge color="success" slot="end" className="chat-list-badge">
-								{room.last_message?.timestamp
-									? new Date(room.last_message.timestamp).toLocaleTimeString([], {
-											hour: "2-digit",
-											minute: "2-digit"
-										})
-									: "N/A"}
-							</IonBadge>
-							<IonButton
-								fill="clear"
-								slot="end"
-								onClick={(e) =>
-									setPopoverState({ open: true, event: e.nativeEvent, chatId: room.id })
-								}>
-								<IonIcon icon={ellipsisHorizontal} />
-							</IonButton>
-						</IonItem>
-					))
-				)}
-			</IonList>
+							</ListItemButton>
+							<ListItemSecondaryAction>
+								<Typography variant="body2" color="textSecondary">
+									{room.last_message?.timestamp
+										? new Date(room.last_message.timestamp).toLocaleTimeString([], {
+												hour: "2-digit",
+												minute: "2-digit"
+											})
+										: "N/A"}
+								</Typography>
+								<IconButton edge="end" onClick={(e) => handlePopoverOpen(e, room.id)}>
+									<MoreVert />
+								</IconButton>
+							</ListItemSecondaryAction>
+						</ListItem>
+					))}
+				</List>
+			)}
 
-			<IonPopover
-				isOpen={popoverState.open}
-				event={popoverState.event}
-				onDidDismiss={() =>
-					setPopoverState({ open: false, event: undefined, chatId: null })
-				}>
-				<IonItem
-					button
+			<Popover
+				open={Boolean(anchorEl)}
+				anchorEl={anchorEl}
+				onClose={handlePopoverClose}
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "center"
+				}}
+				transformOrigin={{
+					vertical: "top",
+					horizontal: "center"
+				}}>
+				<Button
 					onClick={() => {
-						if (popoverState.chatId) {
-							onLeaveRoom(popoverState.chatId);
+						if (popoverChatId) {
+							onLeaveRoom(popoverChatId);
 						}
-						setPopoverState({ open: false, event: undefined, chatId: null });
+						handlePopoverClose();
 					}}>
 					Leave Room
-				</IonItem>
-			</IonPopover>
+				</Button>
+			</Popover>
 		</>
 	);
 };

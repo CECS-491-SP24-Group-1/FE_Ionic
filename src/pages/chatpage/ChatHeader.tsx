@@ -1,14 +1,6 @@
 import React from "react";
-import { menuController } from "@ionic/core";
-import {
-	IonItem,
-	IonAvatar,
-	IonLabel,
-	IonButton,
-	IonIcon,
-	IonMenuToggle
-} from "@ionic/react";
-import { call, videocam, informationCircle } from "ionicons/icons";
+import { Avatar, Button, IconButton } from "@mui/material";
+import { Call, Videocam, Info } from "@mui/icons-material";
 import { useRoomStore } from "@/stores/room_store";
 
 interface ChatHeaderProps {
@@ -30,42 +22,40 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 		return null;
 	}
 
-	const toggleMenu = async () => {
-		await menuController.toggle();
-	};
-
 	return (
-		<IonItem lines="none" className="user-chat-bar">
-			<IonAvatar slot="start">
-				<img
-					src={`https://i.pravatar.cc/300?u=${selectedChatId}`} // Temporary use id for avatar
-					alt={`Avatar for chat ${selectedChatId}`}
-				/>
-			</IonAvatar>
-			<IonLabel>
-				<h2>{selectedChatId}</h2> {/* temporary display selectedChatId as the title */}
-				<p>
+		<div className="flex items-center justify-between bg-gray-800 p-4 shadow-md">
+			{/* Avatar */}
+			<Avatar
+				src={`https://i.pravatar.cc/300?u=${selectedChatId}`} // Temporary use id for avatar
+				alt={`Avatar for chat ${selectedChatId}`}
+				className="mr-4"
+			/>
+
+			{/* Chat Info */}
+			<div className="flex flex-col text-white">
+				<h2 className="text-lg font-semibold">{selectedChatId}</h2>{" "}
+				{/* Display selectedChatId as title */}
+				<p className="text-sm text-gray-400">
 					Current members online: <strong>{membersOnline}</strong>
 				</p>
-			</IonLabel>
-			<div className="chat-header-icons">
-				<IonButton fill="clear" onClick={onExitChat}>
-					{" "}
-					Exit Room
-				</IonButton>
-				<IonButton fill="clear">
-					<IonIcon icon={call} />
-				</IonButton>
-				<IonButton fill="clear">
-					<IonIcon icon={videocam} />
-				</IonButton>
-				<IonMenuToggle>
-					<IonButton fill="clear" onClick={toggleMenu}>
-						<IonIcon icon={informationCircle} />
-					</IonButton>
-				</IonMenuToggle>
 			</div>
-		</IonItem>
+
+			{/* Action Buttons */}
+			<div className="flex items-center space-x-2">
+				<Button onClick={onExitChat} className="text-primary hover:text-primary-dark">
+					Exit Room
+				</Button>
+				<IconButton className="text-white">
+					<Call fontSize="medium" />
+				</IconButton>
+				<IconButton className="text-white">
+					<Videocam fontSize="medium" />
+				</IconButton>
+				<IconButton onClick={() => console.log("Menu toggle")} className="text-white">
+					<Info fontSize="medium" />
+				</IconButton>
+			</div>
+		</div>
 	);
 };
 
