@@ -1,5 +1,3 @@
-// Sidebar.tsx
-
 import React, { useState } from "react";
 import {
 	FaHome,
@@ -24,6 +22,10 @@ const Sidebar: React.FC = () => {
 		history.push(path);
 	};
 
+	// Define reusable class constant for the buttons
+	const buttonClasses =
+		"flex items-center space-x-3 text-lg pl-2 text-gray-300 hover:text-blue-400";
+
 	return (
 		<div
 			className={`h-screen ${isExpanded ? "w-64" : "w-20"} bg-[#1a1a1a] p-6 flex flex-col transition-width duration-300`}>
@@ -31,15 +33,13 @@ const Sidebar: React.FC = () => {
 			<button onClick={toggleSidebar} className="mb-6 text-gray-300 hover:text-white">
 				<FaBars className="text-2xl" />
 			</button>
-
 			{/* Profile Section */}
 			<div className="flex items-center mb-6">
 				<div
 					className={`${
 						isExpanded ? "w-12 h-12" : "w-8 h-8"
 					} rounded-full flex items-center justify-center text-xl font-semibold text-white`}
-					style={{ backgroundColor: "#444444" }} // Set to a specific color or "transparent"
-				>
+					style={{ backgroundColor: "#444444" }}>
 					{/* Placeholder for profile image */}
 					<span style={{ backgroundColor: "transparent" }}>DP</span>
 				</div>
@@ -53,42 +53,41 @@ const Sidebar: React.FC = () => {
 				)}
 			</div>
 
-			{/* Navigation Links */}
 			<nav className="flex flex-col space-y-4">
 				<button
 					onClick={() => navigate("/home")}
-					className={`flex items-center space-x-3 text-gray-300 hover:text-blue-400 ${!isExpanded && "justify-center"}`}>
-					<FaHome className="text-lg" />
+					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					<FaHome className="text-xl" />
 					{isExpanded && <span>Home</span>}
 				</button>
 				<button
 					onClick={() => navigate("/chat")}
-					className={`flex items-center space-x-3 text-gray-300 hover:text-blue-400 ${!isExpanded && "justify-center"}`}>
-					<FaComments className="text-lg" />
+					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					<FaComments className="text-xl" />
 					{isExpanded && <span>Chat</span>}
 				</button>
 				<button
 					onClick={() => navigate("/camera")}
-					className={`flex items-center space-x-3 text-gray-300 hover:text-blue-400 ${!isExpanded && "justify-center"}`}>
-					<FaCamera className="text-lg" />
+					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					<FaCamera className="text-xl" />
 					{isExpanded && <span>Camera</span>}
 				</button>
 				<button
 					onClick={() => navigate("/connections")}
-					className={`flex items-center space-x-3 text-gray-300 hover:text-blue-400 ${!isExpanded && "justify-center"}`}>
-					<FaUserFriends className="text-lg" />
+					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					<FaUserFriends className="text-xl" />
 					{isExpanded && <span>Connections</span>}
 				</button>
 				<button
 					onClick={() => navigate("/settings")}
-					className={`flex items-center space-x-3 text-gray-300 hover:text-blue-400 ${!isExpanded && "justify-center"}`}>
-					<FaCog className="text-lg" />
+					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					<FaCog className="text-xl" />
 					{isExpanded && <span>Settings</span>}
 				</button>
 				<button
 					onClick={() => navigate("/about")}
-					className={`flex items-center space-x-3 text-gray-300 hover:text-blue-400 ${!isExpanded && "justify-center"}`}>
-					<FaInfoCircle className="text-lg" />
+					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					<FaInfoCircle className="text-xl" />
 					{isExpanded && <span>About</span>}
 				</button>
 			</nav>

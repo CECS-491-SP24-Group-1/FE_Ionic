@@ -1,5 +1,7 @@
 import React from "react";
 import { FaCamera } from "react-icons/fa";
+import { useUser } from "@/hooks/useUser";
+import useVaultStore from "@/stores/vault_store";
 
 interface InfoFieldProps {
 	label: string;
@@ -24,11 +26,22 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable }) => {
 };
 
 const AccountTab: React.FC = () => {
+	const myID = useVaultStore((state) => state.myID); // Get the user ID from VaultStore
+	const { user, isLoading, error } = useUser(myID); // Use the user ID in the useUser hook
+
+	if (isLoading) {
+		return <p>Loading...</p>;
+	}
+
+	if (error) {
+		return <p>Error loading user data.</p>;
+	}
+
 	const infoFields = [
-		{ label: "Name", value: "Thomas Shelby", isEditable: true },
-		{ label: "Country", value: "USA", isEditable: true },
-		{ label: "Timezone", value: "Europe/Rome", isEditable: true },
-		{ label: "About", value: "Hey, it's me :)", isEditable: true }
+		{ label: "ID", value: user?.id || "", isEditable: false },
+		{ label: "Public Key", value: user?.pubkey || "", isEditable: false },
+		{ label: "Username", value: user?.username || "", isEditable: false },
+		{ label: "Display Name", value: user?.display_name || "", isEditable: true }
 	];
 
 	return (
@@ -50,7 +63,7 @@ const AccountTab: React.FC = () => {
 				{/* User Info */}
 				<div>
 					<p className="font-semibold text-textPrimary text-lg dark:text-textPrimary-light">
-						Thomas Shelby
+						{user?.display_name || "Display Name"}
 					</p>
 					<a
 						href="#"
