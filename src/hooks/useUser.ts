@@ -10,7 +10,7 @@ const fetchUser = async (url: string) => {
 
 export const useUser = (uid: string) => {
 	console.log(uid);
-	const { data, error, isLoading } = useSWR(`${api}/api/user/${uid}`, fetchUser, {
+	const { data, error, isLoading } = useSWR(`${api}/user/${uid}`, fetchUser, {
 		revalidateOnFocus: false
 	});
 
