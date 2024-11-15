@@ -23,40 +23,51 @@ const Sidebar: React.FC = () => {
 		history.push(path);
 	};
 
-	const buttonClasses = "flex items-center space-x-3 text-lg pl-2 hover:text-blue-400";
+	const buttonClasses =
+		"flex items-center space-x-3 text-lg pl-2 hover:text-accent dark:hover:text-accent-light bg-transparent";
 
 	return (
 		<div
-			className={`h-screen ${isExpanded ? "w-64" : "w-20"} bg-[#1a1a1a] p-6 hidden md:flex flex-col transition-width duration-300`}>
-			<button onClick={toggleSidebar} className="mb-6 text-gray-300 hover:text-white">
+			className={`h-screen ${
+				isExpanded ? "w-64" : "w-20"
+			} bg-primary dark:bg-primary-light p-6 hidden md:flex flex-col transition-width duration-300v`}>
+			{/* Sidebar Toggle Button */}
+			<button
+				onClick={toggleSidebar}
+				className="mb-6 pl-2 text-textPrimary dark:text-textPrimary-light hover:text-accent dark:hover:text-accent-light bg-transparent">
 				<FaBars className="text-2xl" />
 			</button>
 
+			{/* Profile Section */}
 			<div className="flex items-center mb-6">
 				<div
 					className={`${
 						isExpanded ? "w-12 h-12" : "w-8 h-8"
-					} rounded-full flex items-center justify-center text-xl font-semibold text-white`}
-					style={{ backgroundColor: "#444444" }}>
+					} rounded-full flex items-center justify-center text-xl font-semibold text-textPrimary dark:text-textPrimary-light bg-secondary dark:bg-secondary-light`}>
 					<span>DP</span>
 				</div>
 				{isExpanded && (
 					<div className="ml-4">
-						<p className="font-semibold text-gray-200">David</p>
-						<Link to="#" className="text-sm text-blue-400 hover:underline">
+						<p className="font-semibold text-textPrimary dark:text-textPrimary-light">
+							David
+						</p>
+						<Link
+							to="#"
+							className="text-sm text-accent dark:text-accent-light hover:underline">
 							View profile
 						</Link>
 					</div>
 				)}
 			</div>
 
+			{/* Navigation Links */}
 			<nav className="flex flex-col space-y-4">
 				<button
 					onClick={() => navigate("/home")}
 					className={`${buttonClasses} ${
 						location.pathname === "/home"
-							? "text-blue-400 font-semibold"
-							: "text-gray-300"
+							? "text-accent font-semibold dark:text-accent-light"
+							: "text-textSecondary dark:text-textSecondary-light"
 					} ${!isExpanded && "justify-center"}`}>
 					<FaHome className="text-xl" />
 					{isExpanded && <span>Home</span>}
@@ -65,8 +76,8 @@ const Sidebar: React.FC = () => {
 					onClick={() => navigate("/chat")}
 					className={`${buttonClasses} ${
 						location.pathname === "/chat"
-							? "text-blue-400 font-semibold"
-							: "text-gray-300"
+							? "text-accent font-semibold dark:text-accent-light"
+							: "text-textSecondary dark:text-textSecondary-light"
 					} ${!isExpanded && "justify-center"}`}>
 					<FaComments className="text-xl" />
 					{isExpanded && <span>Chat</span>}
@@ -75,8 +86,8 @@ const Sidebar: React.FC = () => {
 					onClick={() => navigate("/camera")}
 					className={`${buttonClasses} ${
 						location.pathname === "/camera"
-							? "text-blue-400 font-semibold"
-							: "text-gray-300"
+							? "text-accent font-semibold dark:text-accent-light"
+							: "text-textSecondary dark:text-textSecondary-light"
 					} ${!isExpanded && "justify-center"}`}>
 					<FaCamera className="text-xl" />
 					{isExpanded && <span>Camera</span>}
@@ -85,8 +96,8 @@ const Sidebar: React.FC = () => {
 					onClick={() => navigate("/connections")}
 					className={`${buttonClasses} ${
 						location.pathname === "/connections"
-							? "text-blue-400 font-semibold"
-							: "text-gray-300"
+							? "text-accent font-semibold dark:text-accent-light"
+							: "text-textSecondary dark:text-textSecondary-light"
 					} ${!isExpanded && "justify-center"}`}>
 					<FaUserFriends className="text-xl" />
 					{isExpanded && <span>Connections</span>}
@@ -95,8 +106,8 @@ const Sidebar: React.FC = () => {
 					onClick={() => navigate("/settings")}
 					className={`${buttonClasses} ${
 						location.pathname === "/settings"
-							? "text-blue-400 font-semibold"
-							: "text-gray-300"
+							? "text-accent font-semibold dark:text-accent-light"
+							: "text-textSecondary dark:text-textSecondary-light"
 					} ${!isExpanded && "justify-center"}`}>
 					<FaCog className="text-xl" />
 					{isExpanded && <span>Settings</span>}
@@ -105,8 +116,8 @@ const Sidebar: React.FC = () => {
 					onClick={() => navigate("/about")}
 					className={`${buttonClasses} ${
 						location.pathname === "/about"
-							? "text-blue-400 font-semibold"
-							: "text-gray-300"
+							? "text-accent font-semibold dark:text-accent-light"
+							: "text-textSecondary dark:text-textSecondary-light"
 					} ${!isExpanded && "justify-center"}`}>
 					<FaInfoCircle className="text-xl" />
 					{isExpanded && <span>About</span>}

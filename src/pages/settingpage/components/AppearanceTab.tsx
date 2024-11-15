@@ -1,10 +1,10 @@
 // AppearanceTab.tsx
 
 import React, { useState } from "react";
-import { Switch, Typography, Box, Button } from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
+import DarkModeToggle from "@/components/DarkModeToggle"; // Importing the DarkModeToggle component
 
 const AppearanceTab: React.FC = () => {
-	const [darkMode, setDarkMode] = useState(true);
 	const [fontSize, setFontSize] = useState(1); // 0: Small, 1: Medium, 2: Large
 
 	const handleFontSizeChange = (newSize: number) => {
@@ -34,11 +34,7 @@ const AppearanceTab: React.FC = () => {
 						Toggle between light and dark themes.
 					</Typography>
 				</Box>
-				<Switch
-					checked={darkMode}
-					onChange={() => setDarkMode(!darkMode)}
-					color="primary"
-				/>
+				<DarkModeToggle /> {/* Using DarkModeToggle component here */}
 			</Box>
 
 			{/* Custom Font Size Slider */}
