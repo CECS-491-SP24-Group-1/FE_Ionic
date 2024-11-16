@@ -21,7 +21,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
 	};
 
 	return (
-		<div className="fixed bottom-0 w-full bg-white dark:bg-gray-800">
+		<div className="fixed bottom-0 w-full bg-primary dark:bg-primary-light">
 			<Toolbar className="flex items-center px-4 py-2">
 				<TextField
 					value={message}
@@ -31,16 +31,22 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
 					fullWidth
 					className="mr-4"
 					InputProps={{
-						className: "text-gray-700 dark:text-gray-200"
+						className:
+							"text-textPrimary dark:text-textPrimary-light placeholder-textSecondary dark:placeholder-textSecondary-light",
+						classes: {
+							root: "bg-backgroundHighlight dark:bg-backgroundHighlight-light"
+						}
 					}}
 				/>
-				<IconButton onClick={handleSendMessage} color="primary">
+				<IconButton
+					onClick={handleSendMessage}
+					className="text-accent dark:text-accent-light">
 					<SendIcon />
 				</IconButton>
-				<IconButton color="default">
+				<IconButton className="text-muted dark:text-muted-light">
 					<MicIcon />
 				</IconButton>
-				<IconButton color="default">
+				<IconButton className="text-muted dark:text-muted-light">
 					<AttachIcon />
 				</IconButton>
 			</Toolbar>

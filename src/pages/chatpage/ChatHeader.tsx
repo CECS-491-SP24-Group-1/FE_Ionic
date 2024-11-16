@@ -23,7 +23,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 	}
 
 	return (
-		<div className="flex items-center justify-between bg-gray-800 p-4 shadow-md">
+		<div className="flex items-center justify-between bg-primary dark:bg-primary-light p-4 shadow-md">
 			{/* Avatar */}
 			<Avatar
 				src={`https://i.pravatar.cc/300?u=${selectedChatId}`} // Temporary use id for avatar
@@ -32,26 +32,30 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 			/>
 
 			{/* Chat Info */}
-			<div className="flex flex-col text-white">
+			<div className="flex flex-col text-textPrimary dark:text-textPrimary-light">
 				<h2 className="text-lg font-semibold">{selectedChatId}</h2>{" "}
 				{/* Display selectedChatId as title */}
-				<p className="text-sm text-gray-400">
+				<p className="text-sm text-textSecondary dark:text-textSecondary-light">
 					Current members online: <strong>{membersOnline}</strong>
 				</p>
 			</div>
 
 			{/* Action Buttons */}
 			<div className="flex items-center space-x-2">
-				<Button onClick={onExitChat} className="text-primary hover:text-primary-dark">
+				<Button
+					onClick={onExitChat}
+					className="text-accent dark:text-accent-light hover:underline">
 					Exit Room
 				</Button>
-				<IconButton className="text-white">
+				<IconButton className="text-textPrimary dark:text-textPrimary-light">
 					<Call fontSize="medium" />
 				</IconButton>
-				<IconButton className="text-white">
+				<IconButton className="text-textPrimary dark:text-textPrimary-light">
 					<Videocam fontSize="medium" />
 				</IconButton>
-				<IconButton onClick={() => console.log("Menu toggle")} className="text-white">
+				<IconButton
+					onClick={() => console.log("Menu toggle")}
+					className="text-textPrimary dark:text-textPrimary-light">
 					<Info fontSize="medium" />
 				</IconButton>
 			</div>

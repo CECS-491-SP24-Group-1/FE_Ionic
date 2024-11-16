@@ -7,7 +7,6 @@ import {
 	ListItemText,
 	ListItemSecondaryAction,
 	Avatar,
-	Badge,
 	IconButton,
 	Popover,
 	Typography,
@@ -39,7 +38,7 @@ const ChatList: React.FC<ChatListProps> = ({
 		event: React.MouseEvent<HTMLButtonElement>,
 		chatId: string
 	) => {
-		event.stopPropagation(); // Prevents triggering the ListItemButton onClick
+		event.stopPropagation();
 		setAnchorEl(event.currentTarget);
 		setPopoverChatId(chatId);
 	};
@@ -61,20 +60,21 @@ const ChatList: React.FC<ChatListProps> = ({
 			<ChatsHeader onSearch={(query) => setSearchQuery(query)} />
 
 			{isEmpty ? (
-				<div className="empty-container">
-					<div className="empty-chat-message">
+				<div className="flex flex-col items-center justify-center mt-8">
+					<div className="text-textSecondary dark:text-textSecondary-light text-center mb-4">
 						<h2>No chats found</h2>
 					</div>
-					<img src={emptyFolderImage} className="empty-image" alt="Empty folder" />
+					<img src={emptyFolderImage} className="w-32 h-32" alt="Empty folder" />
 				</div>
 			) : (
-				<List className={`chat-list ${isEmpty ? "empty" : ""}`}>
+				<List
+					className={`chat-list ${isEmpty ? "empty" : ""} bg-primary dark:bg-primary-light`}>
 					{filteredRooms.map((room) => (
 						<ListItem
 							key={room.id}
 							disablePadding
-							className={`chat-list-item ${
-								room.id === selectedChatId ? "selected" : ""
+							className={`border-b border-borderPrimary dark:border-borderPrimary-light ${
+								room.id === selectedChatId ? "bg-secondary dark:bg-secondary-light" : ""
 							}`}>
 							<ListItemButton
 								selected={room.id === selectedChatId}
@@ -82,7 +82,8 @@ const ChatList: React.FC<ChatListProps> = ({
 									if (room.id !== selectedChatId) {
 										onChatSelect(room.id);
 									}
-								}}>
+								}}
+								className={`hover:bg-backgroundHighlight dark:hover:bg-backgroundHighlight-light`}>
 								<ListItemAvatar>
 									<Avatar
 										src={`https://i.pravatar.cc/300?u=${room.id}`}
@@ -90,12 +91,22 @@ const ChatList: React.FC<ChatListProps> = ({
 									/>
 								</ListItemAvatar>
 								<ListItemText
-									primary={`Room ${room.id}`}
-									secondary={room.last_message?.content || "No messages yet"}
+									primary={
+										<span className="text-textPrimary dark:text-textPrimary-light">
+											{`Room ${room.id}`}
+										</span>
+									}
+									secondary={
+										<span className="text-textSecondary dark:text-textSecondary-light">
+											{room.last_message?.content || "No messages yet"}
+										</span>
+									}
 								/>
 							</ListItemButton>
 							<ListItemSecondaryAction>
-								<Typography variant="body2" color="textSecondary">
+								<Typography
+									variant="body2"
+									className="text-textSecondary dark:text-textSecondary-light">
 									{room.last_message?.timestamp
 										? new Date(room.last_message.timestamp).toLocaleTimeString([], {
 												hour: "2-digit",
@@ -103,7 +114,10 @@ const ChatList: React.FC<ChatListProps> = ({
 											})
 										: "N/A"}
 								</Typography>
-								<IconButton edge="end" onClick={(e) => handlePopoverOpen(e, room.id)}>
+								<IconButton
+									edge="end"
+									onClick={(e) => handlePopoverOpen(e, room.id)}
+									className="text-muted dark:text-muted-light">
 									<MoreVert />
 								</IconButton>
 							</ListItemSecondaryAction>
@@ -130,7 +144,8 @@ const ChatList: React.FC<ChatListProps> = ({
 							onLeaveRoom(popoverChatId);
 						}
 						handlePopoverClose();
-					}}>
+					}}
+					className="text-accent dark:text-accent-light hover:underline">
 					Leave Room
 				</Button>
 			</Popover>

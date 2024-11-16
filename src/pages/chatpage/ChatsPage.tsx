@@ -247,7 +247,10 @@ const ChatsPage: React.FC = () => {
 	};
 
 	return (
-		<Container disableGutters className="w-full h-screen flex flex-col">
+		<Container
+			disableGutters
+			maxWidth={false}
+			className="w-full h-screen flex flex-col m-0">
 			{isLoading ? (
 				<CircularProgress />
 			) : error ? (
@@ -255,7 +258,7 @@ const ChatsPage: React.FC = () => {
 			) : (
 				<div className="flex h-full">
 					{/* Chat List */}
-					<div className="max-h-screen bg-gray-800 overflow-y-auto">
+					<div className="h-full overflow-y-auto bg-primary dark:bg-primary-light border-b border-borderPrimary dark:border-borderPrimary-light">
 						<ChatList
 							rooms={rooms}
 							selectedChatId={selectedChatId}
