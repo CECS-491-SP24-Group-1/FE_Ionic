@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 
 	// Define reusable class constant for the buttons
 	const buttonClasses =
-		"flex items-center space-x-3 text-lg pl-2 text-gray-300 hover:text-blue-400";
+		"flex items-center space-x-3 text-lg pl- text-gray-300 hover:text-blue-400";
 
 	return (
 		<div
@@ -40,7 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 				<div
 					className={`${
 						isExpanded ? "w-12 h-12" : "w-8 h-8"
-					} rounded-full flex items-center justify-center text-xl font-semibold text-white`}
+					} rounded-full flex items-center justify-center text-lg font-semibold text-white`}
 					style={{ backgroundColor: "#444444" }}>
 					{/* Placeholder for profile image */}
 					<span style={{ backgroundColor: "transparent" }}>DP</span>
@@ -58,37 +58,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 			<nav className="flex flex-col space-y-4">
 				<button
 					onClick={() => navigate("/home")}
-					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
 					<FaHome className="text-xl" />
 					{isExpanded && <span>Home</span>}
 				</button>
 				<button
 					onClick={() => navigate("/chat")}
-					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
 					<FaComments className="text-xl" />
 					{isExpanded && <span>Chat</span>}
 				</button>
 				<button
 					onClick={() => navigate("/camera")}
-					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
 					<FaCamera className="text-xl" />
 					{isExpanded && <span>Camera</span>}
 				</button>
 				<button
 					onClick={() => navigate("/connections")}
-					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
 					<FaUserFriends className="text-xl" />
 					{isExpanded && <span>Connections</span>}
 				</button>
 				<button
 					onClick={() => navigate("/settings")}
-					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
 					<FaCog className="text-xl" />
 					{isExpanded && <span>Settings</span>}
 				</button>
 				<button
 					onClick={() => navigate("/about")}
-					className={`${buttonClasses} ${!isExpanded && "justify-center"}`}>
+					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
 					<FaInfoCircle className="text-xl" />
 					{isExpanded && <span>About</span>}
 				</button>
