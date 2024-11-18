@@ -28,7 +28,7 @@ const Sidebar: React.FC = () => {
 
 	return (
 		<div
-			className={`h-screen ${isExpanded ? "w-64" : "w-20"} bg-[#1a1a1a] p-6 flex flex-col transition-width duration-300`}>
+			className={`h-screen ${isExpanded ? "w-64" : "w-20"} bg-[#1a1a1a] p-6 flex flex-col flex-0 transition-width duration-300`}>
 			{/* Toggle Button */}
 			<button onClick={toggleSidebar} className="mb-6 text-gray-300 hover:text-white">
 				<FaBars className="text-2xl" />

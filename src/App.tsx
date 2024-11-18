@@ -25,6 +25,7 @@ import CameraPage from "./pages/Camera";
 import SettingsPage from "./pages/settingpage/SettingsPage";
 import ChatsPage from "./pages/chatpage/ChatsPage";
 import LandingPage from "./pages/LandingPage";
+import Sidebar from "./components/Sidebar";
 import "./App.scss";
 
 const App: React.FC = () => {
@@ -76,79 +77,63 @@ const App: React.FC = () => {
 					</IonToolbar>
 				</div>
 			)}
-
 			<IonReactRouter>
-				<IonTabs>
-					<IonRouterOutlet>
-						<>
-							{/* Define routes for each tab */}
-							<Route path="/home" component={Home} exact={true} />
-							{/* <Route path="/login" component={LRPage} exact={true} /> */}
-							<Route path="/camera" component={CameraPage} exact={true} />
-							<Route path="/settings" component={SettingsPage} exact={true} />
-							<Route path="/chat" component={ChatsPage} exact={true} />
-							<Route path="/LandingPage" component={LandingPage} exact={true} />
-							{/* <Route path="/PostRegister" component={PostRegister} exact={true} /> */}
-							<Route exact path="/" render={() => <Redirect to="/chat" />} />
-						</>
-					</IonRouterOutlet>
+				<div className="flex h-screen">
+					<div className="hidden sm:flex">
+						<Sidebar />
+					</div>
+					<div className="flex flex-col flex-1">
+						<IonTabs className="flex flex-col flex-1 translate-x-0 sm:translate-x-32">
+							<IonRouterOutlet className="flex-1">
+								<>
+									{/* Define routes for each tab */}
+									<Route path="/home" component={Home} exact={true} />
+									<Route path="/camera" component={CameraPage} exact={true} />
+									<Route path="/settings" component={SettingsPage} exact={true} />
+									<Route path="/chat" component={ChatsPage} exact={true} />
+									<Route path="/LandingPage" component={LandingPage} exact={true} />
+									<Route exact path="/" render={() => <Redirect to="/chat" />} />
+								</>
+							</IonRouterOutlet>
 
-					{/* Temporary registration page */}
-					<IonTabBar slot="bottom">
-						{/* <IonTabButton tab="register" href="/register">
-							<IonIcon icon={settings} />
-							<IonLabel>Register</IonLabel>
-						</IonTabButton> */}
+							{/* Tab bar at the bottom */}
+							<IonTabBar className="flex sm:hidden" slot="bottom">
+								<IonTabButton tab="chat" href="/chat">
+									<IonIcon icon={chatbubble} />
+									<IonLabel>Chat</IonLabel>
+								</IonTabButton>
 
-						{/*
-					<IonTabButton tab="login" href="/login">
-						<IonIcon icon={logIn} />
-						<IonLabel>Login</IonLabel>
-					</IonTabButton>
-					*/}
+								<IonTabButton tab="camera" href="/camera">
+									<IonIcon icon={camera} />
+									<IonLabel>Camera</IonLabel>
+								</IonTabButton>
 
-						<IonTabButton tab="chat" href="/chat">
-							<IonIcon icon={chatbubble} />
-							<IonLabel>Chat</IonLabel>
-						</IonTabButton>
+								<IonTabButton tab="settings" href="/settings">
+									<IonIcon icon={settings} />
+									<IonLabel>Settings</IonLabel>
+								</IonTabButton>
+							</IonTabBar>
 
-						<IonTabButton tab="camera" href="/camera">
-							<IonIcon icon={camera} />
-							<IonLabel>Camera</IonLabel>
-						</IonTabButton>
-
-						<IonTabButton tab="settings" href="/settings">
-							<IonIcon icon={settings} />
-							<IonLabel>Settings</IonLabel>
-						</IonTabButton>
-					</IonTabBar>
-
-					{/* Modal that allows the user to save the current vault state */}
-					<IonModal
-						isOpen={isSaveVaultModalOpen}
-						onDidDismiss={() => setIsSaveVaultModalOpen(false)}
-						className="custom-modal">
-						<div className="modal-wrapper">
-							<IonContent className="modal-content">
-								<h2>Enter Passphrase</h2>
-								<IonInput
-									//type={showPassphrase ? "text" : "password"}
-									//value={pass}
-									//onIonInput={handleInputChange} // Use onIonInput for real-time update
-									placeholder="Enter a passphrase"
-									//maxlength={maxLen ? maxLen : undefined}
-									//disabled={disable}
-									required
-								/>
-								<IonButton
-									onClick={() => setIsSaveVaultModalOpen(false)}
-									className="close-button">
-									Encrypt Vault
-								</IonButton>
-							</IonContent>
-						</div>
-					</IonModal>
-				</IonTabs>
+							{/* Modal for saving vault state */}
+							<IonModal
+								isOpen={isSaveVaultModalOpen}
+								onDidDismiss={() => setIsSaveVaultModalOpen(false)}
+								className="custom-modal">
+								<div className="modal-wrapper">
+									<IonContent className="modal-content">
+										<h2>Enter Passphrase</h2>
+										<IonInput placeholder="Enter a passphrase" required />
+										<IonButton
+											onClick={() => setIsSaveVaultModalOpen(false)}
+											className="close-button">
+											Encrypt Vault
+										</IonButton>
+									</IonContent>
+								</div>
+							</IonModal>
+						</IonTabs>
+					</div>
+				</div>
 			</IonReactRouter>
 		</>
 	);
