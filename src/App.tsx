@@ -19,7 +19,6 @@ import { camera, settings, chatbubble, warningOutline } from "ionicons/icons";
 import useVaultStore from "./stores/vault_store";
 
 // Import pages
-// TODO: suffix other pages name to match ChatsPage
 import Home from "./pages/Home";
 import CameraPage from "./pages/Camera";
 import SettingsPage from "./pages/settingpage/SettingsPage";
@@ -35,7 +34,10 @@ const App: React.FC = () => {
 	// Determines whether the vault has unsaved changes
 	const [hasVaultUnsavedChanges, setHasVaultUnsavedChanges] = useState(false);
 
-	//Vault state
+	// State to control sidebar expansion
+	const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+
+	// Vault state
 	const { vault, evault, setEVault } = useVaultStore((state) => ({
 		vault: state.vault,
 		evault: state.evault,
@@ -45,7 +47,6 @@ const App: React.FC = () => {
 	/* This handles the state of the banner. If the vault hash differs from the encrypted
 	 * vault hash, open a modal that saves the new vault state and re-encrypts it. */
 	useEffect(() => {
-		//Invert Boolean!
 		console.log("vhash: ", vault?.hashcode());
 		console.log("evhash:", evault?.hash);
 		setHasVaultUnsavedChanges(vault?.hashcode() !== evault?.hash);
@@ -79,11 +80,20 @@ const App: React.FC = () => {
 			)}
 			<IonReactRouter>
 				<div className="flex h-screen">
+					{/* Sidebar */}
 					<div className="hidden sm:flex">
-						<Sidebar />
+						<Sidebar
+							isExpanded={isSidebarExpanded}
+							toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}
+						/>
 					</div>
+
+					{/* Main content */}
 					<div className="flex flex-col flex-1">
-						<IonTabs className="flex flex-col flex-1 translate-x-0 sm:translate-x-32">
+						<IonTabs
+							className={`flex flex-col flex-1 translate-x-0 ${
+								isSidebarExpanded ? "sm:translate-x-32" : "sm:translate-x-12"
+							}`}>
 							<IonRouterOutlet className="flex-1">
 								<>
 									{/* Define routes for each tab */}

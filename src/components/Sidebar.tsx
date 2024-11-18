@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	FaHome,
 	FaComments,
@@ -10,13 +10,13 @@ import {
 } from "react-icons/fa";
 import { Link, useHistory } from "react-router-dom";
 
-const Sidebar: React.FC = () => {
-	const [isExpanded, setIsExpanded] = useState(true);
-	const history = useHistory();
+interface SidebarProps {
+	isExpanded: boolean;
+	toggleSidebar: () => void;
+}
 
-	const toggleSidebar = () => {
-		setIsExpanded(!isExpanded);
-	};
+const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
+	const history = useHistory();
 
 	const navigate = (path: string) => {
 		history.push(path);
@@ -28,7 +28,9 @@ const Sidebar: React.FC = () => {
 
 	return (
 		<div
-			className={`h-screen ${isExpanded ? "w-64" : "w-20"} bg-[#1a1a1a] p-6 flex flex-col flex-0 transition-width duration-300`}>
+			className={`hidden sm:flex h-screen ${
+				isExpanded ? "w-64" : "w-20"
+			} bg-[#1a1a1a] p-6 flex-col flex-shrink-0 transition-width duration-300`}>
 			{/* Toggle Button */}
 			<button onClick={toggleSidebar} className="mb-6 text-gray-300 hover:text-white">
 				<FaBars className="text-2xl" />
