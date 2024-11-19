@@ -245,23 +245,21 @@ const ChatsPage: React.FC = () => {
 				<div>Error loading chats.</div>
 			) : (
 				<IonContent id="main-content">
-					<div className="chat-container flex h-full bg-secondary dark:bg-secondary-light">
-						<div className="m-3">
-							<div className="chat-list h-full bg-borderPrimary dark:bg-backgroundHighlight-light rounded-2xl">
-								<ChatList
-									rooms={rooms}
-									selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
-									onChatSelect={handleChatSelect}
-									onLeaveRoom={handleLeaveRoom}
-								/>{" "}
-							</div>
+					<div className="chat-container flex h-full bg-secondary dark:bg-white gap-4">
+						<div className="max-h-100 rounded-t-2xl bg-borderPrimary dark:bg-primary-light rounded-b-2xl ml-4 mt-4 mb-4 p-4">
+							<ChatList
+								rooms={rooms}
+								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
+								onChatSelect={handleChatSelect}
+								onLeaveRoom={handleLeaveRoom}
+							/>{" "}
 						</div>
 
-						<div className="chat-view w-full bg-borderPrimary dark:bg-secondary-light rounded-2xl m-3 p-4 flex flex-col">
+						<div className="chat-view w-full bg-borderPrimary dark:bg-primary-light  rounded-2xl mt-4 mb-4 mr-4 p-4 flex flex-col">
 							{selectedChatId !== null ? (
 								<>
 									{/* Chat Header */}
-									<div className="chat-header truncate pb-6 rounded-t-lg">
+									<div className="chat-header truncate rounded-t-lg">
 										<ChatHeader
 											selectedChatId={selectedChatId}
 											membersOnline={membersOnline}
@@ -270,7 +268,7 @@ const ChatsPage: React.FC = () => {
 									</div>
 
 									{/* Chat Messages */}
-									<div className="flex-grow overflow-y-auto bg-borderPrimary dark:bg-primary-light dark:bg-gray-900">
+									<div className="flex-grow overflow-y-auto bg-borderPrimary dark:bg-primary-light">
 										<ChatMessages
 											messages={Object.values(rooms[selectedChatId]?.messages || {})}
 										/>
@@ -286,7 +284,7 @@ const ChatsPage: React.FC = () => {
 														setInputMessage(e.detail.value!)
 													}
 													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
-													className="flex-1 ml-4 dark:text-gray-700 text-gray-200 bg-secondary dark:bg-secondary-light rounded-3xl"
+													className="flex-1 ml-4 mb-3 dark:text-gray-700 text-gray-200 bg-secondary dark:bg-secondary-light rounded-3xl"
 												/>
 
 												<IonButton
@@ -316,7 +314,7 @@ const ChatsPage: React.FC = () => {
 									</div>
 								</>
 							) : (
-								<div className="no-chat-selected h-full flex flex-col items-center justify-center text-center p-4 bg-transparent dark:bg-primary-light rounded-lg">
+								<div className="no-chat-selected h-full flex flex-col items-center justify-center text-center p-4 bg-transparent dark:bg-primary-light rounded-2xl">
 									<div className="empty-chat-container">
 										<img
 											src={logo}

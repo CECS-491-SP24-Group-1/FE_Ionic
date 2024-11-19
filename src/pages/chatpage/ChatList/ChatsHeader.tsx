@@ -29,7 +29,7 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 	};
 
 	return (
-		<div className="chats-header bg-borderPrimary dark:bg-primary-light sticky top-0 z-10 text-textPrimary dark:text-textPrimary-light p-4">
+		<div className=" bg-transparent sticky top-0 z-10 text-textPrimary dark:text-textPrimary-light rounded-t-2xl p-4">
 			<div className="chats-title flex justify-between items-center mb-4">
 				<IonLabel className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
 					Chats

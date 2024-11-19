@@ -50,8 +50,7 @@ const ChatList: React.FC<ChatListProps> = ({
 			{/* Pass search handler to ChatsHeader */}
 			<ChatsHeader onSearch={(query) => setSearchQuery(query)} />
 
-			<IonList
-				className={`chat-list bg-transparent w-full h-full ${isEmpty ? "empty" : ""} rounded-b-lg`}>
+			<IonList className={`${isEmpty ? "empty" : ""}`}>
 				{isEmpty ? (
 					<div className="empty-container text-center p-4">
 						<div className="empty-chat-message">

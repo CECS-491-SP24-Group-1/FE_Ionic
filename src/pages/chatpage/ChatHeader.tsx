@@ -37,7 +37,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 	return (
 		<IonItem
 			lines="none"
-			className="dark:bg-backgroundHighlight-light text-textPrimary dark:text-textPrimary-light">
+			className="dark:bg-primary-light text-textPrimary dark:text-textPrimary-light">
 			<IonAvatar slot="start" className="rounded-full">
 				<img
 					src={`https://i.pravatar.cc/300?u=${selectedChatId}`} // Temporary use id for avatar
