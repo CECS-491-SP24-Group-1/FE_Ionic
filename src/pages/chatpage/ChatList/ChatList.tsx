@@ -50,53 +50,81 @@ const ChatList: React.FC<ChatListProps> = ({
 			{/* Pass search handler to ChatsHeader */}
 			<ChatsHeader onSearch={(query) => setSearchQuery(query)} />
 
-			<IonList className={`chat-list ${isEmpty ? "empty" : ""}`}>
+			<IonList
+				className={`chat-list bg-borderPrimary w-full h-full ${isEmpty ? "empty" : ""} rounded-b-lg`}>
 				{isEmpty ? (
-					<div className="empty-container">
+					<div className="empty-container text-center p-4">
 						<div className="empty-chat-message">
-							<h2>No chats found</h2>
+							<h2 className="text-textPrimary dark:text-textPrimary-light text-lg font-semibold">
+								No chats found
+							</h2>
 						</div>
-						<img src={emptyFolderImage} className="empty-image" alt="Empty folder" />
+						<img
+							src={emptyFolderImage}
+							className="empty-image mx-auto mt-4"
+							alt="Empty folder"
+						/>
 					</div>
 				) : (
 					filteredRooms.map((room) => (
 						<IonItem
 							button
 							key={room.id}
-							onClick={() => {
-								if (room.id !== selectedChatId) {
-									onChatSelect(room.id);
-								}
-							}}
-							className={`chat-list-item ${room.id === selectedChatId ? "selected" : ""}`}>
-							<IonAvatar slot="start" className="chat-list-avatar">
-								<img
-									src={`https://i.pravatar.cc/300?u=${room.id}`}
-									alt={`Chat room ${room.id}`}
-								/>
-							</IonAvatar>
-							<IonLabel className="chat-list-label">
-								<h2 className="chat-list-name">Room {room.id}</h2>
-								<p className="chat-list-message">
-									{room.last_message?.content || "No messages yet"}
-								</p>
-							</IonLabel>
-							<IonBadge color="success" slot="end" className="chat-list-badge">
-								{room.last_message?.timestamp
-									? new Date(room.last_message.timestamp).toLocaleTimeString([], {
-											hour: "2-digit",
-											minute: "2-digit"
-										})
-									: "N/A"}
-							</IonBadge>
-							<IonButton
-								fill="clear"
-								slot="end"
-								onClick={(e) =>
-									setPopoverState({ open: true, event: e.nativeEvent, chatId: room.id })
-								}>
-								<IonIcon icon={ellipsisHorizontal} />
-							</IonButton>
+							onClick={() => room.id !== selectedChatId && onChatSelect(room.id)}>
+							<div
+								className={`w-full ${
+									room.id === selectedChatId
+										? "bg-primary dark:bg-primary-light"
+										: "bg-transparent"
+								} text-textPrimary dark:text-textPrimary-light rounded-lg p-2`}>
+								<div className="flex items-center justify-between">
+									{/* Left Section: Avatar and Text */}
+									<div className="flex items-center">
+										<IonAvatar
+											slot="start"
+											className="mr-3 w-12 h-12 flex items-center justify-center">
+											<img
+												src={`https://i.pravatar.cc/300?u=${room.id}`}
+												alt={`Chat room ${room.id}`}
+												className="rounded-full"
+											/>
+										</IonAvatar>
+										<IonLabel className="chat-list-label">
+											<h2 className="chat-list-name font-medium text-textPrimary dark:text-textPrimary-light">
+												Room {room.id}
+											</h2>
+											<p className="chat-list-message text-textSecondary dark:text-textSecondary-light">
+												{room.last_message?.content || "No messages yet"}
+											</p>
+										</IonLabel>
+									</div>
+									{/* Right Section: Badge and Button */}
+									<div className="flex items-center space-x-3">
+										<IonBadge
+											color="success"
+											className="chat-list-badge bg-accent text-white text-sm dark:bg-accent-light">
+											{room.last_message?.timestamp
+												? new Date(room.last_message.timestamp).toLocaleTimeString([], {
+														hour: "2-digit",
+														minute: "2-digit"
+													})
+												: "N/A"}
+										</IonBadge>
+										<IonButton
+											fill="clear"
+											onClick={(e) =>
+												setPopoverState({
+													open: true,
+													event: e.nativeEvent,
+													chatId: room.id
+												})
+											}
+											className="text-textSecondary dark:text-textSecondary-light">
+											<IonIcon icon={ellipsisHorizontal} />
+										</IonButton>
+									</div>
+								</div>
+							</div>
 						</IonItem>
 					))
 				)}
@@ -107,7 +135,8 @@ const ChatList: React.FC<ChatListProps> = ({
 				event={popoverState.event}
 				onDidDismiss={() =>
 					setPopoverState({ open: false, event: undefined, chatId: null })
-				}>
+				}
+				className="text-textPrimary dark:text-textPrimary-light">
 				<IonItem
 					button
 					onClick={() => {
@@ -115,7 +144,8 @@ const ChatList: React.FC<ChatListProps> = ({
 							onLeaveRoom(popoverState.chatId);
 						}
 						setPopoverState({ open: false, event: undefined, chatId: null });
-					}}>
+					}}
+					className="text-red-600 dark:text-red-400">
 					Leave Room
 				</IonItem>
 			</IonPopover>

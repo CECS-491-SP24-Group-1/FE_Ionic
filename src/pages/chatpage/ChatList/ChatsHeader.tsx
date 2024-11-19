@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IonLabel, IonIcon, IonModal, IonButton, IonInput } from "@ionic/react";
-import { createOutline, search } from "ionicons/icons"; // Add search icon
+import { createOutline, search } from "ionicons/icons";
 import CreateChatRoom from "../CreateChatRoom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -29,26 +29,32 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 	};
 
 	return (
-		<div className="chats-header">
-			<div className="chats-title">
-				<IonLabel>Chats</IonLabel>
-				<div className="new-chat-icon-container">
-					<div className="new-chat-icon" onClick={handleOpenModal}>
-						<FontAwesomeIcon icon={faEdit} />
-					</div>
+		<div className="chats-header sticky top-0 z-10 text-textPrimary dark:text-textPrimary-light p-4">
+			<div className="chats-title flex justify-between items-center mb-4">
+				<IonLabel className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
+					Chats
+				</IonLabel>
+				<div
+					className="absolute top-2 right-2 flex items-center justify-center rounded-full text-[19px] p-[10px] shadow-[0px_2px_5px_rgba(0,0,0,0.2)] cursor-pointer transition-colors duration-300 text-textAccent dark:text-textAccent-light hover:bg-[#6a6a6b]"
+					onClick={handleOpenModal}>
+					<FontAwesomeIcon icon={faEdit} />
 				</div>
 			</div>
 
 			{/* Search bar */}
-			<div className="chat-search-bar">
-				<IonIcon icon={search} className="search-icon" />
+			<div className="chat-search-bar flex items-center bg-secondary dark:bg-secondary-light rounded-lg px-3 py-2">
+				<IonIcon
+					icon={search}
+					className="search-icon text-textSecondary dark:text-textSecondary-light mr-2"
+				/>
 				<IonInput
 					value={searchQuery}
 					placeholder="Search Messenger"
 					onIonChange={handleSearchChange}
-					className="chat-search-input"
+					className="chat-search-input bg-transparent text-textPrimary dark:text-textPrimary-light w-full"
 				/>
 			</div>
+
 			{/* Conditionally render the CreateChatRoom component */}
 			{showModal && <CreateChatRoom onRoomCreated={handleCloseModal} />}
 		</div>

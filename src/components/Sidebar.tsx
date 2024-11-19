@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		<div
 			className={`hidden sm:flex h-screen ${
 				isExpanded ? "w-64" : "w-20"
-			} bg-[#1a1a1a] p-6 flex-col flex-shrink-0 transition-width duration-300`}>
+			} bg-[#1a1a1a] p-6 flex-col flex-shrink-0 transition-width duration-300 rounded-r-lg`}>
 			{/* Toggle Button */}
 			<button onClick={toggleSidebar} className="mb-6 text-gray-300 hover:text-white">
 				<FaBars className="text-2xl" />

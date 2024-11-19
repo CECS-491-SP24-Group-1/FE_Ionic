@@ -81,7 +81,7 @@ const App: React.FC = () => {
 			<IonReactRouter>
 				<div className="flex h-screen">
 					{/* Sidebar */}
-					<div className="hidden sm:flex">
+					<div className="hidden sm:flex rounded-lg">
 						<Sidebar
 							isExpanded={isSidebarExpanded}
 							toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}

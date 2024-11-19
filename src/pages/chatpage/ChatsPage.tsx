@@ -245,17 +245,19 @@ const ChatsPage: React.FC = () => {
 				<div>Error loading chats.</div>
 			) : (
 				<IonContent id="main-content">
-					<div className="chat-container">
-						<div className="chat-list">
-							<ChatList
-								rooms={rooms}
-								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
-								onChatSelect={handleChatSelect}
-								onLeaveRoom={handleLeaveRoom}
-							/>{" "}
+					<div className="chat-container bg-secondary">
+						<div className="m-3">
+							<div className="chat-list h-full bg-borderPrimary dark:bg-backgroundHighlight-light rounded-lg">
+								<ChatList
+									rooms={rooms}
+									selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
+									onChatSelect={handleChatSelect}
+									onLeaveRoom={handleLeaveRoom}
+								/>{" "}
+							</div>
 						</div>
 
-						<div className="chat-view">
+						<div className="chat-view bg-primary dark:bg-backgroundHighlight-light rounded-lg m-3">
 							{selectedChatId !== null ? (
 								<>
 									<div className="chat-header">

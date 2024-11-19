@@ -35,32 +35,40 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 	};
 
 	return (
-		<IonItem lines="none" className="user-chat-bar">
-			<IonAvatar slot="start">
+		<IonItem
+			lines="none"
+			className="user-chat-bar dark:bg-backgroundHighlight-light text-textPrimary dark:text-textPrimary-light">
+			<IonAvatar slot="start" className="rounded-full">
 				<img
 					src={`https://i.pravatar.cc/300?u=${selectedChatId}`} // Temporary use id for avatar
 					alt={`Avatar for chat ${selectedChatId}`}
 				/>
 			</IonAvatar>
-			<IonLabel>
-				<h2>{selectedChatId}</h2> {/* temporary display selectedChatId as the title */}
-				<p>
+			<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+				<h2 className="font-semibold text-lg">{selectedChatId}</h2>{" "}
+				{/* Temporary display selectedChatId as the title */}
+				<p className="text-textSecondary dark:text-textSecondary-light text-sm">
 					Current members online: <strong>{membersOnline}</strong>
 				</p>
 			</IonLabel>
-			<div className="chat-header-icons">
-				<IonButton fill="clear" onClick={onExitChat}>
-					{" "}
+			<div className="chat-header-icons flex items-center space-x-2">
+				<IonButton
+					fill="clear"
+					onClick={onExitChat}
+					className="text-red-600 dark:text-red-400 text-sm">
 					Exit Room
 				</IonButton>
-				<IonButton fill="clear">
+				<IonButton fill="clear" className="text-accent dark:text-accent-light">
 					<IonIcon icon={call} />
 				</IonButton>
-				<IonButton fill="clear">
+				<IonButton fill="clear" className="text-accent dark:text-accent-light">
 					<IonIcon icon={videocam} />
 				</IonButton>
 				<IonMenuToggle>
-					<IonButton fill="clear" onClick={toggleMenu}>
+					<IonButton
+						fill="clear"
+						onClick={toggleMenu}
+						className="text-accent dark:text-accent-light">
 						<IonIcon icon={informationCircle} />
 					</IonButton>
 				</IonMenuToggle>

@@ -39,7 +39,7 @@ module.exports = {
 
 				// Border colors
 				borderPrimary: {
-					DEFAULT: "#3f3f52", // Default dark mode border color (dark gray)
+					DEFAULT: "#1e1e1e", // Default dark mode border color (dark gray)
 					light: "#d1d5db" // Light mode border color (soft gray)
 				},
 				borderAccent: {
