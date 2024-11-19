@@ -35,7 +35,7 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 					Chats
 				</IonLabel>
 				<div
-					className="absolute top-2 right-2 flex items-center justify-center rounded-full text-[19px] p-[10px] shadow-[0px_2px_5px_rgba(0,0,0,0.2)] cursor-pointer transition-colors duration-300 text-textAccent dark:text-textAccent-light hover:bg-[#6a6a6b]"
+					className="absolute top-4 right-4 flex items-center justify-center text-[19px] cursor-pointer transition-colors duration-300 text-textAccent dark:text-textAccent-light"
 					onClick={handleOpenModal}>
 					<FontAwesomeIcon icon={faEdit} />
 				</div>

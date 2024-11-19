@@ -134,8 +134,7 @@ const ChatList: React.FC<ChatListProps> = ({
 				event={popoverState.event}
 				onDidDismiss={() =>
 					setPopoverState({ open: false, event: undefined, chatId: null })
-				}
-				className="text-textPrimary dark:text-textPrimary-light">
+				}>
 				<IonItem
 					button
 					onClick={() => {
@@ -143,8 +142,7 @@ const ChatList: React.FC<ChatListProps> = ({
 							onLeaveRoom(popoverState.chatId);
 						}
 						setPopoverState({ open: false, event: undefined, chatId: null });
-					}}
-					className="text-red-600 dark:text-red-400">
+					}}>
 					Leave Room
 				</IonItem>
 			</IonPopover>

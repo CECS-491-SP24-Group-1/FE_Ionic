@@ -290,23 +290,23 @@ const ChatsPage: React.FC = () => {
 												<IonButton
 													onClick={() => handleSendMessage(inputMessage)}
 													fill="clear"
-													className="pb-3 text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
+													className="pb-3 text-blue-500  hover:text-blue-700 ">
 													<IonIcon icon={send} />
 												</IonButton>
 												<IonButton
 													fill="clear"
-													className="pb-3 text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
+													className="pb-3 text-blue-500 hover:text-blue-700 ">
 													<IonIcon icon={mic} />
 												</IonButton>
 												<IonButton
 													fill="clear"
 													onClick={() => setShowCamera(true)}
-													className="pb-3 text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
+													className="pb-3 text-blue-500 hover:text-blue-700 ">
 													<IonIcon icon={camera} />
 												</IonButton>
 												<IonButton
 													fill="clear"
-													className="pb-3 text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
+													className="pb-3 text-blue-500 hover:text-blue-700 ">
 													<IonIcon icon={attach} />
 												</IonButton>
 											</div>

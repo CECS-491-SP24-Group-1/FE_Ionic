@@ -59,6 +59,25 @@ ion-content {
 	--padding-top: var(--unsaved-changes-banner-height, 0px);
 }
 
+ion-popover {
+	--backdrop-opacity: 0;
+	--background: #333;
+	--ion-text-color: #fff;
+}
+
+ion-popover:hover {
+	--ion-text-color: #d4280a;
+}
+
+html.dark ion-popover {
+	--background: #fff;
+	--ion-text-color: #333;
+}
+
+html.dark ion-popover:hover {
+	--ion-text-color: #d4280a;
+}
+
 /* Styles for the IonModal component */
 .custom-modal {
 	.modal-wrapper {
