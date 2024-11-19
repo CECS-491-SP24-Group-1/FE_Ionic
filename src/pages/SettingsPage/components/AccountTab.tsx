@@ -22,36 +22,40 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 	};
   
 	return (
-	  <div className="flex justify-between items-center py-3 border-b border-borderPrimary dark:border-borderPrimary-light">
-		<p className="text-textSecondary dark:text-textSecondary-light">{label}</p>
-		{isEditing ? (
-		  <div className="flex items-center">
-			<input
-			  type="text"
-			  value={newValue}
-			  onChange={(e) => setNewValue(e.target.value)}
-			  className="border rounded px-2 py-1"
-			/>
-			<button onClick={handleSave} className="ml-2 text-accent dark:text-accent-light">
-			  Save
-			</button>
-		  </div>
-		) : (
-		  <p className="text-textPrimary dark:text-textPrimary-light">{value}</p>
-		)}
-		{isEditable && !isEditing && (
-		  <a
-			href="#"
-			onClick={(e) => {
-			  e.preventDefault();
-			  setIsEditing(true); // Enable edit mode
-			}}
-			className="text-accent hover:underline text-sm dark:text-accent-light"
-		  >
-			Edit
-		  </a>
-		)}
-	  </div>
+		<div className="flex justify-between items-center py-3 border-b border-borderPrimary dark:border-borderPrimary-light">
+		  <p className="text-textSecondary dark:text-textSecondary-light">{label}</p>
+		  {isEditing ? (
+			<div className="flex items-center">
+			  <input
+				type="text"
+				value={newValue}
+				onChange={(e) => setNewValue(e.target.value)}
+				className="border rounded px-2 py-1"
+			  />
+			  <button onClick={handleSave} className="ml-2 text-accent dark:text-accent-light">
+				Save
+			  </button>
+			</div>
+		  ) : (
+			<div className="flex items-center space-x-2">
+			  {/* Display Value */}
+			  <p className="text-textPrimary dark:text-textPrimary-light">{value}</p>
+			  {/* Edit Button */}
+			  {isEditable && (
+				<a
+				  href="#"
+				  onClick={(e) => {
+					e.preventDefault();
+					setIsEditing(true); // Enable edit mode
+				  }}
+				  className="text-accent hover:underline text-sm dark:text-accent-light"
+				>
+				  Edit
+				</a>
+			  )}
+			</div>
+		  )}
+		</div>
 	);
   };
   
