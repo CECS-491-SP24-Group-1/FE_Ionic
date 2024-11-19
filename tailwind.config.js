@@ -25,7 +25,7 @@ module.exports = {
 
 				// Text colors
 				textPrimary: {
-					DEFAULT: "#e4e4e7", // Default dark mode primary text color (soft white)
+					DEFAULT: "#d1d5db", // Default dark mode primary text color (soft white)
 					light: "#1a1a1a" // Light mode primary text color (dark gray)
 				},
 				textSecondary: {
@@ -40,7 +40,7 @@ module.exports = {
 				// Border colors
 				borderPrimary: {
 					DEFAULT: "#1e1e1e", // Default dark mode border color (dark gray)
-					light: "#d1d5db" // Light mode border color (soft gray)
+					light: "#d1d6de" // Light mode border color (soft gray)
 				},
 				borderAccent: {
 					DEFAULT: "#60a5fa", // Default dark mode accent border color (lighter blue)

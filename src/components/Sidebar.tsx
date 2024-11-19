@@ -18,21 +18,48 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 	const history = useHistory();
 
+	const menuItems = [
+		{ label: "Home", icon: FaHome, path: "/home" },
+		{ label: "Chat", icon: FaComments, path: "/chat" },
+		{ label: "Camera", icon: FaCamera, path: "/camera" },
+		{ label: "Connections", icon: FaUserFriends, path: "/connections" },
+		{ label: "Settings", icon: FaCog, path: "/settings" },
+		{ label: "About", icon: FaInfoCircle, path: "/about" }
+	];
+
 	const navigate = (path: string) => {
 		history.push(path);
 	};
 
-	// Define reusable class constant for the buttons
-	const buttonClasses =
-		"flex items-center space-x-3 text-lg pl- text-gray-300 hover:text-blue-400";
+	const buttonClasses = "flex items-center space-x-3 text-lg pl-2";
+
+	const MenuButtons = ({ isExpanded }: { isExpanded: boolean }) => (
+		<>
+			{menuItems.map((item) => (
+				<button
+					key={item.label}
+					onClick={() => navigate(item.path)}
+					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
+					<item.icon className="text-xl text-textPrimary dark:text-textPrimary-light hover:text-blue-400" />
+					{isExpanded && (
+						<span className="text-textPrimary dark:text-textPrimary-light hover:text-blue-400">
+							{item.label}
+						</span>
+					)}
+				</button>
+			))}
+		</>
+	);
 
 	return (
 		<div
 			className={`hidden sm:flex h-screen ${
 				isExpanded ? "w-64" : "w-20"
-			} bg-[#1a1a1a] p-6 flex-col flex-shrink-0 transition-width duration-300 rounded-r-lg`}>
+			} bg-borderPrimary dark:bg-borderPrimary-light p-6 flex-col flex-shrink-0 transition-width duration-300`}>
 			{/* Toggle Button */}
-			<button onClick={toggleSidebar} className="mb-6 text-gray-300 hover:text-white">
+			<button
+				onClick={toggleSidebar}
+				className="mb-6 text-textPrimary dark:text-textPrimary-light hover:text-blue-400">
 				<FaBars className="text-2xl" />
 			</button>
 			{/* Profile Section */}
@@ -47,8 +74,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 				</div>
 				{isExpanded && (
 					<div className="ml-4">
-						<p className="font-semibold text-gray-200">David</p>
-						<Link to="#" className="text-sm text-blue-400 hover:underline">
+						<p className="font-semibold text-textPrimary dark:text-textPrimary-light">
+							David
+						</p>
+						<Link
+							to="#"
+							className="text-sm text-blue-400 dark:text-blue-800 hover:underline">
 							View profile
 						</Link>
 					</div>
@@ -56,42 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 			</div>
 
 			<nav className="flex flex-col space-y-4">
-				<button
-					onClick={() => navigate("/home")}
-					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<FaHome className="text-xl" />
-					{isExpanded && <span>Home</span>}
-				</button>
-				<button
-					onClick={() => navigate("/chat")}
-					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<FaComments className="text-xl" />
-					{isExpanded && <span>Chat</span>}
-				</button>
-				<button
-					onClick={() => navigate("/camera")}
-					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<FaCamera className="text-xl" />
-					{isExpanded && <span>Camera</span>}
-				</button>
-				<button
-					onClick={() => navigate("/connections")}
-					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<FaUserFriends className="text-xl" />
-					{isExpanded && <span>Connections</span>}
-				</button>
-				<button
-					onClick={() => navigate("/settings")}
-					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<FaCog className="text-xl" />
-					{isExpanded && <span>Settings</span>}
-				</button>
-				<button
-					onClick={() => navigate("/about")}
-					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<FaInfoCircle className="text-xl" />
-					{isExpanded && <span>About</span>}
-				</button>
+				<MenuButtons isExpanded={isExpanded} />
 			</nav>
 		</div>
 	);

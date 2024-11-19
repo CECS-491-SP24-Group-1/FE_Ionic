@@ -75,7 +75,7 @@ const ChatList: React.FC<ChatListProps> = ({
 									room.id === selectedChatId
 										? "bg-secondary dark:bg-secondary-light"
 										: "bg-transparent"
-								} text-textPrimary dark:text-textPrimary-light rounded-2xl p-2`}>
+								} text-textPrimary dark:text-textPrimary-light rounded-2xl p-3`}>
 								<div className="flex items-center justify-between">
 									{/* Left Section: Avatar and Text */}
 									<div className="flex items-center">

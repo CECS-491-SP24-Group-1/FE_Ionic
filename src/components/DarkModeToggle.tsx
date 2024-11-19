@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { IonToggle } from "@ionic/react";
 
 function DarkModeToggle() {
 	const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -25,11 +26,10 @@ function DarkModeToggle() {
 	}, [isDarkMode]);
 
 	return (
-		<button
-			onClick={() => setIsDarkMode(!isDarkMode)}
-			className="p-2 text-white rounded dark:bg-primary-dark">
-			Toggle Dark Mode
-		</button>
+		<IonToggle
+			checked={isDarkMode}
+			onIonChange={(e: CustomEvent) => setIsDarkMode(e.detail.checked)}
+		/>
 	);
 }
 

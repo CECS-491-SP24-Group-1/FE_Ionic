@@ -8,7 +8,7 @@ import {
 	IonIcon,
 	IonMenuToggle
 } from "@ionic/react";
-import { call, videocam, informationCircle } from "ionicons/icons";
+import { call, videocam, informationCircle, exitOutline } from "ionicons/icons";
 import { useRoomStore } from "@/stores/room_store";
 
 interface ChatHeaderProps {
@@ -51,12 +51,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 					Current members online: <strong>{membersOnline}</strong>
 				</p>
 			</IonLabel>
-			<div className="chat-header-icons flex items-center space-x-2">
+			<div className="chat-header-icons flex items-center">
 				<IonButton
 					fill="clear"
 					onClick={onExitChat}
-					className="text-red-600 dark:text-red-400 text-sm">
-					Exit Room
+					className=" text-red-500 dark:text-red-400">
+					<IonIcon icon={exitOutline} />
 				</IonButton>
 				<IonButton fill="clear" className="text-accent dark:text-accent-light">
 					<IonIcon icon={call} />

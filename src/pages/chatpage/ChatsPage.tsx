@@ -246,7 +246,7 @@ const ChatsPage: React.FC = () => {
 			) : (
 				<IonContent id="main-content">
 					<div className="chat-container flex h-full bg-secondary dark:bg-white gap-4">
-						<div className="max-h-100 rounded-t-2xl bg-borderPrimary dark:bg-primary-light rounded-b-2xl ml-4 mt-4 mb-4 p-4">
+						<div className="max-h-100 min-w-[25rem] rounded-t-2xl bg-borderPrimary dark:bg-primary-light rounded-b-2xl ml-4 mt-4 mb-4 overflow-y-auto">
 							<ChatList
 								rooms={rooms}
 								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
@@ -284,29 +284,29 @@ const ChatsPage: React.FC = () => {
 														setInputMessage(e.detail.value!)
 													}
 													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
-													className="flex-1 ml-4 mb-3 dark:text-gray-700 text-gray-200 bg-secondary dark:bg-secondary-light rounded-3xl"
+													className="flex-1 ml-4 pl-4 mb-3 dark:text-gray-700 text-gray-200 bg-secondary dark:bg-secondary-light rounded-3xl"
 												/>
 
 												<IonButton
 													onClick={() => handleSendMessage(inputMessage)}
 													fill="clear"
-													className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
+													className="pb-3 text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
 													<IonIcon icon={send} />
 												</IonButton>
 												<IonButton
 													fill="clear"
-													className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
+													className="pb-3 text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
 													<IonIcon icon={mic} />
 												</IonButton>
 												<IonButton
 													fill="clear"
 													onClick={() => setShowCamera(true)}
-													className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
+													className="pb-3 text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
 													<IonIcon icon={camera} />
 												</IonButton>
 												<IonButton
 													fill="clear"
-													className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
+													className="pb-3 text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
 													<IonIcon icon={attach} />
 												</IonButton>
 											</div>
