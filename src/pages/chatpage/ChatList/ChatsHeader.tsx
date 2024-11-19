@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IonLabel, IonIcon, IonModal, IonButton, IonInput } from "@ionic/react";
 import { search } from "ionicons/icons";
-import CreateChatRoom from "../CreateChatRoom";
+import CreateChatRoom from "./CreateChatRoom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 

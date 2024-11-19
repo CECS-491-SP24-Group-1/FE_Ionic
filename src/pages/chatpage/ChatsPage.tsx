@@ -14,9 +14,9 @@ import {
 import { send, attach, mic, camera } from "ionicons/icons";
 import logo from "@assets/images/glock_primary.svg";
 import ChatList from "./ChatList/ChatList";
-import ChatMessages from "./ChatMessages";
+import ChatMessages from "./ChatView/ChatMessages";
 import taxios from "@/util/token_refresh_hook";
-import ChatHeader from "./ChatHeader";
+import ChatHeader from "./ChatView/ChatHeader";
 import ChatMenu from "./Menu/ChatMenu";
 import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import taxios from "../../util/token_refresh_hook";
-import useVaultStore from "../../stores/vault_store";
+import taxios from "../../../util/token_refresh_hook";
+import useVaultStore from "../../../stores/vault_store";
 import { IonModal } from "@ionic/react";
-import { useRoomStore } from "../../stores/room_store";
+import { useRoomStore } from "../../../stores/room_store";
 import { FaTimes } from "react-icons/fa";
 
 interface CreateChatRoomProps {

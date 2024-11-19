@@ -1,6 +1,5 @@
 $primary-color: #4b8fea;
 
-
 .search-icon {
 	color: #b0b3b8;
 	/* Gray color for the search icon */
@@ -26,53 +25,4 @@ $primary-color: #4b8fea;
 .chat-search-input:focus {
 	outline: none;
 	/* Remove focus outline */
-}
-
-
-/* Chat Bubbles */
-.chat-messages {
-	display: flex;
-	height: 90vh;
-	flex-direction: column;
-	padding: 15px;
-	overflow-y: auto;
-	word-wrap: break-word;
-}
-
-/* Chat Bubble */
-.chat-bubble {
-	max-width: 50%;
-	margin: 10px 0;
-	padding: 10px;
-	border-radius: 20px;
-	position: relative;
-	word-wrap: break-word;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-	word-break: break-word;
-}
-
-/* My chat - aligned right */
-.chat-bubble.from-me {
-	background-color: $primary-color;
-	color: white;
-	margin-left: auto;
-	/* Aligns my messages to the right */
-	border-bottom-right-radius: 0;
-}
-
-/* Their chat - aligned left */
-.chat-bubble.from-them {
-	background-color: #e5e5ea;
-	color: black;
-	margin-right: auto;
-	/* Aligns their messages to the left */
-	border-bottom-left-radius: 0;
-}
-
-.chat-bubble span {
-	display: block;
-	font-size: 0.8rem;
-	text-align: right;
-	margin-top: 5px;
 }

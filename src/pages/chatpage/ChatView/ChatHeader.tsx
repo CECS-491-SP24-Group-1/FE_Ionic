@@ -22,17 +22,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 	membersOnline,
 	onExitChat
 }) => {
-	// Retrieve the selected chat from Zustand
 	const selectedChat = useRoomStore((state) => state.rooms[selectedChatId]);
 
-	// Ensure the selected chat exists
 	if (!selectedChat) {
 		return null;
 	}
-
-	const toggleMenu = async () => {
-		await menuController.toggle();
-	};
 
 	return (
 		<IonItem
@@ -40,13 +34,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 			className="dark:bg-primary-light text-textPrimary dark:text-textPrimary-light">
 			<IonAvatar slot="start" className="rounded-full">
 				<img
-					src={`https://i.pravatar.cc/300?u=${selectedChatId}`} // Temporary use id for avatar
+					src={`https://i.pravatar.cc/300?u=${selectedChatId}`}
 					alt={`Avatar for chat ${selectedChatId}`}
 				/>
 			</IonAvatar>
 			<IonLabel className="text-textPrimary dark:text-textPrimary-light">
-				<h2 className="font-semibold text-lg">{selectedChatId}</h2>{" "}
-				{/* Temporary display selectedChatId as the title */}
+				<h2 className="font-semibold text-lg">{selectedChatId}</h2>
 				<p className="text-textSecondary dark:text-textSecondary-light text-sm">
 					Current members online: <strong>{membersOnline}</strong>
 				</p>
@@ -55,7 +48,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 				<IonButton
 					fill="clear"
 					onClick={onExitChat}
-					className=" text-red-500 dark:text-red-400">
+					className="text-red-500 dark:text-red-400">
 					<IonIcon icon={exitOutline} />
 				</IonButton>
 				<IonButton fill="clear" className="text-accent dark:text-accent-light">
@@ -64,11 +57,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 				<IonButton fill="clear" className="text-accent dark:text-accent-light">
 					<IonIcon icon={videocam} />
 				</IonButton>
-				<IonMenuToggle>
-					<IonButton
-						fill="clear"
-						onClick={toggleMenu}
-						className="text-accent dark:text-accent-light">
+				{/* Wrap the menu trigger button in IonMenuToggle */}
+				<IonMenuToggle menu="end">
+					<IonButton fill="clear" className="text-accent dark:text-accent-light">
 						<IonIcon icon={informationCircle} />
 					</IonButton>
 				</IonMenuToggle>

@@ -4,7 +4,7 @@ import { uuidv72Date } from "@/util/uuid";
 import useVaultStore from "@/stores/vault_store";
 
 interface ChatMessagesProps {
-	messages: Message[]; // Update to use the Message type
+	messages: Message[];
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
@@ -13,7 +13,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
 	// Reference to scroll to the end of the messages
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
-	//Vault state
+	// Vault state
 	const { myID } = useVaultStore((state) => ({
 		myID: state.myID
 	}));
@@ -32,14 +32,22 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
 	}, [messages]);
 
 	return (
-		<div ref={messagesContainerRef} className="chat-messages">
+		<div
+			ref={messagesContainerRef}
+			className="chat-messages overflow-auto max-h-screen p-4">
 			{messages.map((msg) => (
 				<div
 					key={msg.id}
-					className={`chat-bubble ${msg.sender_id === myID ? "from-me" : "from-them"}`}>
+					className={`chat-bubble ${
+						msg.sender_id === myID
+							? "bg-[#4b8fea] text-white ml-auto rounded-l-2xl rounded-tr-2xl"
+							: "bg-gray-200 text-black mr-auto rounded-r-2xl rounded-tl-2xl"
+					} w-fit max-w-xs p-3 my-3 break-words`}>
 					<p>{msg.content}</p>
-					{ /* <span>{uuidv72Date(msg.id).toLocaleTimeString()}</span> */}
-					<span>msg</span>
+					<span className="block text-xs text-right mt-1">
+						{/* Replace with `uuidv72Date` function when necessary */}
+						msg
+					</span>
 				</div>
 			))}
 			{/* Dummy div to ensure scroll to bottom */}
