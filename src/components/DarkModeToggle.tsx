@@ -1,36 +1,34 @@
-import { useEffect, useState } from "react";
+// src/components/DarkModeToggle.tsx
+import React, { useState, useEffect } from "react";
 import { IonToggle } from "@ionic/react";
 
-function DarkModeToggle() {
-	const [isDarkMode, setIsDarkMode] = useState(() => {
-		// Initialize based on localStorage or system preference
+const DarkModeToggle: React.FC = () => {
+	const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
 		const savedPreference = localStorage.getItem("isDarkMode");
 		if (savedPreference !== null) {
-			return JSON.parse(savedPreference);
-		} else {
-			return (
-				window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-			);
+			return JSON.parse(savedPreference) as boolean;
 		}
+		return window.matchMedia("(prefers-color-scheme: dark)").matches;
 	});
 
+	// Update the dark mode class and localStorage whenever isDarkMode changes
 	useEffect(() => {
-		// Update the dark mode class and save preference in localStorage
 		if (isDarkMode) {
 			document.documentElement.classList.add("dark");
-			localStorage.setItem("isDarkMode", JSON.stringify(true));
 		} else {
 			document.documentElement.classList.remove("dark");
-			localStorage.setItem("isDarkMode", JSON.stringify(false));
 		}
+		localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
 	}, [isDarkMode]);
 
 	return (
-		<IonToggle
-			checked={isDarkMode}
-			onIonChange={(e: CustomEvent) => setIsDarkMode(e.detail.checked)}
-		/>
+		<div>
+			<IonToggle
+				checked={isDarkMode}
+				onIonChange={(e: CustomEvent) => setIsDarkMode(e.detail.checked)}
+			/>
+		</div>
 	);
-}
+};
 
 export default DarkModeToggle;

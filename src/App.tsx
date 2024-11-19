@@ -60,6 +60,27 @@ const App: React.FC = () => {
 		);
 	}, [hasVaultUnsavedChanges]);
 
+	// Dark Mode initialization
+	useEffect(() => {
+		// Initialize dark mode based on localStorage or system preference
+		const savedPreference = localStorage.getItem("isDarkMode");
+		let isDarkMode: boolean;
+
+		if (savedPreference !== null) {
+			isDarkMode = JSON.parse(savedPreference) as boolean;
+		} else {
+			// Fallback to system preference
+			isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+		}
+
+		// Apply the dark mode class to the document root
+		if (isDarkMode) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+	}, []);
+
 	return (
 		<>
 			{/* Banner that shows whether there are unsaved vault changes */}
