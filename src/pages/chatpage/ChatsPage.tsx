@@ -261,7 +261,7 @@ const ChatsPage: React.FC = () => {
 							{selectedChatId !== null ? (
 								<>
 									{/* Chat Header */}
-									<div className="chat-header truncate">
+									<div className="chat-header truncate pb-6 rounded-t-lg">
 										<ChatHeader
 											selectedChatId={selectedChatId}
 											membersOnline={membersOnline}
@@ -270,23 +270,23 @@ const ChatsPage: React.FC = () => {
 									</div>
 
 									{/* Chat Messages */}
-									<div className="chat-messages flex-grow overflow-y-auto dark:bg-gray-900 rounded-lg">
+									<div className="flex-grow overflow-y-auto bg-borderPrimary dark:bg-primary-light dark:bg-gray-900">
 										<ChatMessages
 											messages={Object.values(rooms[selectedChatId]?.messages || {})}
 										/>
 									</div>
 									{/* Chat Input */}
-									<div className="chat-input mt-4">
-										<div className="dark:bg-gray-800 rounded-lg shadow-md">
-											<div className="flex items-center gap-2 p-3">
+									<div className="chat-input">
+										<div className="dark:bg-primary-light rounded-b-lg">
+											<div className="flex items-center gap-0">
 												<IonInput
 													value={inputMessage}
-													placeholder="Write a message..."
+													placeholder="    Write a message..."
 													onIonChange={(e: CustomEvent) =>
 														setInputMessage(e.detail.value!)
 													}
 													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
-													className="flex-1 p-3 text-gray-700 dark:text-gray-200 bg-secondary dark:bg-gray-700 rounded-lg focus:outline-none"
+													className="flex-1 ml-4 dark:text-gray-700 text-gray-200 bg-secondary dark:bg-secondary-light rounded-3xl"
 												/>
 
 												<IonButton
@@ -316,11 +316,11 @@ const ChatsPage: React.FC = () => {
 									</div>
 								</>
 							) : (
-								<div className="no-chat-selected h-full flex flex-col items-center justify-center text-center p-4 dark:bg-gray-900 rounded-lg">
+								<div className="no-chat-selected h-full flex flex-col items-center justify-center text-center p-4 bg-transparent dark:bg-primary-light rounded-lg">
 									<div className="empty-chat-container">
 										<img
 											src={logo}
-											className="empty-chat-image mx-auto w-44 h-44"
+											className="empty-chat-image mx-auto w-44 h-44 dark:invert"
 											alt="No chat selected"
 										/>
 									</div>
