@@ -113,7 +113,7 @@ const App: React.FC = () => {
 					<div className="flex flex-col flex-1">
 						<IonTabs
 							className={`flex flex-col flex-1 translate-x-0 z-auto ${
-								isSidebarExpanded ? "sm:translate-x-64" : "sm:translate-x-20"
+								isSidebarExpanded ? "sm:translate-x-64 pr-64" : "sm:translate-x-20 pr-20"
 							}`}>
 							<IonRouterOutlet className="flex-1">
 								<>
