@@ -7,9 +7,19 @@ const fetchUser = async (url: string) => {
 	const response = await taxios.get(url);
 	return response.data.payloads[0]; // Return the first payload as user data
 };
+
 const updateUser = async (uid: string, data: Record<string, any>) => {
-	await taxios.put(`${api}/user/${uid}`, data); // Update user data
-	mutate(`${api}/user/${uid}`); // Revalidate the SWR cache
+	try {
+	  const response = await taxios.patch(`${api}/user/${uid}`, data);
+	  console.log("Update response:", response.data);
+	  if (response.status !== 200) {
+		throw new Error("Failed to update user on the server.");
+	  }
+	  mutate(`${api}/user/${uid}`); // Revalidate the SWR cache
+	} catch (error) {
+	  console.error("Error updating user:", error);
+	  throw error;
+	}
 };
 
 export const useUser = (uid: string) => {
