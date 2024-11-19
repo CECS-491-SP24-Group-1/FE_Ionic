@@ -245,9 +245,9 @@ const ChatsPage: React.FC = () => {
 				<div>Error loading chats.</div>
 			) : (
 				<IonContent id="main-content">
-					<div className="chat-container bg-secondary">
+					<div className="chat-container flex h-full bg-secondary dark:bg-secondary-light">
 						<div className="m-3">
-							<div className="chat-list h-full bg-borderPrimary dark:bg-backgroundHighlight-light rounded-lg">
+							<div className="chat-list h-full bg-borderPrimary dark:bg-backgroundHighlight-light rounded-2xl">
 								<ChatList
 									rooms={rooms}
 									selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
@@ -257,10 +257,11 @@ const ChatsPage: React.FC = () => {
 							</div>
 						</div>
 
-						<div className="chat-view bg-primary dark:bg-backgroundHighlight-light rounded-lg m-3">
+						<div className="chat-view w-full bg-borderPrimary dark:bg-secondary-light rounded-2xl m-3 p-4 flex flex-col">
 							{selectedChatId !== null ? (
 								<>
-									<div className="chat-header">
+									{/* Chat Header */}
+									<div className="chat-header truncate">
 										<ChatHeader
 											selectedChatId={selectedChatId}
 											membersOnline={membersOnline}
@@ -268,56 +269,70 @@ const ChatsPage: React.FC = () => {
 										/>
 									</div>
 
-									<div className="chat-messages">
+									{/* Chat Messages */}
+									<div className="chat-messages flex-grow overflow-y-auto dark:bg-gray-900 rounded-lg">
 										<ChatMessages
 											messages={Object.values(rooms[selectedChatId]?.messages || {})}
 										/>
 									</div>
-
-									<div className="chat-input">
-										<IonFooter className="chat-input">
-											<IonToolbar>
+									{/* Chat Input */}
+									<div className="chat-input mt-4">
+										<div className="dark:bg-gray-800 rounded-lg shadow-md">
+											<div className="flex items-center gap-2 p-3">
 												<IonInput
 													value={inputMessage}
 													placeholder="Write a message..."
 													onIonChange={(e: CustomEvent) =>
 														setInputMessage(e.detail.value!)
 													}
-													//onIonInput={handleTyping} // Detect typing
 													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
+													className="flex-1 p-3 text-gray-700 dark:text-gray-200 bg-secondary dark:bg-gray-700 rounded-lg focus:outline-none"
 												/>
+
 												<IonButton
 													onClick={() => handleSendMessage(inputMessage)}
-													slot="end"
-													fill="clear">
+													fill="clear"
+													className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
 													<IonIcon icon={send} />
 												</IonButton>
-												<IonButton slot="end" fill="clear">
+												<IonButton
+													fill="clear"
+													className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
 													<IonIcon icon={mic} />
 												</IonButton>
 												<IonButton
-													slot="end"
 													fill="clear"
-													onClick={() => setShowCamera(true)}>
+													onClick={() => setShowCamera(true)}
+													className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
 													<IonIcon icon={camera} />
 												</IonButton>
-												<IonButton slot="end" fill="clear">
+												<IonButton
+													fill="clear"
+													className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">
 													<IonIcon icon={attach} />
 												</IonButton>
-											</IonToolbar>
-										</IonFooter>
+											</div>
+										</div>
 									</div>
 								</>
 							) : (
-								<div className="no-chat-selected">
+								<div className="no-chat-selected h-full flex flex-col items-center justify-center text-center p-4 dark:bg-gray-900 rounded-lg">
 									<div className="empty-chat-container">
-										<img src={logo} className="empty-chat-image" />
-										<h2>Wraith Web</h2>
-										<p>Please select a chat or create a new one to start messaging.</p>
-										<p>
-											You can create and organize your conversations here. Stay connected!
-										</p>
+										<img
+											src={logo}
+											className="empty-chat-image mx-auto w-44 h-44"
+											alt="No chat selected"
+										/>
 									</div>
+									<h2 className="text-6xl font-semibold dark:text-gray-800 text-gray-200">
+										Wraith Web
+									</h2>
+									<p className="dark:text-gray-600 text-gray-400 mt-2">
+										Please select a chat or create a new one to start messaging.
+									</p>
+									<p className="dark:text-gray-600 text-gray-400 mt-1">
+										You can create and organize your conversations here. Stay connected!
+									</p>
 								</div>
 							)}
 						</div>

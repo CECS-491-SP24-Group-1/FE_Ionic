@@ -51,7 +51,7 @@ const ChatList: React.FC<ChatListProps> = ({
 			<ChatsHeader onSearch={(query) => setSearchQuery(query)} />
 
 			<IonList
-				className={`chat-list bg-borderPrimary w-full h-full ${isEmpty ? "empty" : ""} rounded-b-lg`}>
+				className={`chat-list bg-transparent w-full h-full ${isEmpty ? "empty" : ""} rounded-b-lg`}>
 				{isEmpty ? (
 					<div className="empty-container text-center p-4">
 						<div className="empty-chat-message">
@@ -74,9 +74,9 @@ const ChatList: React.FC<ChatListProps> = ({
 							<div
 								className={`w-full ${
 									room.id === selectedChatId
-										? "bg-primary dark:bg-primary-light"
+										? "bg-secondary dark:bg-secondary-light"
 										: "bg-transparent"
-								} text-textPrimary dark:text-textPrimary-light rounded-lg p-2`}>
+								} text-textPrimary dark:text-textPrimary-light rounded-2xl p-2`}>
 								<div className="flex items-center justify-between">
 									{/* Left Section: Avatar and Text */}
 									<div className="flex items-center">
@@ -89,7 +89,7 @@ const ChatList: React.FC<ChatListProps> = ({
 												className="rounded-full"
 											/>
 										</IonAvatar>
-										<IonLabel className="chat-list-label">
+										<IonLabel className="chat-list-label max-w-44 text-sm truncate pr-2">
 											<h2 className="chat-list-name font-medium text-textPrimary dark:text-textPrimary-light">
 												Room {room.id}
 											</h2>

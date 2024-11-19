@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import taxios from "../../util/token_refresh_hook";
 import useVaultStore from "../../stores/vault_store";
-import { useHistory } from "react-router-dom";
+import { IonModal } from "@ionic/react";
 import { useRoomStore } from "../../stores/room_store";
 import { FaTimes } from "react-icons/fa";
 
@@ -56,125 +56,59 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 	};
 
 	return (
-		<div style={styles.modalOverlay}>
-			<div style={styles.modalContent}>
-				<FaTimes style={styles.closeIcon} onClick={onRoomCreated} />
-				<h2 style={styles.header}>Create New Chat Room</h2>
-				{error && <p style={styles.errorText}>{error}</p>}
-				{success && <p style={styles.successText}>{success}</p>}
-				<form onSubmit={handleSubmit} style={styles.form}>
-					<label htmlFor="participants" style={styles.label}>
-						Participants (comma-separated UUIDs):
-					</label>
-					<input
-						id="participants"
-						type="text"
-						value={participants}
-						onChange={(e) => setParticipants(e.target.value)}
-						required
-						style={styles.input}
+		<IonModal isOpen={true} onDidDismiss={onRoomCreated}>
+			<div className="fixed inset-0 flex items-center justify-center bg-transparent bg-opacity-100">
+				<div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-11/12 max-w-lg relative text-center">
+					<FaTimes
+						onClick={onRoomCreated}
+						className="absolute top-4 right-4 text-xl text-gray-700 dark:text-gray-200 cursor-pointer"
 					/>
-
-					<label htmlFor="roomName" style={styles.label}>
-						Chat Room Name:
-					</label>
-					<input
-						id="roomName"
-						type="text"
-						value={roomName}
-						onChange={(e) => setRoomName(e.target.value)}
-						required
-						style={styles.input}
-					/>
-
-					<button type="submit" style={styles.button}>
-						Create Chat Room
-					</button>
-				</form>
+					<h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+						Create New Chat Room
+					</h2>
+					{error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+					{success && <p className="text-sm text-green-500 mb-4">{success}</p>}
+					<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+						<div className="text-left">
+							<label
+								htmlFor="participants"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+								Participants (comma-separated UUIDs):
+							</label>
+							<input
+								id="participants"
+								type="text"
+								value={participants}
+								onChange={(e) => setParticipants(e.target.value)}
+								required
+								className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 shadow-sm focus:ring-primary focus:border-primary sm:text-sm p-2"
+							/>
+						</div>
+						<div className="text-left">
+							<label
+								htmlFor="roomName"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+								Chat Room Name:
+							</label>
+							<input
+								id="roomName"
+								type="text"
+								value={roomName}
+								onChange={(e) => setRoomName(e.target.value)}
+								required
+								className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 shadow-sm focus:ring-primary focus:border-primary sm:text-sm p-2"
+							/>
+						</div>
+						<button
+							type="submit"
+							className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:ring-offset-gray-900">
+							Create Chat Room
+						</button>
+					</form>
+				</div>
 			</div>
-		</div>
+		</IonModal>
 	);
-};
-
-const styles = {
-	modalOverlay: {
-		position: "fixed" as "fixed",
-		top: 0,
-		left: 0,
-		width: "100%",
-		height: "100%",
-		backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
-		zIndex: 1000
-	},
-
-	modalContent: {
-		backgroundColor: "#fff",
-		padding: "2rem",
-		borderRadius: "8px",
-		width: "90%",
-		maxWidth: "500px",
-		boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)", // Subtle shadow
-		position: "relative" as "relative",
-		textAlign: "center" as "center",
-		border: "none"
-	},
-	header: {
-		fontSize: "1.5rem",
-		marginBottom: "1rem",
-		color: "#333"
-	},
-	form: {
-		display: "flex",
-		flexDirection: "column" as "column",
-		gap: "1rem"
-	},
-	label: {
-		fontSize: "0.9rem",
-		color: "#555",
-		marginBottom: "0.3rem",
-		textAlign: "left" as "left"
-	},
-	input: {
-		padding: "0.8rem",
-		fontSize: "1rem",
-		borderRadius: "4px",
-		border: "1px solid #ccc",
-		width: "100%",
-		boxSizing: "border-box" as "border-box",
-		backgroundColor: "#fff",
-		color: "#333"
-	},
-	button: {
-		padding: "0.8rem",
-		fontSize: "1rem",
-		borderRadius: "4px",
-		border: "none",
-		backgroundColor: "#4CAF50",
-		color: "#fff",
-		cursor: "pointer",
-		transition: "background-color 0.3s ease"
-	},
-	errorText: {
-		color: "red",
-		marginBottom: "1rem",
-		fontSize: "0.9rem"
-	},
-	successText: {
-		color: "green",
-		marginBottom: "1rem",
-		fontSize: "0.9rem"
-	},
-	closeIcon: {
-		position: "absolute" as "absolute",
-		top: "15px",
-		right: "15px",
-		fontSize: "1.5rem",
-		cursor: "pointer",
-		color: "#333"
-	}
 };
 
 export default CreateChatRoom;
