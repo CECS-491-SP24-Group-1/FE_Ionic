@@ -1,5 +1,5 @@
 import React from "react";
-import { menuController } from "@ionic/core";
+import { menuController } from "@ionic/core/components";
 import {
 	IonItem,
 	IonAvatar,
@@ -26,6 +26,15 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
 	if (!selectedChat) {
 		return null;
+	}
+
+	async function openMenu() {
+		try {
+			await menuController.enable(true, "chat-menu");
+			await menuController.open("chat-menu");
+		} catch (error) {
+			console.error("Failed to open menu:", error);
+		}
 	}
 
 	return (
@@ -57,12 +66,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 				<IonButton fill="clear" className="text-accent dark:text-accent-light">
 					<IonIcon icon={videocam} />
 				</IonButton>
-				{/* Wrap the menu trigger button in IonMenuToggle */}
-				<IonMenuToggle menu="end">
-					<IonButton fill="clear" className="text-accent dark:text-accent-light">
-						<IonIcon icon={informationCircle} />
-					</IonButton>
-				</IonMenuToggle>
+				<IonButton
+					onClick={openMenu}
+					fill="clear"
+					className="text-accent dark:text-accent-light">
+					<IonIcon icon={informationCircle} />
+				</IonButton>
 			</div>
 		</IonItem>
 	);

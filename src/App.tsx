@@ -11,11 +11,24 @@ import {
 	IonContent,
 	IonButton,
 	IonInput,
-	IonToolbar
+	IonToolbar,
+	IonMenu,
+	IonHeader,
+	IonTitle,
+	IonList,
+	IonItem,
+	IonAvatar,
+	IonMenuToggle
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
-import { camera, settings, chatbubble, warningOutline } from "ionicons/icons";
+import {
+	camera,
+	settings,
+	chatbubble,
+	warningOutline,
+	closeCircleOutline
+} from "ionicons/icons";
 import useVaultStore from "./stores/vault_store";
 
 // Import pages
@@ -92,13 +105,91 @@ const App: React.FC = () => {
 						<div className="bannerText">
 							<IonIcon icon={warningOutline} />
 							<p>
-								Your vault has unsaved changes. Please click here to re-encrypt your
+								Your vault has unsaved changeXs. Please click here to re-encrypt your
 								vault.
 							</p>
 						</div>
 					</IonToolbar>
 				</div>
 			)}
+			<IonReactRouter>
+				<IonMenu
+					side="end"
+					contentId="chat-page"
+					menuId="chat-menu"
+					type="overlay"
+					className="bg-transparent">
+					<IonHeader className="bg-borderPrimary dark:bg-borderPrimary-light">
+						<IonToolbar>
+							<div className="flex">
+								<IonTitle className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
+									Chat Information
+								</IonTitle>
+								<IonMenuToggle>
+									<IonButton
+										fill="clear"
+										className="text-accent dark:text-accent-light flex items-center">
+										<IonIcon icon={closeCircleOutline} />
+									</IonButton>
+								</IonMenuToggle>
+							</div>
+						</IonToolbar>
+					</IonHeader>
+
+					<IonContent>
+						<div className="h-full bg-borderPrimary dark:bg-borderPrimary-light opacity-100">
+							<IonList>
+								{/* Chat Info */}
+								<IonItem className="flex items-center gap-4 py-4">
+									<IonAvatar slot="start">
+										<img
+											src="https://i.pravatar.cc/300"
+											alt="Chat Avatar"
+											className="rounded-full w-12 h-12"
+										/>
+									</IonAvatar>
+									<IonLabel>
+										<h2 className="font-semibold text-textPrimary dark:text-textPrimary-light">
+											Chat Name
+										</h2>
+										<p className="text-sm text-textPrimary dark:text-textPrimary-light">
+											Last message at 10:00 AM
+										</p>
+									</IonLabel>
+								</IonItem>
+
+								{/* Menu Items */}
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Profile
+									</IonLabel>
+								</IonItem>
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Mute Notifications
+									</IonLabel>
+								</IonItem>
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Search in Chat
+									</IonLabel>
+								</IonItem>
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Media, Links, and Docs
+									</IonLabel>
+								</IonItem>
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Privacy & Support
+									</IonLabel>
+								</IonItem>
+							</IonList>
+						</div>
+					</IonContent>
+				</IonMenu>
+			</IonReactRouter>
+
 			<IonReactRouter>
 				<div className="flex h-screen">
 					{/* Sidebar */}

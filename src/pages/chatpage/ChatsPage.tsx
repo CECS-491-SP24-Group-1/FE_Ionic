@@ -17,7 +17,6 @@ import ChatList from "./ChatList/ChatList";
 import ChatMessages from "./ChatView/ChatMessages";
 import taxios from "@/util/token_refresh_hook";
 import ChatHeader from "./ChatView/ChatHeader";
-import ChatMenu from "./Menu/ChatMenu";
 import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
@@ -238,13 +237,13 @@ const ChatsPage: React.FC = () => {
 	};
 
 	return (
-		<IonPage>
+		<IonPage id="chat-page">
 			{isLoading ? (
 				<div>Loading chats...</div>
 			) : error ? (
 				<div>Error loading chats.</div>
 			) : (
-				<IonContent id="main-content">
+				<IonContent id="chat-page">
 					<div className="chat-container flex h-full bg-secondary dark:bg-white gap-4">
 						<div className="max-h-100 min-w-[25rem] rounded-t-2xl bg-borderPrimary dark:bg-primary-light rounded-b-2xl ml-4 mt-4 mb-4 overflow-y-auto">
 							<ChatList
@@ -335,8 +334,6 @@ const ChatsPage: React.FC = () => {
 							)}
 						</div>
 					</div>
-
-					<ChatMenu selectedChatId={selectedChatId} />
 
 					{/* Camera Modal */}
 					<IonModal isOpen={showCamera} onDidDismiss={() => setShowCamera(false)}>
