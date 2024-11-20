@@ -1,17 +1,20 @@
+// Ionic imports
 import { useEffect, useRef, useState } from "react";
-import { IonIcon, IonButton, IonText } from "@ionic/react";
+import { IonIcon, IonButton, IonText, IonLoading } from "@ionic/react";
 import { downloadOutline, lockOpenOutline, logInOutline } from "ionicons/icons";
 import { toast } from "react-toastify";
 
 import LRContainer from "./components/LRContainer";
 import { swallowError } from "@/util/http_util";
 
+// Webstorage imports
 import "./LoginRegister.scss";
 import PassInput from "./components/PassInput";
 import { LS_EVAULT_KEY, SS_VAULT_KEY } from "@/constants/WebStorageKeys";
 import { VAULT_FILE_EXT } from "@/constants/Misc";
 import FileInput from "@/components/misc/FileInput";
 
+//Vaultstore and http response imputs
 import { readText } from "@/util/io";
 import { Auth, LoginReq } from "@ptypes/response_types";
 import credAxios from "@/util/axios_with_creds";
@@ -87,6 +90,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 	const [passphrase, setPassphrase] = useState(""); //State for passphrases
 	const disablePassphraseInput = useRef<boolean>(false);
 
+	// Loading spinner
+	const [loading, setLoading] = useState(false);
 	//Invokes the form loader
 	useEffect(() => {
 		console.log("setForm called");
@@ -202,6 +207,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		//Attempt to decrypt the vault
 		if (!evault) return; //This shouldn't be hit
 		disablePassphraseInput.current = true;
+		setLoading(true); // Show the spinner
+
 		try {
 			//Get the salt from the encrypted vault and a new one for re-encryption
 			const dsalt = evault.salt;
@@ -228,12 +235,15 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 				...prevState,
 				hasVault: true
 			}));
+
+			setLoading(false); // Hide spinner
 		} catch (e: any) {
 			toast.error(
 				"The passphrase you entered was incorrect or an error occurred. Check the console for more details."
 			);
 			console.error(e.message);
 			disablePassphraseInput.current = false;
+			
 		}
 	};
 
@@ -392,8 +402,12 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		</>
 	);
 
-	//Render the fragment
-	return form && <LRContainer title="Login" content={form} onSubmit={handleLogin} />;
+	return (
+		<>
+		  <IonLoading isOpen={loading} message="Decrypting the vault, please wait..." />
+		  {form && <LRContainer title="Login" content={form} onSubmit={handleLogin} />}
+		</>
+	  );
 };
 
 export default Login;
