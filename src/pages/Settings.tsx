@@ -69,29 +69,26 @@ const Settings: React.FC = () => {
 
 	const handleLogout = async () => {
 		try {
-			// Step 1: Optionally, invalidate session on the backend
-			await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
 				method: "POST",
-				credentials: "include", // Send cookies if needed
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("authToken")}` // Replace with token if needed
-				}
+				credentials: "include" // Send cookies along with the request
 			});
 
-			// Step 2: Clear tokens and user-related data
-			localStorage.removeItem("authToken");
-			sessionStorage.removeItem("authToken");
+			if (response.ok) {
+				// Remove local storage/session data
+				localStorage.removeItem("authToken");
+				sessionStorage.removeItem("authToken");
 
-			// Step 3: Reset any in-memory user state if you're using Context or Redux
-			// Example: userContext.setUser(null); // Uncomment if using Context API for user state
+				// Redirect to the login page
+				history.push("/LandingPage");
 
-			// Step 4: Redirect to the login page
-			history.push("/LandingPage");
-
-			console.log("User fully logged out");
+				console.log("User fully logged out");
+			} else {
+				console.error("Failed to log out:", await response.text());
+			}
+			history.push("/Home");
 		} catch (error) {
-			console.error("Failed to log out:", error);
+			console.error("Logout error:", error);
 		}
 	};
 
