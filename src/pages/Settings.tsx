@@ -1,5 +1,7 @@
-import { IonPage, IonContent } from "@ionic/react";
-import { useEffect, useMemo, useState } from "react";
+import { IonPage, IonContent, IonButton } from "@ionic/react";
+import { useEffect, useMemo, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
+import "./Settings.scss";
 
 const Settings: React.FC = () => {
 	/*
@@ -19,6 +21,97 @@ const Settings: React.FC = () => {
 	}, [ks1, ks2]);
 	*/
 
+	const history = useHistory();
+
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+	const handleButtonClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	};
+
+	const [profilePic, setProfilePic] = useState<string | null>(null);
+
+	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			console.log("Selected file:", file);
+			setProfilePic(URL.createObjectURL(file)); // Temporarily show the image
+
+			// Call the upload function
+			await uploadProfilePic(file);
+		}
+	};
+
+	const uploadProfilePic = async (file: File) => {
+		const formData = new FormData();
+		formData.append("profilePic", file);
+
+		try {
+			const response = await fetch("/api/upload", {
+				method: "POST",
+				body: formData
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				console.log("Upload successful:", data);
+				// Update profilePic with the server URL if needed
+				setProfilePic(data.imageUrl); // Assuming the server returns the URL of the uploaded image
+			} else {
+				console.error("Failed to upload profile picture.");
+			}
+		} catch (error) {
+			console.error("Error during upload:", error);
+		}
+	};
+
+	const handleLogout = async () => {
+		try {
+			// Step 1: Optionally, invalidate session on the backend
+			await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
+				method: "POST",
+				credentials: "include", // Send cookies if needed
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("authToken")}` // Replace with token if needed
+				}
+			});
+
+			// Step 2: Clear tokens and user-related data
+			localStorage.removeItem("authToken");
+			sessionStorage.removeItem("authToken");
+
+			// Step 3: Reset any in-memory user state if you're using Context or Redux
+			// Example: userContext.setUser(null); // Uncomment if using Context API for user state
+
+			// Step 4: Redirect to the login page
+			history.push("/LandingPage");
+
+			console.log("User fully logged out");
+		} catch (error) {
+			console.error("Failed to log out:", error);
+		}
+	};
+
+	const handleProfilePicChange = async (file: File) => {
+		const formData = new FormData();
+		formData.append("profilePic", file);
+
+		const response = await fetch("/api/upload", {
+			method: "POST",
+			body: formData
+		});
+
+		if (response.ok) {
+			console.log("Profile picture updated!");
+			// Update UI state
+		} else {
+			console.error("Failed to update profile picture.");
+		}
+	};
+
 	return (
 		<IonPage>
 			<IonContent>
@@ -37,6 +130,35 @@ const Settings: React.FC = () => {
 						<br></br>
 						*/}
 					</p>
+				</div>
+
+				<div className="button-container">
+					{/* Profile Picture Preview */}
+					{profilePic && (
+						<div className="profile-pic-container">
+							<img src={profilePic} alt="Profile" className="profile-pic-preview" />
+						</div>
+					)}
+
+					{/* Hidden File Input */}
+					<input
+						type="file"
+						//accept="image/*"
+						style={{ display: "none" }}
+						ref={fileInputRef}
+						onChange={handleFileChange}
+					/>
+
+					{/* Button */}
+					<IonButton className="profile-pic-button" onClick={handleButtonClick}>
+						Add/Change Profile Pic
+					</IonButton>
+				</div>
+
+				<div className="button-container">
+					<IonButton className="logout-button" onClick={handleLogout}>
+						Logout
+					</IonButton>
 				</div>
 			</IonContent>
 		</IonPage>

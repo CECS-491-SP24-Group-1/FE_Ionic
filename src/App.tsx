@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
-import { camera, settings, chatbubble, warningOutline } from "ionicons/icons";
+import { camera, settings, home, chatbubble, warningOutline } from "ionicons/icons";
 import useVaultStore from "./stores/vault_store";
 
 // Import pages
@@ -87,7 +87,7 @@ const App: React.FC = () => {
 							<Route path="/chat" component={ChatsPage} exact={true} />
 							<Route path="/LandingPage" component={LandingPage} exact={true} />
 							{/* <Route path="/PostRegister" component={PostRegister} exact={true} /> */}
-							<Route exact path="/" render={() => <Redirect to="/chat" />} />
+							<Route exact path="/" render={() => <Redirect to="/home" />} />
 						</>
 					</IonRouterOutlet>
 
@@ -113,6 +113,11 @@ const App: React.FC = () => {
 						<IonTabButton tab="camera" href="/camera">
 							<IonIcon icon={camera} />
 							<IonLabel>Camera</IonLabel>
+						</IonTabButton>
+
+						<IonTabButton tab="home" href="/home">
+							<IonIcon icon={home} />
+							<IonLabel>Home</IonLabel>
 						</IonTabButton>
 
 						<IonTabButton tab="settings" href="/settings">

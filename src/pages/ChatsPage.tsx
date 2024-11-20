@@ -1,5 +1,3 @@
-// src/pages/ChatsPage.tsx
-
 import React, { useEffect, useRef, useState } from "react";
 import {
 	IonContent,
@@ -22,34 +20,35 @@ import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
 import { LastMessage, MembershipChange } from "../../types/chat";
 import { newChat } from "@/util/chat";
-import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
+import { useRoomList } from "@/hooks/useRoomList";
 import "./Chats.scss";
 import { Message } from "@ptypes/chat";
 
 const ChatsPage: React.FC = () => {
 	const { myID, vault, evault } = useVaultStore((state) => ({
 		myID: state.myID,
-		vault: state.vault as Exclude<typeof state.vault, null | undefined>, // Type is not null
-		evault: state.evault as Exclude<typeof state.evault, null | undefined> // Type is not null
+		vault: state.vault as Exclude<typeof state.vault, null | undefined>,
+		evault: state.evault as Exclude<typeof state.evault, null | undefined>
 	}));
 
 	const { clearRoomMessages, rooms } = useRoomStore((state) => ({
 		clearRoomMessages: state.clearRoomMessages,
 		rooms: state.rooms
 	}));
-	const [membersOnline, setMembersOnline] = useState<number>(0)
-
-	const { isLoading, error } = useRoomList(); // Use the custom hook
-
+	const [membersOnline, setMembersOnline] = useState<number>(0);
+	const { isLoading, error } = useRoomList();
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState<string>("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
 	const [showCamera, setShowCamera] = useState(false);
+	const [isRecording, setIsRecording] = useState(false);
+	const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 	const api = import.meta.env.VITE_API_URL;
 
-	// WebSocket setup
 	useEffect(() => {
-		if (!selectedChatId) return;
+		if (!selectedChatId || !api) return;
 
 		const socket = new WebSocket(`${api}/chat/room/${selectedChatId}`);
 
@@ -58,23 +57,18 @@ const ChatsPage: React.FC = () => {
 		};
 
 		socket.onmessage = (event) => {
-			//Get the message from the server and log the event
 			console.log("Message from server:", event.data);
 			const msg: Message = JSON.parse(event.data);
 
-			//Switch over the message type
 			switch (msg.type) {
-				//User join/quit event
-				case "JOIN_EVENT": case "QUIT_EVENT": {
+				case "JOIN_EVENT":
+				case "QUIT_EVENT": {
 					const delta = JSON.parse(msg.content) as MembershipChange;
 					setMembersOnline(delta.new);
 					console.log(`membership change: old ${delta.old}, new ${delta.new}`);
 					break;
 				}
-
-				//Default handler
 				default: {
-					//Add the incoming message to the Zustand store
 					useRoomStore.getState().addMessageToRoom(selectedChatId, msg.id, msg);
 					break;
 				}
@@ -91,58 +85,50 @@ const ChatsPage: React.FC = () => {
 
 		setWs(socket);
 
-		// Clean up the WebSocket when the component unmounts or selectedChatId changes
 		return () => {
 			socket.close();
 		};
 	}, [selectedChatId, api]);
 
-	// Function to handle chat selection
 	const handleChatSelect = (chatId: string) => {
-		// If there's a currently selected chat, clear its messages
 		if (selectedChatId) {
-			clearRoomMessages(selectedChatId); // Clear the previous chat's messages when switching
+			clearRoomMessages(selectedChatId);
 		}
-
-		// Switch to the new chat room
 		setSelectedChatId(chatId);
 	};
 
 	const handleSendMessage = (message: string) => {
-		if (!message.trim() || !selectedChatId) return; // Check for empty message and selected chat
+		if (!message.trim() || !selectedChatId) return;
 
-		const chat = newChat(message, myID, selectedChatId); // Create a chat message
-		ws?.send(JSON.stringify(chat)); // Send the message over WebSocket
+		const chat = newChat(message, myID, selectedChatId);
+		ws?.send(JSON.stringify(chat));
 
-		// Add the message to the Zustand store using the correct Message interface
 		useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
-			id: chat.id, // Unique message ID
-			type: "U_MSG", // Specify the message type, e.g., user message
-			sender_id: myID, // Sender's ID (the current user)
-			recipient_id: selectedChatId, // Chat room ID or recipient ID
-			content: message // The actual text message
+			id: chat.id,
+			type: "U_MSG",
+			sender_id: myID,
+			recipient_id: selectedChatId,
+			content: message
 		});
 
-		setInputMessage(""); // Clear the input field after sending the message
+		setInputMessage("");
 	};
 
 	const handleSendImage = (imageData: string) => {
 		if (selectedChatId) {
-			const chat = newChat(imageData, myID, selectedChatId); // Create a chat message for the image
-			ws?.send(JSON.stringify(chat)); // Send the image message over WebSocket
+			const chat = newChat(imageData, myID, selectedChatId);
+			ws?.send(JSON.stringify(chat));
 
-			// Add the image message to the Zustand store using the correct Message interface
 			useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
-				id: chat.id, // Unique message ID
-				type: "U_MSG", // Specify the message type (you could use a specific type for images)
-				sender_id: myID, // Sender's ID (the current user)
-				recipient_id: selectedChatId, // Chat room ID or recipient ID
-				content: "[Image]" // Placeholder content for the image (you can use imageData here if needed)
+				id: chat.id,
+				type: "U_MSG",
+				sender_id: myID,
+				recipient_id: selectedChatId,
+				content: "[Image]"
 			});
 		}
 	};
 
-	// Function to handle key down for the input
 	const handleKeyDown = (event: React.KeyboardEvent) => {
 		const inputElement = event.target as HTMLIonInputElement;
 		const message = inputElement.value?.toString().trim();
@@ -151,6 +137,100 @@ const ChatsPage: React.FC = () => {
 			event.preventDefault();
 			handleSendMessage(message);
 			setInputMessage("");
+		}
+	};
+
+	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file && selectedChatId) {
+			const formData = new FormData();
+			formData.append("file", file);
+
+			try {
+				const response = await fetch(`${api}/upload`, { method: "POST", body: formData });
+				if (!response.ok) {
+					console.error("Failed to upload file", response.statusText);
+					return;
+				}
+
+				const { url } = await response.json();
+				const chat = newChat(url, myID, selectedChatId);
+				ws?.send(JSON.stringify(chat));
+
+				useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
+					id: chat.id,
+					type: "FILE",
+					sender_id: myID,
+					recipient_id: selectedChatId,
+					content: file.name,
+					url: url
+				});
+			} catch (error) {
+				console.error("Error uploading file:", error);
+				console.log("File upload URL:", `${api}/upload`);
+			}
+		}
+	};
+
+	// Function to handle recording
+	const handleAudioRecording = () => {
+		if (isRecording) {
+			// Stop recording
+			mediaRecorderRef.current?.stop();
+			setIsRecording(false);
+		} else {
+			// Start recording
+			navigator.mediaDevices
+				.getUserMedia({ audio: true })
+				.then((stream) => {
+					const mediaRecorder = new MediaRecorder(stream);
+					mediaRecorderRef.current = mediaRecorder;
+
+					mediaRecorder.ondataavailable = (event) => {
+						setAudioChunks((prev) => [...prev, event.data]);
+					};
+
+					mediaRecorder.onstop = () => {
+						const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+						setAudioChunks([]);
+						handleSendAudio(audioBlob);
+					};
+
+					mediaRecorder.start();
+					setIsRecording(true);
+				})
+				.catch((error) => console.error("Error accessing microphone:", error));
+		}
+	};
+
+	// Function to send audio file as a message
+	const handleSendAudio = async (audioBlob: Blob) => {
+		if (selectedChatId) {
+			const formData = new FormData();
+			formData.append("file", audioBlob, "recording.webm");
+
+			try {
+				const response = await fetch(`${api}/upload`, { method: "POST", body: formData });
+				if (!response.ok) {
+					console.error("Failed to upload audio file:", response.statusText);
+					return;
+				}
+
+				const { url } = await response.json();
+				const chat = newChat(url, myID, selectedChatId);
+				ws?.send(JSON.stringify(chat));
+
+				useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
+					id: chat.id,
+					type: "FILE",
+					sender_id: myID,
+					recipient_id: selectedChatId,
+					content: "[Audio Message]",
+					url: url
+				});
+			} catch (error) {
+				console.error("Error uploading audio file:", error);
+			}
 		}
 	};
 
@@ -166,16 +246,19 @@ const ChatsPage: React.FC = () => {
 						<div className="chat-list">
 							<ChatList
 								rooms={rooms}
-								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
+								selectedChatId={selectedChatId}
 								onChatSelect={handleChatSelect}
-							/>{" "}
+							/>
 						</div>
 
 						<div className="chat-view">
 							{selectedChatId !== null ? (
 								<>
 									<div className="chat-header">
-										<ChatHeader selectedChatId={selectedChatId} membersOnline={membersOnline} />
+										<ChatHeader
+											selectedChatId={selectedChatId}
+											membersOnline={membersOnline}
+										/>
 									</div>
 
 									<div className="chat-messages">
@@ -201,8 +284,11 @@ const ChatsPage: React.FC = () => {
 													fill="clear">
 													<IonIcon icon={send} />
 												</IonButton>
-												<IonButton slot="end" fill="clear">
-													<IonIcon icon={mic} />
+												<IonButton onClick={handleAudioRecording} slot="end" fill="clear">
+													<IonIcon
+														icon={mic}
+														color={isRecording ? "danger" : undefined}
+													/>
 												</IonButton>
 												<IonButton
 													slot="end"
@@ -210,9 +296,19 @@ const ChatsPage: React.FC = () => {
 													onClick={() => setShowCamera(true)}>
 													<IonIcon icon={camera} />
 												</IonButton>
-												<IonButton slot="end" fill="clear">
+												<IonButton
+													slot="end"
+													fill="clear"
+													onClick={() => fileInputRef.current?.click()}>
 													<IonIcon icon={attach} />
 												</IonButton>
+
+												<input
+													type="file"
+													ref={fileInputRef}
+													style={{ display: "none" }}
+													onChange={handleFileChange}
+												/>
 											</IonToolbar>
 										</IonFooter>
 									</div>
@@ -234,7 +330,6 @@ const ChatsPage: React.FC = () => {
 
 					<ChatMenu selectedChatId={selectedChatId} />
 
-					{/* Camera Modal */}
 					<IonModal isOpen={showCamera} onDidDismiss={() => setShowCamera(false)}>
 						<Camera
 							onCapture={(imageData: string) => {

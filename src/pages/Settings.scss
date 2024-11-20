@@ -1,0 +1,113 @@
+// General page styling
+.page-content {
+    padding: 2rem; // Add spacing to the content
+    text-align: center; // Center-align text and buttons
+    background-color: #f9f9f9; // Light background for better contrast
+    min-height: 100vh; // Ensure full-page height
+    box-sizing: border-box;
+}
+
+// Heading styles
+h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+// Paragraph styling
+p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+
+    code {
+        font-family: monospace;
+        background: #e0e0e0;
+        padding: 0.2rem 0.4rem;
+        border-radius: 5px;
+    }
+}
+
+// Button container styling
+.button-container {
+    margin: 1.5rem auto;
+    display: flex;
+    justify-content: center;
+
+    // Ensure buttons are spaced apart
+    .ion-button {
+        margin: 0 0.5rem;
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+
+    // Profile picture button styling
+    .profile-pic-button {
+        padding-top: 20px;
+        width: 100px;
+        height: 50px;
+
+        &:hover {
+            background-color: #0056b3; // Darker blue on hover
+        }
+    }
+
+    .profile-pic-container {
+        width: 100px;
+        /* Desired width of the cropped area */
+        height: 100px;
+        /* Desired height of the cropped area */
+        overflow: hidden;
+        /* Ensures the image is cropped */
+        border-radius: 50%;
+        /* Makes the cropped area circular */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Centers the image in the container */
+    }
+
+    .profile-pic-preview {
+        width: 100%;
+        /* Makes the image fit the container */
+        height: auto;
+        /* Maintains aspect ratio */
+        object-fit: cover;
+        /* Crops the image to fill the container */
+    }
+
+
+    // Logout button styling
+    .logout-button {
+        width: 100px;
+        height: 50px;
+
+        &:hover {
+            background-color: #0056b3; // Darker red on hover
+        }
+    }
+}
+
+// Responsive design adjustments
+@media (max-width: 768px) {
+    .page-content {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    .button-container {
+        flex-direction: column;
+
+        .ion-button {
+            margin: 0.5rem 0;
+            width: 90%; // Ensure buttons fit on smaller screens
+        }
+    }
+}
