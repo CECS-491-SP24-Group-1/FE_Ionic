@@ -22,9 +22,11 @@ import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
 import { LastMessage, MembershipChange } from "types/chat";
 import { newChat } from "@/util/chat";
+import { Message } from "@ptypes/chat";
+
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
 import "./Chats.scss";
-import { Message } from "@ptypes/chat";
 
 const ChatsPage: React.FC = () => {
 	const { myID, vault, evault } = useVaultStore((state) => ({
@@ -50,6 +52,9 @@ const ChatsPage: React.FC = () => {
 	const [ws, setWs] = useState<WebSocket | null>(null);
 	const [showCamera, setShowCamera] = useState(false);
 	const api = import.meta.env.VITE_API_URL;
+
+	const { width } = useWindowSize();
+	const isMobile = width !== undefined && width < 640;
 
 	// WebSocket setup
 	useEffect(() => {
@@ -245,94 +250,97 @@ const ChatsPage: React.FC = () => {
 			) : (
 				<IonContent id="chat-page">
 					<div className="chat-container flex h-full bg-secondary dark:bg-white gap-4">
-						<div className="max-h-100 min-w-[25rem] rounded-t-2xl bg-borderPrimary dark:bg-primary-light rounded-b-2xl ml-4 mt-4 mb-4 overflow-y-auto">
-							<ChatList
-								rooms={rooms}
-								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
-								onChatSelect={handleChatSelect}
-								onLeaveRoom={handleLeaveRoom}
-							/>{" "}
-						</div>
+						{/* Chat List */}
+						{(!selectedChatId || !isMobile) && (
+							<div className="chat-list-container max-h-100 min-w-full sm:min-w-[25rem] rounded-t-2xl bg-borderPrimary dark:bg-primary-light rounded-b-2xl ml-4 mt-4 mb-4 overflow-y-auto">
+								<ChatList
+									rooms={rooms}
+									selectedChatId={selectedChatId}
+									onChatSelect={handleChatSelect}
+									onLeaveRoom={handleLeaveRoom}
+								/>
+							</div>
+						)}
 
-						<div className="chat-view w-full bg-borderPrimary dark:bg-primary-light  rounded-2xl mt-4 mb-4 mr-4 p-4 flex flex-col">
-							{selectedChatId !== null ? (
-								<>
-									{/* Chat Header */}
-									<div className="chat-header truncate rounded-t-lg">
-										<ChatHeader
-											selectedChatId={selectedChatId}
-											membersOnline={membersOnline}
-											onExitChat={handleExitChat}
-										/>
-									</div>
+						{/* Chat View */}
+						{selectedChatId && (
+							<div className="chat-view-container w-full bg-borderPrimary dark:bg-primary-light rounded-2xl mt-4 mb-4 mr-4 p-4 flex flex-col">
+								{/* Chat Header */}
+								<div className="chat-header truncate rounded-t-lg">
+									<ChatHeader
+										selectedChatId={selectedChatId}
+										membersOnline={membersOnline}
+										onExitChat={handleExitChat}
+										isMobileView={isMobile}
+									/>
+								</div>
 
-									{/* Chat Messages */}
-									<div className="flex-grow overflow-y-auto bg-borderPrimary dark:bg-primary-light">
-										<ChatMessages
-											messages={Object.values(rooms[selectedChatId]?.messages || {})}
-										/>
-									</div>
-									{/* Chat Input */}
-									<div className="chat-input">
-										<div className="dark:bg-primary-light rounded-b-lg">
-											<div className="flex items-center gap-0">
-												<IonInput
-													value={inputMessage}
-													placeholder="    Write a message..."
-													onIonChange={(e: CustomEvent) =>
-														setInputMessage(e.detail.value!)
-													}
-													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
-													className="flex-1 ml-4 pl-4 mb-3 dark:text-gray-700 text-gray-200 bg-secondary dark:bg-secondary-light rounded-3xl"
-												/>
+								{/* Chat Messages */}
+								<div className="flex-grow overflow-y-auto bg-borderPrimary dark:bg-primary-light">
+									<ChatMessages
+										messages={Object.values(rooms[selectedChatId]?.messages || {})}
+									/>
+								</div>
 
-												<IonButton
-													onClick={() => handleSendMessage(inputMessage)}
-													fill="clear"
-													className="pb-3 text-blue-500  hover:text-blue-700 ">
-													<IonIcon icon={send} />
-												</IonButton>
-												<IonButton
-													fill="clear"
-													className="pb-3 text-blue-500 hover:text-blue-700 ">
-													<IonIcon icon={mic} />
-												</IonButton>
-												<IonButton
-													fill="clear"
-													onClick={() => setShowCamera(true)}
-													className="pb-3 text-blue-500 hover:text-blue-700 ">
-													<IonIcon icon={camera} />
-												</IonButton>
-												<IonButton
-													fill="clear"
-													className="pb-3 text-blue-500 hover:text-blue-700 ">
-													<IonIcon icon={attach} />
-												</IonButton>
-											</div>
+								{/* Chat Input */}
+								<div className="chat-input">
+									<div className="dark:bg-primary-light rounded-b-lg">
+										<div className="flex items-center gap-0">
+											<IonInput
+												value={inputMessage}
+												placeholder="    Write a message..."
+												onIonChange={(e: CustomEvent) => setInputMessage(e.detail.value!)}
+												onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
+												className="flex-1 ml-4 pl-4 mb-3 dark:text-gray-700 text-gray-200 bg-secondary dark:bg-secondary-light rounded-3xl"
+											/>
+
+											<IonButton
+												onClick={() => handleSendMessage(inputMessage)}
+												fill="clear"
+												className="pb-3 text-blue-500  hover:text-blue-700 ">
+												<IonIcon icon={send} />
+											</IonButton>
+											<IonButton
+												fill="clear"
+												className="pb-3 text-blue-500 hover:text-blue-700 ">
+												<IonIcon icon={mic} />
+											</IonButton>
+											<IonButton
+												fill="clear"
+												onClick={() => setShowCamera(true)}
+												className="pb-3 text-blue-500 hover:text-blue-700 ">
+												<IonIcon icon={camera} />
+											</IonButton>
+											<IonButton
+												fill="clear"
+												className="pb-3 text-blue-500 hover:text-blue-700 ">
+												<IonIcon icon={attach} />
+											</IonButton>
 										</div>
 									</div>
-								</>
-							) : (
-								<div className="no-chat-selected h-full flex flex-col items-center justify-center text-center p-4 bg-transparent dark:bg-primary-light rounded-2xl">
-									<div className="empty-chat-container">
-										<img
-											src={logo}
-											className="empty-chat-image mx-auto w-44 h-44 dark:invert"
-											alt="No chat selected"
-										/>
-									</div>
-									<h2 className="text-6xl font-semibold dark:text-gray-800 text-gray-200">
-										Wraith Web
-									</h2>
-									<p className="dark:text-gray-600 text-gray-400 mt-2">
-										Please select a chat or create a new one to start messaging.
-									</p>
-									<p className="dark:text-gray-600 text-gray-400 mt-1">
-										You can create and organize your conversations here. Stay connected!
-									</p>
 								</div>
-							)}
-						</div>
+							</div>
+						)}
+
+						{/* No Chat Selected Message (for larger screens) */}
+						{!selectedChatId && !isMobile && (
+							<div className="h-full translate-x-12 flex flex-col items-center justify-center text-center p-4 bg-transparent dark:bg-primary-light rounded-2xl">
+								<img
+									src={logo}
+									className="empty-chat-image mx-auto w-44 h-44 dark:invert"
+									alt="No chat selected"
+								/>
+								<h2 className="text-6xl font-semibold dark:text-gray-800 text-gray-200">
+									Wraith Web
+								</h2>
+								<p className="dark:text-gray-600 text-gray-400 mt-2">
+									Please select a chat or create a new one to start messaging.
+								</p>
+								<p className="dark:text-gray-600 text-gray-400 mt-1">
+									You can create and organize your conversations here. Stay connected!
+								</p>
+							</div>
+						)}
 					</div>
 
 					{/* Camera Modal */}

@@ -203,8 +203,11 @@ const App: React.FC = () => {
 					{/* Main content */}
 					<div className="flex flex-col flex-1">
 						<IonTabs
-							className={`flex flex-col flex-1 z-auto ${isSidebarExpanded ? "sm:translate-x-32 pr-64" : "sm:translate-x-10 pr-20"
-								}`}>
+							className={`flex flex-col flex-1 z-auto ${
+								isSidebarExpanded
+									? "translate-x-0 pr-0 sm:translate-x-64 sm:pr-64"
+									: "translate-x-0 pr-0 sm:translate-x-20 sm:pr-20"
+							}`}>
 							<IonRouterOutlet className="flex-1">
 								<>
 									{/* Define routes for each tab */}

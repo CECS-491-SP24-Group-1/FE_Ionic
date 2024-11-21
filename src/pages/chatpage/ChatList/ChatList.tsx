@@ -88,8 +88,8 @@ const ChatList: React.FC<ChatListProps> = ({
 												className="rounded-full"
 											/>
 										</IonAvatar>
-										<IonLabel className="chat-list-label max-w-44 text-sm truncate pr-2">
-											<h2 className="chat-list-name font-medium text-textPrimary dark:text-textPrimary-light">
+										<IonLabel className="max-w-44 text-sm truncate pr-2">
+											<h2 className="font-medium text-textPrimary dark:text-textPrimary-light">
 												Room {room.id}
 											</h2>
 											<p className="chat-list-message text-textSecondary dark:text-textSecondary-light">
