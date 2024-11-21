@@ -32,7 +32,7 @@ import {
 import useVaultStore from "./stores/vault_store";
 
 // Import pages
-import Home from "./pages/Home";
+import Home from "./pages/homepage/Home";
 import CameraPage from "./pages/Camera";
 import SettingsPage from "./pages/settingpage/SettingsPage";
 import ChatsPage from "./pages/chatpage/ChatsPage";
