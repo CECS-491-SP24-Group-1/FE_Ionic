@@ -45,7 +45,8 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 			lines="none"
 			className="dark:bg-primary-light text-textPrimary dark:text-textPrimary-light flex items-center">
 			{/* Left Section: Back Button on Mobile */}
-			<div className="flex gap-16">
+			<div className="flex flex-grow items-center">
+				{/* Left Section */}
 				<div className="flex items-center gap-4">
 					{isMobileView && (
 						<IonButton onClick={onExitChat} fill="clear" className="mr-2">
@@ -67,7 +68,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 				</div>
 
 				{/* Right Section: Action Buttons */}
-				<div className="chat-header-icons">
+				<div className="ml-auto">
 					{/* Hide the exit button on mobile if the back button is present */}
 					{!isMobileView && (
 						<IonButton

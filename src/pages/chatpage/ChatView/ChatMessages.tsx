@@ -36,15 +36,21 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
 			ref={messagesContainerRef}
 			className="chat-messages overflow-auto max-h-screen p-4">
 			{messages.map((msg) => (
-				<div
-					key={msg.id}
-					className={`chat-bubble ${
-						msg.sender_id === myID
-							? "bg-[#4b8fea] text-white ml-auto rounded-l-2xl rounded-tr-2xl"
-							: "bg-gray-200 text-black mr-auto rounded-r-2xl rounded-tl-2xl"
-					} w-fit max-w-xs p-3 my-3 break-words`}>
-					<p>{msg.content}</p>
-					<span className="block text-xs text-right mt-1">
+				<div key={msg.id} className="message-container my-3">
+					{/* Chat bubble */}
+					<div
+						className={`chat-bubble ${
+							msg.sender_id === myID
+								? "bg-[#4b8fea] text-white ml-auto"
+								: "bg-gray-200 text-black mr-auto"
+						} rounded-2xl w-fit max-w-xs p-3 break-words`}>
+						<p>{msg.content}</p>
+					</div>
+					{/* Message part (outside the bubble) */}
+					<span
+						className={`block text-xs mt-1 text-gray-500 ${
+							msg.sender_id === myID ? "text-right" : "text-left "
+						}`}>
 						{/* Replace with `uuidv72Date` function when necessary */}
 						msg
 					</span>

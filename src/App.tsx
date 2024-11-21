@@ -202,12 +202,12 @@ const App: React.FC = () => {
 
 					{/* Main content */}
 					<div
-						className="flex-1 relative"
+						className="flex-1"
 						style={{
 							position: "relative"
 						}}>
-						<IonTabs className={`flex flex-col flex-1 z-auto`}>
-							<IonRouterOutlet className="flex-1">
+						<IonTabs>
+							<IonRouterOutlet>
 								<>
 									{/* Define routes for each tab */}
 									<Route path="/home" component={Home} exact={true} />

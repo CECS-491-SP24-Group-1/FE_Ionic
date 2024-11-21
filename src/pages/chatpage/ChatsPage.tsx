@@ -324,7 +324,7 @@ const ChatsPage: React.FC = () => {
 
 						{/* No Chat Selected Message (for larger screens) */}
 						{!selectedChatId && !isMobile && (
-							<div className="h-full translate-x-12 flex flex-col items-center justify-center text-center p-4 bg-transparent dark:bg-primary-light rounded-2xl">
+							<div className="h-full flex flex-grow flex-col items-center justify-center text-center p-4 bg-transparent dark:bg-primary-light rounded-2xl">
 								<img
 									src={logo}
 									className="empty-chat-image mx-auto w-44 h-44 dark:invert"
