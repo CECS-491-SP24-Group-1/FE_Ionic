@@ -7,23 +7,17 @@ import {
 	IonText,
 	IonButton
 } from "@ionic/react";
+import logo from "@assets/images/glock_primary.svg";
+import "./Home.scss";
 
 const Home: React.FC = () => (
 	<IonPage>
-		<IonContent className="ion-padding">
+		<IonContent>
 			{/* Welcome Message */}
-			<IonText color="primary">
-				<h1>Welcome to Wraith</h1>
+			<IonText className="heading" color="primary">
+				<img src={logo} alt="Wraith Logo" className="logo" />
+				<h1>Wraith</h1>
 			</IonText>
-
-			<IonText>
-				<p>Use the tabs below to navigate between different sections of the app.</p>
-			</IonText>
-
-			{/* Button to explore other parts */}
-			<IonButton expand="full" routerLink="/camera">
-				Go to Camera
-			</IonButton>
 		</IonContent>
 	</IonPage>
 );
