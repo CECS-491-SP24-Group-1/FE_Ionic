@@ -3,6 +3,7 @@ import { FaCamera } from "react-icons/fa";
 import { useUser } from "@/hooks/useUser";
 import useVaultStore from "@/stores/vault_store";
 import useSWR, { mutate } from "swr";
+
 interface InfoFieldProps {
 	label: string;
 	value: string;
@@ -22,7 +23,7 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 	};
 
 	return (
-		<div className="flex items-center justify-between border-b border-borderPrimary py-3 dark:border-borderPrimary-light">
+		<div className="flex justify-between items-center py-3 border-b border-borderPrimary dark:border-borderPrimary-light">
 			<p className="text-textSecondary dark:text-textSecondary-light">{label}</p>
 			{isEditing ? (
 				<div className="flex items-center">
@@ -61,8 +62,9 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 };
 
 const AccountTab: React.FC = () => {
-	const myID = useVaultStore((state) => state.myID); // Get the user ID from VaultStore
-	const { user, isLoading, error, updateUser } = useUser(myID); // Use the user ID in the useUser hook
+	const myID = useVaultStore((state) => state.myID);
+	const { user, isLoading, error, updateUser } = useUser(myID);
+	const [newPhoto, setNewPhoto] = useState<string>("");
 
 	if (isLoading) {
 		return <p>Loading...</p>;
@@ -74,19 +76,31 @@ const AccountTab: React.FC = () => {
 
 	const handleUpdateDisplayName = async (newDisplayName: string) => {
 		try {
-			// Optimistically update user data locally
 			const updatedUser = { ...user, display_name: newDisplayName };
-
-			// Update local SWR cache immediately
 			mutate(`${import.meta.env.VITE_API_URL}/user/${myID}`, updatedUser, false);
-
-			// Update the server and trigger cache revalidation
 			await updateUser({ display_name: newDisplayName });
-
-			// Revalidate SWR cache after the update
 			mutate(`${import.meta.env.VITE_API_URL}/user/${myID}`);
 		} catch (err) {
 			console.error("Failed to update display name:", err);
+		}
+	};
+
+	const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = async () => {
+				try {
+					// Update user photo
+					const updatedUser = { ...user, photo_url: reader.result as string };
+					mutate(`${import.meta.env.VITE_API_URL}/user/${myID}`, updatedUser, false);
+					await updateUser({ photo_url: reader.result });
+					mutate(`${import.meta.env.VITE_API_URL}/user/${myID}`);
+				} catch (err) {
+					console.error("Failed to update user photo:", err);
+				}
+			};
+			reader.readAsDataURL(file);
 		}
 	};
 
@@ -104,21 +118,27 @@ const AccountTab: React.FC = () => {
 
 	return (
 		<div className="flex flex-col space-y-6">
-			{/* Profile Info Card */}
 			<div className="flex items-center space-x-4">
-				{/* Profile Image with Edit Icon Overlay */}
-				<div className="relative h-16 w-16">
+				<div className="relative w-16 h-16">
 					<img
-						src="https://via.placeholder.com/64" // Placeholder image URL
+						src={user?.photo_url || "https://via.placeholder.com/64"}
 						alt="Profile"
 						className="h-full w-full rounded-full object-cover"
 					/>
-					<div className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-muted p-1 text-xs text-textPrimary dark:bg-muted-light dark:text-textPrimary-light">
+					<label
+						htmlFor="photo-upload"
+						className="absolute bottom-0 right-0 bg-muted text-textPrimary p-1 rounded-full text-xs cursor-pointer dark:bg-muted-light dark:text-textPrimary-light">
 						<FaCamera />
-					</div>
+					</label>
+					<input
+						type="file"
+						id="photo-upload"
+						accept="image/*"
+						className="hidden"
+						onChange={handlePhotoChange}
+					/>
 				</div>
 
-				{/* User Info */}
 				<div>
 					<p className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
 						{user?.display_name || "Display Name"}
@@ -131,7 +151,6 @@ const AccountTab: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Personal Information List */}
 			<div className="flex flex-col space-y-2">
 				{infoFields.map((field) => (
 					<InfoField
@@ -139,7 +158,7 @@ const AccountTab: React.FC = () => {
 						label={field.label}
 						value={field.value}
 						isEditable={field.isEditable}
-						onSave={field.onSave} // Pass the save handler
+						onSave={field.onSave}
 					/>
 				))}
 			</div>

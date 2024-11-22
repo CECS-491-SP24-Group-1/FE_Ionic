@@ -21,11 +21,13 @@ import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
 import { LastMessage, MembershipChange } from "types/chat";
+
 import { newChat } from "@/util/chat";
 import { Message } from "@ptypes/chat";
 
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
+
 import "./Chats.scss";
 
 const ChatsPage: React.FC = () => {
@@ -50,6 +52,10 @@ const ChatsPage: React.FC = () => {
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	const [inputMessage, setInputMessage] = useState<string>("");
 	const [ws, setWs] = useState<WebSocket | null>(null);
+	const [isRecording, setIsRecording] = useState(false);
+	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+	const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [showCamera, setShowCamera] = useState(false);
 	const api = import.meta.env.VITE_API_URL;
 
@@ -179,6 +185,99 @@ const ChatsPage: React.FC = () => {
 			setInputMessage("");
 		}
 	};
+	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file && selectedChatId) {
+			const formData = new FormData();
+			formData.append("file", file);
+
+			try {
+				const response = await fetch(`${api}/upload`, { method: "POST", body: formData });
+				if (!response.ok) {
+					console.error("Failed to upload file", response.statusText);
+					return;
+				}
+
+				const { url } = await response.json();
+				const chat = newChat(url, myID, selectedChatId);
+				ws?.send(JSON.stringify(chat));
+
+				useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
+					id: chat.id,
+					type: "FILE",
+					sender_id: myID,
+					recipient_id: selectedChatId,
+					content: file.name,
+					url: url
+				});
+			} catch (error) {
+				console.error("Error uploading file:", error);
+				console.log("File upload URL:", `${api}/upload`);
+			}
+		}
+	};
+
+	// Function to handle recording
+	const handleAudioRecording = () => {
+		if (isRecording) {
+			// Stop recording
+			mediaRecorderRef.current?.stop();
+			setIsRecording(false);
+		} else {
+			// Start recording
+			navigator.mediaDevices
+				.getUserMedia({ audio: true })
+				.then((stream) => {
+					const mediaRecorder = new MediaRecorder(stream);
+					mediaRecorderRef.current = mediaRecorder;
+
+					mediaRecorder.ondataavailable = (event) => {
+						setAudioChunks((prev) => [...prev, event.data]);
+					};
+
+					mediaRecorder.onstop = () => {
+						const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+						setAudioChunks([]);
+						handleSendAudio(audioBlob);
+					};
+
+					mediaRecorder.start();
+					setIsRecording(true);
+				})
+				.catch((error) => console.error("Error accessing microphone:", error));
+		}
+	};
+
+	// Function to send audio file as a message
+	const handleSendAudio = async (audioBlob: Blob) => {
+		if (selectedChatId) {
+			const formData = new FormData();
+			formData.append("file", audioBlob, "recording.webm");
+
+			try {
+				const response = await fetch(`${api}/upload`, { method: "POST", body: formData });
+				if (!response.ok) {
+					console.error("Failed to upload audio file:", response.statusText);
+					return;
+				}
+
+				const { url } = await response.json();
+				const chat = newChat(url, myID, selectedChatId);
+				ws?.send(JSON.stringify(chat));
+
+				useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
+					id: chat.id,
+					type: "FILE",
+					sender_id: myID,
+					recipient_id: selectedChatId,
+					content: "[Audio Message]",
+					url: url
+				});
+			} catch (error) {
+				console.error("Error uploading audio file:", error);
+			}
+		}
+	};
 
 	//Function to send typing status
 	const sendTypingStatus = (status: boolean) => {
@@ -281,7 +380,6 @@ const ChatsPage: React.FC = () => {
 										messages={Object.values(rooms[selectedChatId]?.messages || {})}
 									/>
 								</div>
-
 								{/* Chat Input */}
 								<div className="chat-input">
 									<div className="rounded-b-lg dark:bg-primary-light">
@@ -300,22 +398,34 @@ const ChatsPage: React.FC = () => {
 												className="pb-3 text-blue-500 hover:text-blue-700">
 												<IonIcon icon={send} />
 											</IonButton>
-											<IonButton
-												fill="clear"
-												className="pb-3 text-blue-500 hover:text-blue-700">
-												<IonIcon icon={mic} />
+
+											{/* Audio Recording */}
+											<IonButton onClick={handleAudioRecording} slot="end" fill="clear">
+												<IonIcon icon={mic} color={isRecording ? "danger" : undefined} />
 											</IonButton>
+
+											{/* Camera Button */}
 											<IonButton
 												fill="clear"
 												onClick={() => setShowCamera(true)}
 												className="pb-3 text-blue-500 hover:text-blue-700">
 												<IonIcon icon={camera} />
 											</IonButton>
+
+											{/* File Attachment */}
 											<IonButton
+												slot="end"
 												fill="clear"
-												className="pb-3 text-blue-500 hover:text-blue-700">
+												onClick={() => fileInputRef.current?.click()}>
 												<IonIcon icon={attach} />
 											</IonButton>
+
+											<input
+												type="file"
+												ref={fileInputRef}
+												style={{ display: "none" }}
+												onChange={handleFileChange}
+											/>
 										</div>
 									</div>
 								</div>
