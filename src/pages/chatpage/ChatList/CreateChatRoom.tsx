@@ -58,16 +58,16 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 	return (
 		<IonModal isOpen={true} onDidDismiss={onRoomCreated}>
 			<div className="fixed inset-0 flex items-center justify-center bg-transparent bg-opacity-100">
-				<div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-11/12 max-w-lg relative text-center">
+				<div className="relative w-11/12 max-w-lg rounded-lg bg-white p-6 text-center dark:bg-gray-800">
 					<FaTimes
 						onClick={onRoomCreated}
-						className="absolute top-4 right-4 text-xl text-gray-700 dark:text-gray-200 cursor-pointer"
+						className="absolute right-4 top-4 cursor-pointer text-xl text-gray-700 dark:text-gray-200"
 					/>
-					<h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+					<h2 className="mb-4 text-2xl font-bold text-gray-800 dark:text-gray-100">
 						Create New Chat Room
 					</h2>
-					{error && <p className="text-sm text-red-500 mb-4">{error}</p>}
-					{success && <p className="text-sm text-green-500 mb-4">{success}</p>}
+					{error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+					{success && <p className="mb-4 text-sm text-green-500">{success}</p>}
 					<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 						<div className="text-left">
 							<label
@@ -81,7 +81,7 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 								value={participants}
 								onChange={(e) => setParticipants(e.target.value)}
 								required
-								className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 shadow-sm focus:ring-primary focus:border-primary sm:text-sm p-2"
+								className="mt-1 block w-full rounded-md border border-gray-300 bg-white p-2 text-gray-700 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200 sm:text-sm"
 							/>
 						</div>
 						<div className="text-left">
@@ -96,12 +96,12 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 								value={roomName}
 								onChange={(e) => setRoomName(e.target.value)}
 								required
-								className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 shadow-sm focus:ring-primary focus:border-primary sm:text-sm p-2"
+								className="mt-1 block w-full rounded-md border border-gray-300 bg-white p-2 text-gray-700 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200 sm:text-sm"
 							/>
 						</div>
 						<button
 							type="submit"
-							className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:ring-offset-gray-900">
+							className="w-full rounded-md bg-green-500 px-4 py-2 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:ring-offset-gray-900">
 							Create Chat Room
 						</button>
 					</form>

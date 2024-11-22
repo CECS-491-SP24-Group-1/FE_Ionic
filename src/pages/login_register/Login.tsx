@@ -243,7 +243,6 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			);
 			console.error(e.message);
 			disablePassphraseInput.current = false;
-			
 		}
 	};
 
@@ -404,10 +403,10 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 	return (
 		<>
-		  <IonLoading isOpen={loading} message="Decrypting the vault, please wait..." />
-		  {form && <LRContainer title="Login" content={form} onSubmit={handleLogin} />}
+			<IonLoading isOpen={loading} message="Decrypting the vault, please wait..." />
+			{form && <LRContainer title="Login" content={form} onSubmit={handleLogin} />}
 		</>
-	  );
+	);
 };
 
 export default Login;

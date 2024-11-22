@@ -40,9 +40,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 					key={item.label}
 					onClick={() => navigate(item.path)}
 					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<item.icon className="text-xl text-textPrimary dark:text-textPrimary-light hover:text-blue-400" />
+					<item.icon className="text-xl text-textPrimary hover:text-blue-400 dark:text-textPrimary-light" />
 					{isExpanded && (
-						<span className="text-textPrimary dark:text-textPrimary-light hover:text-blue-400">
+						<span className="text-textPrimary hover:text-blue-400 dark:text-textPrimary-light">
 							{item.label}
 						</span>
 					)}
@@ -53,21 +53,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 
 	return (
 		<div
-			className={`hidden sm:flex h-screen ${
+			className={`hidden h-screen sm:flex ${
 				isExpanded ? "w-64" : "w-20"
-			} bg-borderPrimary dark:bg-borderPrimary-light p-6 flex-col flex-shrink-0 transition-width duration-300`}>
+			} transition-width flex-shrink-0 flex-col bg-borderPrimary p-6 duration-300 dark:bg-borderPrimary-light`}>
 			{/* Toggle Button */}
 			<button
 				onClick={toggleSidebar}
-				className="mb-6 text-textPrimary dark:text-textPrimary-light hover:text-blue-400">
+				className="mb-6 text-textPrimary hover:text-blue-400 dark:text-textPrimary-light">
 				<FaBars className="text-2xl" />
 			</button>
 			{/* Profile Section */}
-			<div className="flex items-center mb-6">
+			<div className="mb-6 flex items-center">
 				<div
 					className={`${
-						isExpanded ? "w-12 h-12" : "w-8 h-8"
-					} rounded-full flex items-center justify-center text-lg font-semibold text-white`}
+						isExpanded ? "h-12 w-12" : "h-8 w-8"
+					} flex items-center justify-center rounded-full text-lg font-semibold text-white`}
 					style={{ backgroundColor: "#444444" }}>
 					{/* Placeholder for profile image */}
 					<span style={{ backgroundColor: "transparent" }}>DP</span>
@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 						</p>
 						<Link
 							to="#"
-							className="text-sm text-blue-400 dark:text-blue-800 hover:underline">
+							className="text-sm text-blue-400 hover:underline dark:text-blue-800">
 							View profile
 						</Link>
 					</div>

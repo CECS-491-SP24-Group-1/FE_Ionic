@@ -20,9 +20,9 @@ const AppearanceTab: React.FC = () => {
 	};
 
 	return (
-		<IonCard className="bg-backgroundHighlight bg-opacity-50 text-textPrimary dark:bg-backgroundHighlight-light dark:text-textPrimary-light rounded-lg shadow-md">
+		<IonCard className="rounded-lg bg-backgroundHighlight bg-opacity-50 text-textPrimary shadow-md dark:bg-backgroundHighlight-light dark:text-textPrimary-light">
 			<IonCardContent>
-				<h2 className="text-xl font-semibold mb-4">Appearance Settings</h2>
+				<h2 className="mb-4 text-xl font-semibold">Appearance Settings</h2>
 
 				{/* Theme Toggle */}
 				<IonItem

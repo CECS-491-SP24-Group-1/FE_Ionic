@@ -5,7 +5,7 @@ import Footer from "./components/footer"; // Adjust the import paths based on yo
 
 const Home: React.FC = () => {
 	return (
-		<div className="bg-primary text-textPrimary overflow-y-auto h-screen">
+		<div className="h-screen overflow-y-auto bg-primary text-textPrimary dark:bg-primary-light dark:text-textPrimary-light">
 			{/* Hero Section */}
 			<Hero />
 

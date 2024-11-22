@@ -148,7 +148,7 @@ export function Root() {
 				<div className="loadPlaceholder">
 					<div className="flex items-baseline">
 						<h1 className="mr-2">Loading Vaultlib module</h1>
-						<IonSpinner className="w-5 h-5"></IonSpinner>
+						<IonSpinner className="h-5 w-5"></IonSpinner>
 					</div>
 					<p>Check the console for further details</p>
 				</div>

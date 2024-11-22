@@ -52,9 +52,9 @@ const ChatList: React.FC<ChatListProps> = ({
 
 			<IonList className={`${isEmpty ? "empty" : ""}`}>
 				{isEmpty ? (
-					<div className="empty-container text-center p-4">
+					<div className="empty-container p-4 text-center">
 						<div className="empty-chat-message">
-							<h2 className="text-textPrimary dark:text-textPrimary-light text-lg font-semibold">
+							<h2 className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
 								No chats found
 							</h2>
 						</div>
@@ -75,20 +75,20 @@ const ChatList: React.FC<ChatListProps> = ({
 									room.id === selectedChatId
 										? "bg-secondary dark:bg-secondary-light"
 										: "bg-transparent"
-								} text-textPrimary dark:text-textPrimary-light rounded-2xl p-3`}>
+								} rounded-2xl p-3 text-textPrimary dark:text-textPrimary-light`}>
 								<div className="flex items-center justify-between">
 									{/* Left Section: Avatar and Text */}
 									<div className="flex items-center">
 										<IonAvatar
 											slot="start"
-											className="mr-3 w-12 h-12 flex items-center justify-center">
+											className="mr-3 flex h-12 w-12 items-center justify-center">
 											<img
 												src={`https://i.pravatar.cc/300?u=${room.id}`}
 												alt={`Chat room ${room.id}`}
 												className="rounded-full"
 											/>
 										</IonAvatar>
-										<IonLabel className="max-w-44 text-sm truncate pr-2">
+										<IonLabel className="max-w-44 truncate pr-2 text-sm">
 											<h2 className="font-medium text-textPrimary dark:text-textPrimary-light">
 												Room {room.id}
 											</h2>
@@ -101,7 +101,7 @@ const ChatList: React.FC<ChatListProps> = ({
 									<div className="flex items-center space-x-3">
 										<IonBadge
 											color="success"
-											className="chat-list-badge bg-accent text-white text-sm dark:bg-accent-light">
+											className="chat-list-badge bg-accent text-sm text-white dark:bg-accent-light">
 											{room.last_message?.timestamp
 												? new Date(room.last_message.timestamp).toLocaleTimeString([], {
 														hour: "2-digit",

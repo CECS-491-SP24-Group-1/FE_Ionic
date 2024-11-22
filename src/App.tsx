@@ -128,7 +128,7 @@ const App: React.FC = () => {
 								<IonMenuToggle>
 									<IonButton
 										fill="clear"
-										className="text-accent dark:text-accent-light flex items-center">
+										className="flex items-center text-accent dark:text-accent-light">
 										<IonIcon icon={closeCircleOutline} />
 									</IonButton>
 								</IonMenuToggle>
@@ -137,7 +137,7 @@ const App: React.FC = () => {
 					</IonHeader>
 
 					<IonContent>
-						<div className="h-full bg-borderPrimary dark:bg-borderPrimary-light opacity-100">
+						<div className="h-full bg-borderPrimary opacity-100 dark:bg-borderPrimary-light">
 							<IonList>
 								{/* Chat Info */}
 								<IonItem className="flex items-center gap-4 py-4">
@@ -145,7 +145,7 @@ const App: React.FC = () => {
 										<img
 											src="https://i.pravatar.cc/300"
 											alt="Chat Avatar"
-											className="rounded-full w-12 h-12"
+											className="h-12 w-12 rounded-full"
 										/>
 									</IonAvatar>
 									<IonLabel>
@@ -193,7 +193,7 @@ const App: React.FC = () => {
 			<IonReactRouter>
 				<div className="flex h-screen">
 					{/* Sidebar */}
-					<div className="hidden sm:flex rounded-lg">
+					<div className="hidden rounded-lg sm:flex">
 						<Sidebar
 							isExpanded={isSidebarExpanded}
 							toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}

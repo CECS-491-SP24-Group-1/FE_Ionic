@@ -43,7 +43,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 	return (
 		<IonItem
 			lines="none"
-			className="dark:bg-primary-light text-textPrimary dark:text-textPrimary-light flex items-center">
+			className="flex items-center text-textPrimary dark:bg-primary-light dark:text-textPrimary-light">
 			{/* Left Section: Back Button on Mobile */}
 			<div className="flex flex-grow items-center">
 				{/* Left Section */}
@@ -53,15 +53,15 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 							<IonIcon icon={arrowBack} />
 						</IonButton>
 					)}
-					<IonAvatar slot="start" className="w-12 h-12 rounded-full">
+					<IonAvatar slot="start" className="h-12 w-12 rounded-full">
 						<img
 							src={`https://i.pravatar.cc/300?u=${selectedChatId}`}
 							alt={`Avatar for chat ${selectedChatId}`}
 						/>
 					</IonAvatar>
 					<IonLabel className="text-textPrimary dark:text-textPrimary-light">
-						<h2 className="font-semibold text-lg truncate">{selectedChatId}</h2>
-						<p className="text-textSecondary dark:text-textSecondary-light text-sm">
+						<h2 className="truncate text-lg font-semibold">{selectedChatId}</h2>
+						<p className="text-sm text-textSecondary dark:text-textSecondary-light">
 							Current members online: <strong>{membersOnline}</strong>
 						</p>
 					</IonLabel>

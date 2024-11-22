@@ -29,29 +29,29 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 	};
 
 	return (
-		<div className=" bg-transparent sticky top-0 z-10 text-textPrimary dark:text-textPrimary-light rounded-t-2xl p-4">
-			<div className="chats-title flex justify-between items-center mb-4">
+		<div className="sticky top-0 z-10 rounded-t-2xl bg-transparent p-4 text-textPrimary dark:text-textPrimary-light">
+			<div className="chats-title mb-4 flex items-center justify-between">
 				<IonLabel className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
 					Chats
 				</IonLabel>
 				<div
-					className="absolute top-4 right-4 flex items-center justify-center text-[19px] cursor-pointer transition-colors duration-300 text-textAccent dark:text-textAccent-light"
+					className="absolute right-4 top-4 flex cursor-pointer items-center justify-center text-[19px] text-textAccent transition-colors duration-300 dark:text-textAccent-light"
 					onClick={handleOpenModal}>
 					<FontAwesomeIcon icon={faEdit} />
 				</div>
 			</div>
 
 			{/* Search bar */}
-			<div className="chat-search-bar flex items-center bg-secondary dark:bg-secondary-light rounded-lg px-3 py-2">
+			<div className="chat-search-bar flex items-center rounded-lg bg-secondary px-3 py-2 dark:bg-secondary-light">
 				<IonIcon
 					icon={search}
-					className="search-icon text-textSecondary dark:text-textSecondary-light mr-2"
+					className="search-icon mr-2 text-textSecondary dark:text-textSecondary-light"
 				/>
 				<IonInput
 					value={searchQuery}
 					placeholder="Search Messenger"
 					onIonChange={handleSearchChange}
-					className="chat-search-input bg-transparent text-textPrimary dark:text-textPrimary-light w-full"
+					className="chat-search-input w-full bg-transparent text-textPrimary dark:text-textPrimary-light"
 				/>
 			</div>
 

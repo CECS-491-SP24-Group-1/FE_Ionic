@@ -4,12 +4,12 @@ import React from "react";
 
 const PrivacySecurityTab: React.FC = () => {
 	return (
-		<div className="p-4 bg-backgroundHighlight bg-opacity-50 text-textPrimary dark:bg-backgroundHighlight-light dark:text-textPrimary-light rounded-lg shadow-md">
-			<h2 className="text-xl font-semibold mb-4">Privacy & Security</h2>
-			<p className="text-textSecondary dark:text-textSecondary-light mb-2">
+		<div className="rounded-lg bg-backgroundHighlight bg-opacity-50 p-4 text-textPrimary shadow-md dark:bg-backgroundHighlight-light dark:text-textPrimary-light">
+			<h2 className="mb-4 text-xl font-semibold">Privacy & Security</h2>
+			<p className="mb-2 text-textSecondary dark:text-textSecondary-light">
 				Manage your privacy and security settings here.
 			</p>
-			<ul className="list-disc list-inside space-y-2">
+			<ul className="list-inside list-disc space-y-2">
 				<li className="text-textSecondary dark:text-textSecondary-light">
 					Two-Factor Authentication
 				</li>
