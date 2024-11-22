@@ -1,19 +1,23 @@
 import React from "react";
 import Hero from "./components/hero";
 import Features from "./components/features";
+import Technologies from "./components/technologies";
 import Footer from "./components/footer";
-import { Spotlight } from "@/components/Spotlight";
+import { BackgroundBeams } from "@/components/background-beams";
 
 const Home: React.FC = () => {
 	return (
-		<div className="bg-diagonal-grid-accent h-screen overflow-y-auto text-textPrimary dark:text-textPrimary-light">
-			<Spotlight className="absolute left-[60rem] top-0 z-[-1] scale-[2]" fill="white" />
+		<div className="h-screen overflow-y-auto text-textPrimary dark:text-textPrimary-light">
 			{/* Hero Section */}
 			<Hero />
 			{/* Features Section */}
 			<Features />
+			{/* Technologies Section */}
+			<Technologies />
 			{/* Footer Section */}
 			<Footer />
+			{/* Background Beams */}
+			<BackgroundBeams className="bg-Primary z-[-100] dark:bg-primary-light" />
 		</div>
 	);
 };

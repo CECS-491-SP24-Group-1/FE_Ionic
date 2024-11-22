@@ -195,3 +195,46 @@ html.dark ion-popover:hover {
 		fade-in 1s ease;
 	/* Fade-in effect */
 }
+
+/* Keyframes for infinite scrolling */
+@keyframes slide {
+	0% {
+		transform: translateX(0);
+	}
+
+	100% {
+		transform: translateX(-100%);
+	}
+}
+
+/* Tailwind-style slider animation */
+.slider {
+	display: flex;
+	gap: 4rem;
+	/* Adjust spacing between logos+text */
+	animation: slide 20s linear infinite;
+	/* Speed and smoothness */
+	width: calc(200%);
+	/* Double the width for seamless looping */
+}
+
+/* Delayed second slider */
+.slider.delay-1s {
+	animation-delay: 10s;
+	/* Matches half the animation duration for staggering */
+}
+
+.logos-slide {
+	display: inline-block;
+	animation: slide 100s linear infinite;
+}
+
+@keyframes slide {
+	from {
+		transform: translateX(0);
+	}
+
+	to {
+		transform: translateX(-100%);
+	}
+}

@@ -25,7 +25,7 @@ const features = [
 
 const Features: React.FC = () => {
 	return (
-		<section className="bg-primary bg-opacity-40 py-16 text-textPrimary dark:bg-primary-light dark:text-textPrimary-light">
+		<section className="bg-primary bg-opacity-90 py-16 text-textPrimary dark:bg-primary-light dark:text-textPrimary-light">
 			<div className="container mx-auto px-6">
 				{/* Section Header */}
 				<div className="text-center">
