@@ -375,7 +375,7 @@ const ChatsPage: React.FC = () => {
 					<div className="chat-container flex h-full gap-4 bg-secondary dark:bg-white">
 						{/* Chat List */}
 						{(!selectedChatId || !isMobile) && (
-							<div className="chat-list-container max-h-100 mb-4 ml-4 mt-4 min-w-full overflow-y-auto rounded-b-2xl rounded-t-2xl bg-borderPrimary dark:bg-primary-light sm:min-w-[25rem]">
+							<div className="chat-list-container max-h-100 m-0 min-w-full overflow-y-auto rounded-none bg-borderPrimary dark:bg-primary-light sm:mb-4 sm:ml-4 sm:mt-4 sm:min-w-[25rem] sm:rounded-b-2xl sm:rounded-t-2xl">
 								<ChatList
 									rooms={rooms}
 									selectedChatId={selectedChatId}
@@ -387,9 +387,9 @@ const ChatsPage: React.FC = () => {
 
 						{/* Chat View */}
 						{selectedChatId && (
-							<div className="chat-view-container mb-4 mr-4 mt-4 flex w-full flex-col rounded-2xl bg-borderPrimary p-4 dark:bg-primary-light">
+							<div className="chat-view-container flex w-full flex-col bg-borderPrimary p-4 dark:bg-primary-light sm:mb-4 sm:mr-4 sm:mt-4 sm:rounded-2xl">
 								{/* Chat Header */}
-								<div className="chat-header truncate rounded-t-lg">
+								<div className="chat-header rounded-t-lg">
 									<ChatHeader
 										selectedChatId={selectedChatId}
 										membersOnline={membersOnline}
@@ -424,7 +424,11 @@ const ChatsPage: React.FC = () => {
 											</IonButton>
 
 											{/* Audio Recording */}
-											<IonButton onClick={handleAudioRecording} slot="end" fill="clear">
+											<IonButton
+												onClick={handleAudioRecording}
+												slot="end"
+												fill="clear"
+												className="pb-3 text-blue-500 hover:text-blue-700">
 												<IonIcon icon={mic} color={isRecording ? "danger" : undefined} />
 											</IonButton>
 
@@ -440,7 +444,8 @@ const ChatsPage: React.FC = () => {
 											<IonButton
 												slot="end"
 												fill="clear"
-												onClick={() => fileInputRef.current?.click()}>
+												onClick={() => fileInputRef.current?.click()}
+												className="pb-3 text-blue-500 hover:text-blue-700">
 												<IonIcon icon={attach} />
 											</IonButton>
 

@@ -53,14 +53,16 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 							<IonIcon icon={arrowBack} />
 						</IonButton>
 					)}
-					<IonAvatar slot="start" className="h-12 w-12 rounded-full">
+					<IonAvatar slot="start" className="h-12 w-12 flex-shrink-0 rounded-full">
 						<img
 							src={`https://i.pravatar.cc/300?u=${selectedChatId}`}
 							alt={`Avatar for chat ${selectedChatId}`}
 						/>
 					</IonAvatar>
-					<IonLabel className="text-textPrimary dark:text-textPrimary-light">
-						<h2 className="truncate text-lg font-semibold">{selectedChatId}</h2>
+					<IonLabel className="max-w-[200px] flex-grow overflow-hidden text-textPrimary dark:text-textPrimary-light md:max-w-none">
+						<h2 className="max-w-full truncate text-lg font-semibold">
+							{selectedChatId}
+						</h2>
 						<p className="text-sm text-textSecondary dark:text-textSecondary-light">
 							Current members online: <strong>{membersOnline}</strong>
 						</p>

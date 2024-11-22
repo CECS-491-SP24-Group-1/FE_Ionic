@@ -23,6 +23,7 @@ import {
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
 import {
+	home,
 	camera,
 	settings,
 	chatbubble,
@@ -221,6 +222,11 @@ const App: React.FC = () => {
 
 							{/* Tab bar at the bottom */}
 							<IonTabBar className="flex sm:hidden" slot="bottom">
+								<IonTabButton tab="home" href="/home">
+									<IonIcon icon={home} />
+									<IonLabel>Home</IonLabel>
+								</IonTabButton>
+
 								<IonTabButton tab="chat" href="/chat">
 									<IonIcon icon={chatbubble} />
 									<IonLabel>Chat</IonLabel>
