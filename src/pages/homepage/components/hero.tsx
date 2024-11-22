@@ -17,16 +17,17 @@ const Hero: React.FC = () => {
 			{/* Hero Text */}
 			<div className="order-last lg:order-first">
 				<h1 className="text-5xl font-bold lg:text-6xl lg:tracking-tight xl:text-7xl xl:tracking-tighter">
-					Experience Secure Messaging with <span className="text-accent">Wraith Web</span>
+					Experience Secure Messaging with{" "}
+					<span className="text-accent dark:text-textAccent-light">Wraith Web</span>
 				</h1>
-				<p className="mt-4 max-w-xl text-lg font-medium text-textSecondary">
+				<p className="mt-4 max-w-xl text-lg font-medium text-textSecondary dark:text-textSecondary-light">
 					Wraith Web provides private, end-to-end encrypted messaging and a secure camera,
 					ensuring your privacy is always protected.
 				</p>
 				<div className="mt-6 flex flex-col gap-3 sm:flex-row">
 					{/* Start Messaging Button */}
 					<button
-						className="flex transform items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-backgroundHighlight shadow-lg transition-transform hover:scale-105 dark:bg-accent-light"
+						className="flex transform items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-backgroundHighlight shadow-lg transition-transform hover:scale-105 dark:bg-accent-light dark:text-backgroundHighlight-light"
 						onClick={() => navigate("/chat")} // Navigate to Chat Page
 					>
 						<IonIcon icon={chatbubbleEllipses} className="h-5 w-5" />

@@ -58,6 +58,21 @@ module.exports = {
 					DEFAULT: "#6b7280", // Default dark mode muted color (dark gray)
 					light: "#9ca3af" // Light mode muted color (medium gray)
 				}
+			},
+			animation: {
+				spotlight: "spotlight 2s ease .75s 1 forwards"
+			},
+			keyframes: {
+				spotlight: {
+					"0%": {
+						opacity: 0,
+						transform: "translate(-72%, -62%) scale(0.5)"
+					},
+					"100%": {
+						opacity: 1,
+						transform: "translate(-50%,-40%) scale(1)"
+					}
+				}
 			}
 		}
 	},

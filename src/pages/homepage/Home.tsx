@@ -1,17 +1,17 @@
 import React from "react";
-import Hero from "./components/hero"; // Adjust the import paths based on your project structure
-import Features from "./components/features"; // Adjust the import paths based on your project structure
-import Footer from "./components/footer"; // Adjust the import paths based on your project structure
+import Hero from "./components/hero";
+import Features from "./components/features";
+import Footer from "./components/footer";
+import { Spotlight } from "@/components/Spotlight";
 
 const Home: React.FC = () => {
 	return (
-		<div className="h-screen overflow-y-auto bg-primary text-textPrimary dark:bg-primary-light dark:text-textPrimary-light">
+		<div className="bg-diagonal-grid-accent h-screen overflow-y-auto text-textPrimary dark:text-textPrimary-light">
+			<Spotlight className="absolute left-[60rem] top-0 z-[-1] scale-[2]" fill="white" />
 			{/* Hero Section */}
 			<Hero />
-
 			{/* Features Section */}
 			<Features />
-
 			{/* Footer Section */}
 			<Footer />
 		</div>
