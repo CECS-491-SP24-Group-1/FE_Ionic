@@ -21,6 +21,7 @@ import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
 import { LastMessage, MembershipChange } from "types/chat";
+import { motion } from "framer-motion";
 
 import { newChat } from "@/util/chat";
 import { Message } from "@ptypes/chat";
@@ -61,6 +62,29 @@ const ChatsPage: React.FC = () => {
 
 	const { width } = useWindowSize();
 	const isMobile = width !== undefined && width < 640;
+
+	const fadeInUp = {
+		hidden: { opacity: 0, y: 20 },
+		visible: (delay = 0) => ({
+			opacity: 1,
+			y: 0,
+			transition: {
+				duration: 0.8,
+				delay
+			}
+		})
+	};
+
+	const bounceAnimation = {
+		animate: {
+			y: [0, -10, 0]
+		},
+		transition: {
+			duration: 1.5,
+			repeat: Infinity,
+			repeatType: "loop"
+		}
+	};
 
 	// WebSocket setup
 	useEffect(() => {
@@ -435,20 +459,45 @@ const ChatsPage: React.FC = () => {
 						{/* No Chat Selected Message (for larger screens) */}
 						{!selectedChatId && !isMobile && (
 							<div className="flex h-full flex-grow flex-col items-center justify-center rounded-2xl bg-transparent p-4 text-center dark:bg-primary-light">
-								<img
+								{/* Animated Logo */}
+								<motion.img
 									src={logo}
 									className="empty-chat-image mx-auto h-44 w-44 dark:invert"
 									alt="No chat selected"
+									variants={bounceAnimation}
+									animate="animate"
 								/>
-								<h2 className="text-6xl font-semibold text-gray-200 dark:text-gray-800">
+
+								{/* Animated Header */}
+								<motion.h2
+									className="text-6xl font-semibold text-gray-200 dark:text-gray-800"
+									variants={fadeInUp}
+									initial="hidden"
+									animate="visible"
+									custom={0.2} // Add delay for sequential animation
+								>
 									Wraith Web
-								</h2>
-								<p className="mt-2 text-gray-400 dark:text-gray-600">
+								</motion.h2>
+
+								{/* Animated Paragraphs */}
+								<motion.p
+									className="mt-2 text-gray-400 dark:text-gray-600"
+									variants={fadeInUp}
+									initial="hidden"
+									animate="visible"
+									custom={0.4} // Add delay for sequential animation
+								>
 									Please select a chat or create a new one to start messaging.
-								</p>
-								<p className="mt-1 text-gray-400 dark:text-gray-600">
+								</motion.p>
+								<motion.p
+									className="mt-1 text-gray-400 dark:text-gray-600"
+									variants={fadeInUp}
+									initial="hidden"
+									animate="visible"
+									custom={0.6} // Add delay for sequential animation
+								>
 									You can create and organize your conversations here. Stay connected!
-								</p>
+								</motion.p>
 							</div>
 						)}
 					</div>
