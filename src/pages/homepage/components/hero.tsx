@@ -29,7 +29,7 @@ const Hero: React.FC = () => {
 	};
 
 	return (
-		<section className="grid place-items-center pb-12 pl-24 pr-24 pt-24 lg:grid-cols-2">
+		<section className="place-items-centerz grid pb-12 pl-24 pr-24 pt-24 text-textPrimary dark:text-textPrimary-light lg:grid-cols-2">
 			{/* Hero Text */}
 			<div className="order-last lg:order-first">
 				<h1 className="text-5xl font-bold lg:text-6xl lg:tracking-tight xl:text-7xl xl:tracking-tighter">

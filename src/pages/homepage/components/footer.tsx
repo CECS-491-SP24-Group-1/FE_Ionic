@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer: React.FC = () => {
 	return (
-		<footer className="py-8 text-textSecondary dark:text-textSecondary-light">
+		<footer className="py-8 text-textSecondary dark:bg-primary-light dark:text-textSecondary-light">
 			<div className="container mx-auto text-center">
 				<p className="text-sm font-medium text-textPrimary dark:text-textPrimary-light">
 					Copyright © {new Date().getFullYear()}{" "}

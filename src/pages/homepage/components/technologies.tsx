@@ -36,7 +36,7 @@ const Technologies: React.FC = () => {
 	}, []);
 
 	return (
-		<div className="relative overflow-hidden py-10">
+		<div className="relative overflow-hidden py-10 dark:bg-primary-light">
 			{/* Header Text */}
 			<h2 className="mb-12 text-center text-2xl font-bold text-textPrimary dark:text-textPrimary-light">
 				Built with modern tools and technologies

@@ -10,7 +10,7 @@ const Home: React.FC = () => {
 	return (
 		<IonPage>
 			<IonContent
-				className="h-screen overflow-y-auto bg-primary text-textPrimary dark:text-textPrimary-light"
+				className="h-screen overflow-y-auto text-textPrimary dark:text-textPrimary-light"
 				scrollEvents={true} // Enables scroll tracking if needed
 			>
 				{/* Hero Section */}
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
 				<Footer />
 
 				{/* Background Beams */}
-				<BackgroundBeams className="z-[-100] bg-transparent" />
+				<BackgroundBeams className="z-[-100] bg-primary bg-transparent dark:bg-primary-light" />
 			</IonContent>
 		</IonPage>
 	);
