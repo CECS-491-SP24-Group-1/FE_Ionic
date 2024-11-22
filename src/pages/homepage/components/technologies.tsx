@@ -43,8 +43,8 @@ const Technologies: React.FC = () => {
 			</h2>
 
 			{/* Gradient overlays */}
-			<div className="absolute inset-y-0 left-0 z-10 w-80 bg-gradient-to-l from-transparent to-[#121212] dark:to-slate-50"></div>
-			<div className="absolute inset-y-0 right-0 z-10 w-80 bg-gradient-to-r from-transparent to-[#121212] dark:to-slate-50"></div>
+			<div className="absolute inset-y-0 left-0 z-10 w-48 bg-gradient-to-l from-transparent to-[#121212] dark:to-slate-50 md:w-96"></div>
+			<div className="absolute inset-y-0 right-0 z-10 w-48 bg-gradient-to-r from-transparent to-[#121212] dark:to-slate-50 md:w-96"></div>
 
 			{/* Sliding logos */}
 			<div ref={sliderRef} className="logos-slide relative whitespace-nowrap">
