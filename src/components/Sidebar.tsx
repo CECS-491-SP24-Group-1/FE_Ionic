@@ -31,7 +31,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		history.push(path);
 	};
 
-	const buttonClasses = "flex items-center space-x-3 text-lg pl-2";
+	const buttonClasses =
+		"group flex items-center space-x-3 text-lg pl-2 transition-transform duration-300";
 
 	const MenuButtons = ({ isExpanded }: { isExpanded: boolean }) => (
 		<>
@@ -39,13 +40,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 				<button
 					key={item.label}
 					onClick={() => navigate(item.path)}
-					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<item.icon className="text-xl text-textPrimary hover:text-blue-400 dark:text-textPrimary-light" />
-					{isExpanded && (
-						<span className="text-textPrimary hover:text-blue-400 dark:text-textPrimary-light">
-							{item.label}
-						</span>
-					)}
+					className={`${buttonClasses} ${
+						!isExpanded ? "justify-center" : ""
+					} hover:text-blue-400`}>
+					<div className="flex items-center space-x-2">
+						<item.icon className="text-xl transition-transform duration-300 group-hover:scale-105 group-hover:text-blue-400 dark:text-textPrimary-light" />
+						{isExpanded && (
+							<span className="transition-opacity duration-300 group-hover:text-blue-400 dark:text-textPrimary-light">
+								{item.label}
+							</span>
+						)}
+					</div>
 				</button>
 			))}
 		</>
@@ -55,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		<div
 			className={`hidden h-screen sm:flex ${
 				isExpanded ? "w-64" : "w-20"
-			} transition-width flex-shrink-0 flex-col bg-borderPrimary p-6 duration-300 dark:bg-borderPrimary-light`}>
+			} flex-shrink-0 flex-col bg-borderPrimary p-6 transition-all duration-300 dark:bg-borderPrimary-light`}>
 			{/* Toggle Button */}
 			<button
 				onClick={toggleSidebar}
@@ -63,17 +68,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 				<FaBars className="text-2xl" />
 			</button>
 			{/* Profile Section */}
-			<div className="mb-6 flex items-center">
+			<div className="mb-6 flex items-center transition-all duration-300">
 				<div
 					className={`${
 						isExpanded ? "h-12 w-12" : "h-8 w-8"
-					} flex items-center justify-center rounded-full text-lg font-semibold text-white`}
+					} flex items-center justify-center rounded-full text-lg font-semibold text-white transition-all duration-300`}
 					style={{ backgroundColor: "#444444" }}>
 					{/* Placeholder for profile image */}
 					<span style={{ backgroundColor: "transparent" }}>DP</span>
 				</div>
 				{isExpanded && (
-					<div className="ml-4">
+					<div
+						className="ml-4 transition-opacity duration-300"
+						style={{
+							opacity: isExpanded ? 1 : 0,
+							transform: `translateX(${isExpanded ? "0" : "-10px"})`
+						}}>
 						<p className="font-semibold text-textPrimary dark:text-textPrimary-light">
 							David
 						</p>
