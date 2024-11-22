@@ -17,7 +17,7 @@ const Hero: React.FC = () => {
 			{/* Hero Text */}
 			<div className="order-last lg:order-first">
 				<h1 className="text-5xl font-bold lg:text-6xl lg:tracking-tight xl:text-7xl xl:tracking-tighter">
-					Experience Secure Messaging with{" "}
+					Experience Secure Messaging with <br />
 					<span className="text-accent dark:text-textAccent-light">Wraith Web</span>
 				</h1>
 				<p className="mt-4 max-w-xl text-lg font-medium text-textSecondary dark:text-textSecondary-light">
