@@ -290,6 +290,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			const etext = swallowError(e);
 			console.error(etext);
 			toast.error(etext);
+			setLoading(false);
 			return;
 		}
 
@@ -324,6 +325,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 			const etext = swallowError(e);
 			console.error(etext);
 			toast.error(etext);
+			setLoading(false);
 			return;
 		}
 
@@ -403,7 +405,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 
 	return (
 		<>
-			<IonLoading isOpen={loading} message="Decrypting the vault, please wait..." />
+			{loading && <IonLoading message="Decrypting the vault, please wait..." />}
 			{form && <LRContainer title="Login" content={form} onSubmit={handleLogin} />}
 		</>
 	);
