@@ -31,7 +31,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		history.push(path);
 	};
 
-	const buttonClasses = "flex items-center space-x-3 text-lg pl-2";
+	const buttonClasses =
+		"group flex items-center space-x-3 text-lg pl-2 transition-transform duration-300";
 
 	const MenuButtons = ({ isExpanded }: { isExpanded: boolean }) => (
 		<>
@@ -39,13 +40,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 				<button
 					key={item.label}
 					onClick={() => navigate(item.path)}
-					className={`${buttonClasses} ${!isExpanded && "justify-start"}`}>
-					<item.icon className="text-xl text-textPrimary dark:text-textPrimary-light hover:text-blue-400" />
-					{isExpanded && (
-						<span className="text-textPrimary dark:text-textPrimary-light hover:text-blue-400">
-							{item.label}
-						</span>
-					)}
+					className={`${buttonClasses} ${
+						!isExpanded ? "justify-center" : ""
+					} hover:text-blue-400`}>
+					<div className="flex items-center space-x-2">
+						<item.icon className="text-xl transition-transform duration-300 group-hover:scale-105 group-hover:text-blue-400 dark:text-textPrimary-light" />
+						{isExpanded && (
+							<span className="transition-opacity duration-300 group-hover:text-blue-400 dark:text-textPrimary-light">
+								{item.label}
+							</span>
+						)}
+					</div>
 				</button>
 			))}
 		</>
@@ -53,33 +58,38 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 
 	return (
 		<div
-			className={`hidden sm:flex h-screen ${
+			className={`hidden h-screen sm:flex ${
 				isExpanded ? "w-64" : "w-20"
-			} bg-borderPrimary dark:bg-borderPrimary-light p-6 flex-col flex-shrink-0 transition-width duration-300`}>
+			} flex-shrink-0 flex-col bg-borderPrimary p-6 transition-all duration-300 dark:bg-borderPrimary-light`}>
 			{/* Toggle Button */}
 			<button
 				onClick={toggleSidebar}
-				className="mb-6 text-textPrimary dark:text-textPrimary-light hover:text-blue-400">
+				className="mb-6 text-textPrimary hover:text-blue-400 dark:text-textPrimary-light">
 				<FaBars className="text-2xl" />
 			</button>
 			{/* Profile Section */}
-			<div className="flex items-center mb-6">
+			<div className="mb-6 flex items-center transition-all duration-300">
 				<div
 					className={`${
-						isExpanded ? "w-12 h-12" : "w-8 h-8"
-					} rounded-full flex items-center justify-center text-lg font-semibold text-white`}
+						isExpanded ? "h-12 w-12" : "h-8 w-8"
+					} flex items-center justify-center rounded-full text-lg font-semibold text-white transition-all duration-300`}
 					style={{ backgroundColor: "#444444" }}>
 					{/* Placeholder for profile image */}
 					<span style={{ backgroundColor: "transparent" }}>DP</span>
 				</div>
 				{isExpanded && (
-					<div className="ml-4">
+					<div
+						className="ml-4 transition-opacity duration-300"
+						style={{
+							opacity: isExpanded ? 1 : 0,
+							transform: `translateX(${isExpanded ? "0" : "-10px"})`
+						}}>
 						<p className="font-semibold text-textPrimary dark:text-textPrimary-light">
 							David
 						</p>
 						<Link
 							to="#"
-							className="text-sm text-blue-400 dark:text-blue-800 hover:underline">
+							className="text-sm text-blue-400 hover:underline dark:text-blue-800">
 							View profile
 						</Link>
 					</div>

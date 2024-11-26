@@ -12,8 +12,8 @@ const NotificationsTab: React.FC = () => {
 	const [productUpdates, setProductUpdates] = useState(true);
 
 	return (
-		<div className="p-4 bg-backgroundHighlight bg-opacity-50 text-textPrimary dark:bg-backgroundHighlight-light dark:text-textPrimary-light rounded-lg shadow-md">
-			<h2 className="text-xl font-semibold mb-4">Notification Settings</h2>
+		<div className="rounded-lg bg-backgroundHighlight bg-opacity-50 p-4 text-textPrimary shadow-md dark:bg-backgroundHighlight-light dark:text-textPrimary-light">
+			<h2 className="mb-4 text-xl font-semibold">Notification Settings</h2>
 
 			<FormGroup>
 				{/* Email Notifications */}

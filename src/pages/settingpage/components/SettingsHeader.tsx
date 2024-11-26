@@ -16,21 +16,21 @@ const SettingsHeader: React.FC<SettingsHeaderProps> = ({ activeTab, setActiveTab
 	];
 
 	return (
-		<div className="flex flex-col border-b border-borderPrimary dark:border-borderPrimary-light pb-4 mb-6">
+		<div className="mb-6 flex flex-col border-b border-borderPrimary pb-4 dark:border-borderPrimary-light">
 			{/* Main Title */}
 			<h1 className="text-2xl font-bold text-textPrimary dark:text-textPrimary-light">
 				Settings
 			</h1>
 
 			{/* Tabs */}
-			<div className="flex space-x-8 mt-4">
+			<div className="mt-4 flex space-x-8">
 				{tabs.map((tab) => (
 					<button
 						key={tab.id}
 						onClick={() => setActiveTab(tab.id)}
-						className={`bg-transparent font-medium transition-colors duration-200 pb-2 ${
+						className={`bg-transparent pb-2 font-medium transition-colors duration-200 ${
 							activeTab === tab.id
-								? "text-accent border-b-2 border-accent dark:text-accent-light dark:border-accent-light"
+								? "border-b-2 border-accent text-accent dark:border-accent-light dark:text-accent-light"
 								: "text-textSecondary hover:text-accent dark:text-textSecondary-light dark:hover:text-accent-light"
 						}`}>
 						{tab.label}

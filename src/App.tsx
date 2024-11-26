@@ -11,15 +11,29 @@ import {
 	IonContent,
 	IonButton,
 	IonInput,
-	IonToolbar
+	IonToolbar,
+	IonMenu,
+	IonHeader,
+	IonTitle,
+	IonList,
+	IonItem,
+	IonAvatar,
+	IonMenuToggle
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
-import { camera, settings, chatbubble, warningOutline } from "ionicons/icons";
+import {
+	home,
+	camera,
+	settings,
+	chatbubble,
+	warningOutline,
+	closeCircleOutline
+} from "ionicons/icons";
 import useVaultStore from "./stores/vault_store";
 
 // Import pages
-import Home from "./pages/Home";
+import Home from "./pages/homepage/Home";
 import CameraPage from "./pages/Camera";
 import SettingsPage from "./pages/settingpage/SettingsPage";
 import ChatsPage from "./pages/chatpage/ChatsPage";
@@ -92,7 +106,7 @@ const App: React.FC = () => {
 						<div className="bannerText">
 							<IonIcon icon={warningOutline} />
 							<p>
-								Your vault has unsaved changes. Please click here to re-encrypt your
+								Your vault has unsaved changeXs. Please click here to re-encrypt your
 								vault.
 							</p>
 						</div>
@@ -100,9 +114,87 @@ const App: React.FC = () => {
 				</div>
 			)}
 			<IonReactRouter>
+				<IonMenu
+					side="end"
+					contentId="chat-page"
+					menuId="chat-menu"
+					type="overlay"
+					className="bg-transparent">
+					<IonHeader className="bg-borderPrimary dark:bg-borderPrimary-light">
+						<IonToolbar>
+							<div className="flex">
+								<IonTitle className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
+									Chat Information
+								</IonTitle>
+								<IonMenuToggle>
+									<IonButton
+										fill="clear"
+										className="flex items-center text-accent dark:text-accent-light">
+										<IonIcon icon={closeCircleOutline} />
+									</IonButton>
+								</IonMenuToggle>
+							</div>
+						</IonToolbar>
+					</IonHeader>
+
+					<IonContent>
+						<div className="h-full bg-borderPrimary opacity-100 dark:bg-borderPrimary-light">
+							<IonList>
+								{/* Chat Info */}
+								<IonItem className="flex items-center gap-4 py-4">
+									<IonAvatar slot="start">
+										<img
+											src="https://i.pravatar.cc/300"
+											alt="Chat Avatar"
+											className="h-12 w-12 rounded-full"
+										/>
+									</IonAvatar>
+									<IonLabel>
+										<h2 className="font-semibold text-textPrimary dark:text-textPrimary-light">
+											Chat Name
+										</h2>
+										<p className="text-sm text-textPrimary dark:text-textPrimary-light">
+											Last message at 10:00 AM
+										</p>
+									</IonLabel>
+								</IonItem>
+
+								{/* Menu Items */}
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Profile
+									</IonLabel>
+								</IonItem>
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Mute Notifications
+									</IonLabel>
+								</IonItem>
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Search in Chat
+									</IonLabel>
+								</IonItem>
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Media, Links, and Docs
+									</IonLabel>
+								</IonItem>
+								<IonItem button className="text-textPrimary dark:text-textPrimary-light">
+									<IonLabel className="text-textPrimary dark:text-textPrimary-light">
+										Privacy & Support
+									</IonLabel>
+								</IonItem>
+							</IonList>
+						</div>
+					</IonContent>
+				</IonMenu>
+			</IonReactRouter>
+
+			<IonReactRouter>
 				<div className="flex h-screen">
 					{/* Sidebar */}
-					<div className="hidden sm:flex rounded-lg">
+					<div className="hidden rounded-lg sm:flex">
 						<Sidebar
 							isExpanded={isSidebarExpanded}
 							toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}
@@ -110,11 +202,13 @@ const App: React.FC = () => {
 					</div>
 
 					{/* Main content */}
-					<div className="flex flex-col flex-1">
-						<IonTabs
-							className={`flex flex-col flex-1 z-auto ${isSidebarExpanded ? "sm:translate-x-32 pr-64" : "sm:translate-x-10 pr-20"
-								}`}>
-							<IonRouterOutlet className="flex-1">
+					<div
+						className="flex-1"
+						style={{
+							position: "relative"
+						}}>
+						<IonTabs>
+							<IonRouterOutlet>
 								<>
 									{/* Define routes for each tab */}
 									<Route path="/home" component={Home} exact={true} />
@@ -128,6 +222,11 @@ const App: React.FC = () => {
 
 							{/* Tab bar at the bottom */}
 							<IonTabBar className="flex sm:hidden" slot="bottom">
+								<IonTabButton tab="home" href="/home">
+									<IonIcon icon={home} />
+									<IonLabel>Home</IonLabel>
+								</IonTabButton>
+
 								<IonTabButton tab="chat" href="/chat">
 									<IonIcon icon={chatbubble} />
 									<IonLabel>Chat</IonLabel>

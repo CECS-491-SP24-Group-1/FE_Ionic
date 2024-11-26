@@ -17,17 +17,19 @@ import ChatList from "./ChatList/ChatList";
 import ChatMessages from "./ChatView/ChatMessages";
 import taxios from "@/util/token_refresh_hook";
 import ChatHeader from "./ChatView/ChatHeader";
-import ChatMenu from "./Menu/ChatMenu";
 import Camera from "@/pages/Camera";
 import useVaultStore from "@/stores/vault_store";
 import { useRoomStore } from "@/stores/room_store";
 import { LastMessage, MembershipChange } from "types/chat";
+import { motion } from "framer-motion";
 
 import { newChat } from "@/util/chat";
+import { Message } from "@ptypes/chat";
+
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { useRoomList } from "@/hooks/useRoomList"; // Import the custom hook
 
 import "./Chats.scss";
-import { Message } from "@ptypes/chat";
 
 const ChatsPage: React.FC = () => {
 	const { myID, vault, evault } = useVaultStore((state) => ({
@@ -57,6 +59,32 @@ const ChatsPage: React.FC = () => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [showCamera, setShowCamera] = useState(false);
 	const api = import.meta.env.VITE_API_URL;
+
+	const { width } = useWindowSize();
+	const isMobile = width !== undefined && width < 640;
+
+	const fadeInUp = {
+		hidden: { opacity: 0, y: 20 },
+		visible: (delay = 0) => ({
+			opacity: 1,
+			y: 0,
+			transition: {
+				duration: 0.8,
+				delay
+			}
+		})
+	};
+
+	const bounceAnimation = {
+		animate: {
+			y: [0, -10, 0]
+		},
+		transition: {
+			duration: 1.5,
+			repeat: Infinity,
+			repeatType: "loop"
+		}
+	};
 
 	// WebSocket setup
 	useEffect(() => {
@@ -337,114 +365,147 @@ const ChatsPage: React.FC = () => {
 	};
 
 	return (
-		<IonPage>
+		<IonPage id="chat-page">
 			{isLoading ? (
 				<div>Loading chats...</div>
 			) : error ? (
 				<div>Error loading chats.</div>
 			) : (
-				<IonContent id="main-content">
-					<div className="chat-container flex h-full bg-secondary dark:bg-white gap-4">
-						<div className="max-h-100 min-w-[25rem] rounded-t-2xl bg-borderPrimary dark:bg-primary-light rounded-b-2xl ml-4 mt-4 mb-4 overflow-y-auto">
-							<ChatList
-								rooms={rooms}
-								selectedChatId={selectedChatId} // Pass selectedChatId to ChatList
-								onChatSelect={handleChatSelect}
-								onLeaveRoom={handleLeaveRoom}
-							/>{" "}
-						</div>
+				<IonContent id="chat-page">
+					<div className="chat-container flex h-full gap-4 bg-secondary dark:bg-white">
+						{/* Chat List */}
+						{(!selectedChatId || !isMobile) && (
+							<div className="chat-list-container max-h-100 m-0 min-w-full overflow-y-auto rounded-none bg-borderPrimary dark:bg-primary-light sm:mb-4 sm:ml-4 sm:mt-4 sm:min-w-[25rem] sm:rounded-b-2xl sm:rounded-t-2xl">
+								<ChatList
+									rooms={rooms}
+									selectedChatId={selectedChatId}
+									onChatSelect={handleChatSelect}
+									onLeaveRoom={handleLeaveRoom}
+								/>
+							</div>
+						)}
 
-						<div className="chat-view w-full bg-borderPrimary dark:bg-primary-light  rounded-2xl mt-4 mb-4 mr-4 p-4 flex flex-col">
-							{selectedChatId !== null ? (
-								<>
-									{/* Chat Header */}
-									<div className="chat-header truncate rounded-t-lg">
-										<ChatHeader
-											selectedChatId={selectedChatId}
-											membersOnline={membersOnline}
-											onExitChat={handleExitChat}
-										/>
-									</div>
+						{/* Chat View */}
+						{selectedChatId && (
+							<div className="chat-view-container flex w-full flex-col bg-borderPrimary p-4 dark:bg-primary-light sm:mb-4 sm:mr-4 sm:mt-4 sm:rounded-2xl">
+								{/* Chat Header */}
+								<div className="chat-header rounded-t-lg">
+									<ChatHeader
+										selectedChatId={selectedChatId}
+										membersOnline={membersOnline}
+										onExitChat={handleExitChat}
+										isMobileView={isMobile}
+									/>
+								</div>
 
-									{/* Chat Messages */}
-									<div className="flex-grow overflow-y-auto bg-borderPrimary dark:bg-primary-light">
-										<ChatMessages
-											messages={Object.values(rooms[selectedChatId]?.messages || {})}
-										/>
-									</div>
-									{/* Chat Input */}
-									<div className="chat-input">
-										<div className="dark:bg-primary-light rounded-b-lg">
-											<div className="flex items-center gap-0">
-												<IonInput
-													value={inputMessage}
-													placeholder="    Write a message..."
-													onIonChange={(e: CustomEvent) =>
-														setInputMessage(e.detail.value!)
-													}
-													onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
-													className="flex-1 ml-4 pl-4 mb-3 dark:text-gray-700 text-gray-200 bg-secondary dark:bg-secondary-light rounded-3xl"
-												/>
+								{/* Chat Messages */}
+								<div className="flex-grow overflow-y-auto bg-borderPrimary dark:bg-primary-light">
+									<ChatMessages
+										messages={Object.values(rooms[selectedChatId]?.messages || {})}
+									/>
+								</div>
+								{/* Chat Input */}
+								<div className="chat-input">
+									<div className="rounded-b-lg dark:bg-primary-light">
+										<div className="flex items-center gap-0">
+											<IonInput
+												value={inputMessage}
+												placeholder="    Write a message..."
+												onIonChange={(e: CustomEvent) => setInputMessage(e.detail.value!)}
+												onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
+												className="mb-3 ml-4 flex-1 rounded-3xl bg-secondary pl-4 text-gray-200 dark:bg-secondary-light dark:text-gray-700"
+											/>
 
-												<IonButton
-													onClick={() => handleSendMessage(inputMessage)}
-													fill="clear"
-													className="pb-3 text-blue-500  hover:text-blue-700 ">
-													<IonIcon icon={send} />
-												</IonButton>
-												<IonButton onClick={handleAudioRecording} slot="end" fill="clear">
-													<IonIcon
-														icon={mic}
-														color={isRecording ? "danger" : undefined}
-													/>
-												</IonButton>
-												<IonButton
-													fill="clear"
-													onClick={() => setShowCamera(true)}
-													className="pb-3 text-blue-500 hover:text-blue-700 ">
-													<IonIcon icon={camera} />
-												</IonButton>
-												<IonButton
-													slot="end"
-													fill="clear"
-													onClick={() => fileInputRef.current?.click()}>
-													<IonIcon icon={attach} />
-												</IonButton>
+											<IonButton
+												onClick={() => handleSendMessage(inputMessage)}
+												fill="clear"
+												className="pb-3 text-blue-500 hover:text-blue-700">
+												<IonIcon icon={send} />
+											</IonButton>
 
-												<input
-													type="file"
-													ref={fileInputRef}
-													style={{ display: "none" }}
-													onChange={handleFileChange}
-												/>
-											</div>
+											{/* Audio Recording */}
+											<IonButton
+												onClick={handleAudioRecording}
+												slot="end"
+												fill="clear"
+												className="pb-3 text-blue-500 hover:text-blue-700">
+												<IonIcon icon={mic} color={isRecording ? "danger" : undefined} />
+											</IonButton>
+
+											{/* Camera Button */}
+											<IonButton
+												fill="clear"
+												onClick={() => setShowCamera(true)}
+												className="pb-3 text-blue-500 hover:text-blue-700">
+												<IonIcon icon={camera} />
+											</IonButton>
+
+											{/* File Attachment */}
+											<IonButton
+												slot="end"
+												fill="clear"
+												onClick={() => fileInputRef.current?.click()}
+												className="pb-3 text-blue-500 hover:text-blue-700">
+												<IonIcon icon={attach} />
+											</IonButton>
+
+											<input
+												type="file"
+												ref={fileInputRef}
+												style={{ display: "none" }}
+												onChange={handleFileChange}
+											/>
 										</div>
 									</div>
-								</>
-							) : (
-								<div className="no-chat-selected h-full flex flex-col items-center justify-center text-center p-4 bg-transparent dark:bg-primary-light rounded-2xl">
-									<div className="empty-chat-container">
-										<img
-											src={logo}
-											className="empty-chat-image mx-auto w-44 h-44 dark:invert"
-											alt="No chat selected"
-										/>
-									</div>
-									<h2 className="text-6xl font-semibold dark:text-gray-800 text-gray-200">
-										Wraith Web
-									</h2>
-									<p className="dark:text-gray-600 text-gray-400 mt-2">
-										Please select a chat or create a new one to start messaging.
-									</p>
-									<p className="dark:text-gray-600 text-gray-400 mt-1">
-										You can create and organize your conversations here. Stay connected!
-									</p>
 								</div>
-							)}
-						</div>
-					</div>
+							</div>
+						)}
 
-					<ChatMenu selectedChatId={selectedChatId} />
+						{/* No Chat Selected Message (for larger screens) */}
+						{!selectedChatId && !isMobile && (
+							<div className="flex h-full flex-grow flex-col items-center justify-center rounded-2xl bg-transparent p-4 text-center dark:bg-primary-light">
+								{/* Animated Logo */}
+								<motion.img
+									src={logo}
+									className="empty-chat-image mx-auto h-44 w-44 dark:invert"
+									alt="No chat selected"
+									variants={bounceAnimation}
+									animate="animate"
+								/>
+
+								{/* Animated Header */}
+								<motion.h2
+									className="text-6xl font-semibold text-gray-200 dark:text-gray-800"
+									variants={fadeInUp}
+									initial="hidden"
+									animate="visible"
+									custom={0.2} // Add delay for sequential animation
+								>
+									Wraith Web
+								</motion.h2>
+
+								{/* Animated Paragraphs */}
+								<motion.p
+									className="mt-2 text-gray-400 dark:text-gray-600"
+									variants={fadeInUp}
+									initial="hidden"
+									animate="visible"
+									custom={0.4} // Add delay for sequential animation
+								>
+									Please select a chat or create a new one to start messaging.
+								</motion.p>
+								<motion.p
+									className="mt-1 text-gray-400 dark:text-gray-600"
+									variants={fadeInUp}
+									initial="hidden"
+									animate="visible"
+									custom={0.6} // Add delay for sequential animation
+								>
+									You can create and organize your conversations here. Stay connected!
+								</motion.p>
+							</div>
+						)}
+					</div>
 
 					{/* Camera Modal */}
 					<IonModal isOpen={showCamera} onDidDismiss={() => setShowCamera(false)}>

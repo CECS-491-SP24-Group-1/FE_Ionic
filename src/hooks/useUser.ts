@@ -10,15 +10,15 @@ const fetchUser = async (url: string) => {
 
 const updateUser = async (uid: string, data: Record<string, any>) => {
 	try {
-	  const response = await taxios.patch(`${api}/user/${uid}`, data);
-	  console.log("Update response:", response.data);
-	  if (response.status !== 200) {
-		throw new Error("Failed to update user on the server.");
-	  }
-	  mutate(`${api}/user/${uid}`); // Revalidate the SWR cache
+		const response = await taxios.patch(`${api}/user/${uid}`, data);
+		console.log("Update response:", response.data);
+		if (response.status !== 200) {
+			throw new Error("Failed to update user on the server.");
+		}
+		mutate(`${api}/user/${uid}`); // Revalidate the SWR cache
 	} catch (error) {
-	  console.error("Error updating user:", error);
-	  throw error;
+		console.error("Error updating user:", error);
+		throw error;
 	}
 };
 
@@ -32,6 +32,6 @@ export const useUser = (uid: string) => {
 		user: data,
 		isLoading,
 		error,
-		updateUser: (data: Record<string, any>) => updateUser(uid, data), // Expose updateUser
+		updateUser: (data: Record<string, any>) => updateUser(uid, data) // Expose updateUser
 	};
 };

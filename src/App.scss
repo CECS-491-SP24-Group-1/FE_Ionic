@@ -157,3 +157,84 @@ html.dark ion-popover:hover {
 		}
 	}
 }
+
+
+@keyframes gradient-diagonal-animation {
+	0% {
+		background-position: 0 0;
+	}
+
+	100% {
+		background-position: 100% 100%;
+	}
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.bg-diagonal-grid-accent {
+	background-image:
+		linear-gradient(rgba(145, 145, 145, 0.05) 1px, transparent 1px),
+		/* Horizontal lines */
+		linear-gradient(90deg, rgba(145, 145, 145, 0.05) 1px, transparent 1px);
+	/* Diagonal gradient fading into accent */
+	background-size: 20px 20px;
+	/* Size of the grid */
+	background-blend-mode: screen;
+	/* Blend gridlines with the accent gradient */
+	animation:
+		gradient-diagonal-animation 60s linear infinite,
+		/* Diagonal grid movement */
+		fade-in 1s ease;
+	/* Fade-in effect */
+}
+
+/* Keyframes for infinite scrolling */
+@keyframes slide {
+	0% {
+		transform: translateX(0);
+	}
+
+	100% {
+		transform: translateX(-100%);
+	}
+}
+
+/* Tailwind-style slider animation */
+.slider {
+	display: flex;
+	gap: 4rem;
+	/* Adjust spacing between logos+text */
+	animation: slide 20s linear infinite;
+	/* Speed and smoothness */
+	width: calc(200%);
+	/* Double the width for seamless looping */
+}
+
+/* Delayed second slider */
+.slider.delay-1s {
+	animation-delay: 10s;
+	/* Matches half the animation duration for staggering */
+}
+
+.logos-slide {
+	display: inline-block;
+	animation: slide 100s linear infinite;
+}
+
+@keyframes slide {
+	from {
+		transform: translateX(0);
+	}
+
+	to {
+		transform: translateX(-100%);
+	}
+}

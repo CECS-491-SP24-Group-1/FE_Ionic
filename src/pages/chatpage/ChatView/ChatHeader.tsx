@@ -1,26 +1,29 @@
+// src/pages/ChatView/ChatHeader.tsx
+
 import React from "react";
-import { menuController } from "@ionic/core";
+import { menuController } from "@ionic/core/components";
+import { IonItem, IonAvatar, IonLabel, IonButton, IonIcon } from "@ionic/react";
 import {
-	IonItem,
-	IonAvatar,
-	IonLabel,
-	IonButton,
-	IonIcon,
-	IonMenuToggle
-} from "@ionic/react";
-import { call, videocam, informationCircle, exitOutline } from "ionicons/icons";
+	call,
+	videocam,
+	informationCircle,
+	exitOutline,
+	arrowBack
+} from "ionicons/icons";
 import { useRoomStore } from "@/stores/room_store";
 
 interface ChatHeaderProps {
 	selectedChatId: string;
 	membersOnline: number;
 	onExitChat: () => void;
+	isMobileView: boolean; // New prop to determine if it's a mobile view
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
 	selectedChatId,
 	membersOnline,
-	onExitChat
+	onExitChat,
+	isMobileView
 }) => {
 	const selectedChat = useRoomStore((state) => state.rooms[selectedChatId]);
 
@@ -28,41 +31,68 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 		return null;
 	}
 
+	async function openMenu() {
+		try {
+			await menuController.enable(true, "chat-menu");
+			await menuController.open("chat-menu");
+		} catch (error) {
+			console.error("Failed to open menu:", error);
+		}
+	}
+
 	return (
 		<IonItem
 			lines="none"
-			className="dark:bg-primary-light text-textPrimary dark:text-textPrimary-light">
-			<IonAvatar slot="start" className="rounded-full">
-				<img
-					src={`https://i.pravatar.cc/300?u=${selectedChatId}`}
-					alt={`Avatar for chat ${selectedChatId}`}
-				/>
-			</IonAvatar>
-			<IonLabel className="text-textPrimary dark:text-textPrimary-light">
-				<h2 className="font-semibold text-lg">{selectedChatId}</h2>
-				<p className="text-textSecondary dark:text-textSecondary-light text-sm">
-					Current members online: <strong>{membersOnline}</strong>
-				</p>
-			</IonLabel>
-			<div className="chat-header-icons flex items-center">
-				<IonButton
-					fill="clear"
-					onClick={onExitChat}
-					className="text-red-500 dark:text-red-400">
-					<IonIcon icon={exitOutline} />
-				</IonButton>
-				<IonButton fill="clear" className="text-accent dark:text-accent-light">
-					<IonIcon icon={call} />
-				</IonButton>
-				<IonButton fill="clear" className="text-accent dark:text-accent-light">
-					<IonIcon icon={videocam} />
-				</IonButton>
-				{/* Wrap the menu trigger button in IonMenuToggle */}
-				<IonMenuToggle menu="end">
+			className="flex items-center text-textPrimary dark:bg-primary-light dark:text-textPrimary-light">
+			{/* Left Section: Back Button on Mobile */}
+			<div className="flex flex-grow items-center">
+				{/* Left Section */}
+				<div className="flex items-center gap-4">
+					{isMobileView && (
+						<IonButton onClick={onExitChat} fill="clear" className="mr-2">
+							<IonIcon icon={arrowBack} />
+						</IonButton>
+					)}
+					<IonAvatar slot="start" className="h-12 w-12 flex-shrink-0 rounded-full">
+						<img
+							src={`https://i.pravatar.cc/300?u=${selectedChatId}`}
+							alt={`Avatar for chat ${selectedChatId}`}
+						/>
+					</IonAvatar>
+					<IonLabel className="max-w-[200px] flex-grow overflow-hidden text-textPrimary dark:text-textPrimary-light md:max-w-none">
+						<h2 className="max-w-full truncate text-lg font-semibold">
+							{selectedChatId}
+						</h2>
+						<p className="text-sm text-textSecondary dark:text-textSecondary-light">
+							Current members online: <strong>{membersOnline}</strong>
+						</p>
+					</IonLabel>
+				</div>
+
+				{/* Right Section: Action Buttons */}
+				<div className="ml-auto">
+					{/* Hide the exit button on mobile if the back button is present */}
+					{!isMobileView && (
+						<IonButton
+							fill="clear"
+							onClick={onExitChat}
+							className="text-red-500 dark:text-red-400">
+							<IonIcon icon={exitOutline} />
+						</IonButton>
+					)}
 					<IonButton fill="clear" className="text-accent dark:text-accent-light">
+						<IonIcon icon={call} />
+					</IonButton>
+					<IonButton fill="clear" className="text-accent dark:text-accent-light">
+						<IonIcon icon={videocam} />
+					</IonButton>
+					<IonButton
+						onClick={openMenu}
+						fill="clear"
+						className="text-accent dark:text-accent-light">
 						<IonIcon icon={informationCircle} />
 					</IonButton>
-				</IonMenuToggle>
+				</div>
 			</div>
 		</IonItem>
 	);

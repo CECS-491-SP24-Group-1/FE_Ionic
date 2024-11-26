@@ -31,7 +31,7 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 						type="text"
 						value={newValue}
 						onChange={(e) => setNewValue(e.target.value)}
-						className="border rounded px-2 py-1"
+						className="rounded border px-2 py-1"
 					/>
 					<button
 						onClick={handleSave}
@@ -41,7 +41,9 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 				</div>
 			) : (
 				<div className="flex items-center space-x-2">
+					{/* Display Value */}
 					<p className="text-textPrimary dark:text-textPrimary-light">{value}</p>
+					{/* Edit Button */}
 					{isEditable && (
 						<a
 							href="#"
@@ -49,7 +51,7 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 								e.preventDefault();
 								setIsEditing(true); // Enable edit mode
 							}}
-							className="text-accent hover:underline text-sm dark:text-accent-light">
+							className="text-sm text-accent hover:underline dark:text-accent-light">
 							Edit
 						</a>
 					)}
@@ -121,7 +123,7 @@ const AccountTab: React.FC = () => {
 					<img
 						src={user?.photo_url || "https://via.placeholder.com/64"}
 						alt="Profile"
-						className="w-full h-full rounded-full object-cover"
+						className="h-full w-full rounded-full object-cover"
 					/>
 					<label
 						htmlFor="photo-upload"
@@ -138,7 +140,7 @@ const AccountTab: React.FC = () => {
 				</div>
 
 				<div>
-					<p className="font-semibold text-textPrimary text-lg dark:text-textPrimary-light">
+					<p className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
 						{user?.display_name || "Display Name"}
 					</p>
 					<a
