@@ -22,7 +22,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		{ label: "Home", icon: FaHome, path: "/home" },
 		{ label: "Chat", icon: FaComments, path: "/chat" },
 		{ label: "Camera", icon: FaCamera, path: "/camera" },
-		{ label: "Connections", icon: FaUserFriends, path: "/connections" },
+		{ label: "Friends", icon: FaUserFriends, path: "/friends" },
 		{ label: "Settings", icon: FaCog, path: "/settings" },
 		{ label: "About", icon: FaInfoCircle, path: "/about" }
 	];
