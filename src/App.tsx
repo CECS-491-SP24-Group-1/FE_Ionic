@@ -38,6 +38,7 @@ import CameraPage from "./pages/Camera";
 import SettingsPage from "./pages/settingpage/SettingsPage";
 import ChatsPage from "./pages/chatpage/ChatsPage";
 import LandingPage from "./pages/LandingPage";
+import FriendsPage from "./pages/friendspage/FriendsPage";
 import Sidebar from "./components/Sidebar";
 import "./App.scss";
 
@@ -216,6 +217,7 @@ const App: React.FC = () => {
 									<Route path="/settings" component={SettingsPage} exact={true} />
 									<Route path="/chat" component={ChatsPage} exact={true} />
 									<Route path="/LandingPage" component={LandingPage} exact={true} />
+									<Route path="/friends" component={FriendsPage} />
 									<Route exact path="/" render={() => <Redirect to="/chat" />} />
 								</>
 							</IonRouterOutlet>
