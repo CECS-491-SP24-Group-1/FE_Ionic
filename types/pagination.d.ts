@@ -25,6 +25,6 @@ export interface Page {
 
 export interface Params {
 	page: number /* int */;
-	items_per_page: number /* int */;
+	per_page: number /* int */;
 	skip_to_id: any;
 }
