@@ -53,8 +53,8 @@ export interface RoomMember {
 	username: string;
 	display_name: string;
 	is_me: boolean;
-	Role: string;
-	IsOnline: boolean;
+	role: string;
+	is_online: boolean;
 }
 
 //////////
