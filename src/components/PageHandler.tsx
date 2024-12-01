@@ -66,7 +66,7 @@ const PageHandler:React.FC<PaginationDetails> = ({currentPage, setCurrentPage, t
             <div className="w-36 text-center">
                 <IonText className="text-sm text-gray-300">
                     Page <span className="font-semibold">{currentPage}</span> of {" "}
-                    <span className="font-semibold">{perPage}</span>
+                    <span className="font-semibold">{totalPages}</span>
                 </IonText>
             </div>
 
