@@ -31,7 +31,7 @@ const FriendsPage: React.FC = () => {
       });
   }, [currentPage, perPage]);
 
-  const handleAddFriend = (userId: string) => {
+  const handleMessageUser = (userId: string) => {
     /* Implement when friends route works; basic GPT boilerplate here
     taxios.post(`${api}/friends/add`, { userId })
       .then(() => {
@@ -80,9 +80,9 @@ const FriendsPage: React.FC = () => {
                     </div>
                     <IonButton
                       className="ml-auto rounded-lg bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-700"
-                      onClick={() => handleAddFriend(user.id)}
+                      onClick={() => handleMessageUser(user.id)}
                     >
-                      Add Friend
+                      Message
                     </IonButton>
                   </IonItem>
                 ))}
