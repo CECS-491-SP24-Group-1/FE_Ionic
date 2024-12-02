@@ -58,7 +58,9 @@ const ChatList: React.FC<ChatListProps> = ({
 							className="empty-image mx-auto mt-4 max-w-[150px] invert dark:invert-0"
 							alt="Empty folder"
 						/>
-						<h2 className="mt-3 text-xl font-bold">No Chats Yet</h2>
+						<h2 className="mt-3 text-xl font-bold text-textPrimary dark:text-textPrimary-light">
+							No Chats Yet
+						</h2>
 						<p className="max-w-64 text-gray-500">
 							Start a conversation with a friend or create a new chat room.
 						</p>
