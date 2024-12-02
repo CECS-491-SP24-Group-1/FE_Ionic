@@ -379,7 +379,7 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		<>
 			<p className="subtitle top">
 				An existing vault was found. Please enter your credentials to decrypt it. Use the
-				same passphrase you used to encrypt the vault. If you wish you may clear this vault by&nbsp;
+				same passphrase you used to encrypt the vault. If you wish, you may clear this vault by&nbsp;
 				<a className="cursor-pointer" onClick={handleStartOver}>clicking here</a>.
 			</p>
 
@@ -409,7 +409,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		<>
 			<p className="subtitle top">
 				Your vault is decrypted and ready to use. Please click the button below to
-				initiate the login process.
+				initiate the login process. If you wish, you may clear this vault by&nbsp;
+				<a className="cursor-pointer" onClick={handleStartOver}>clicking here</a>.
 			</p>
 
 			<IonButton shape="round" className="icon-btn continue-button" type="submit">
