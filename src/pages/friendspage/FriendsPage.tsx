@@ -93,21 +93,23 @@ const FriendsPage: React.FC = () => {
 						className="text-3xl text-textPrimary dark:text-textPrimary-light"
 					/>
 					<h1 className="mb-5 text-xl font-bold text-textPrimary dark:text-textPrimary-light">
-						Friends
+						Users
 					</h1>
 
-					{/* Separator Line */}
+					{/* Separator Line 
 					<div className="h-8 w-[1px] bg-gray-500"></div>
+					*/}
 
-					{/* Add Friend Button */}
+					{/* Add Friend Button 
 					<button className="bold text-md rounded bg-[#3C8E59] px-4 py-2 font-bold text-white hover:bg-green-700">
 						Add Friend
 					</button>
+					*/}
 				</div>
 			</IonHeader>
 			<IonContent className="bg-primary text-gray-100 dark:bg-primary-light">
 				<div className="min-h-screen bg-primary p-4 dark:bg-primary-light">
-					{/* Search Bar */}
+					{/* Search Bar 
 					<div className="sticky top-0 z-10 bg-primary pb-4 pt-2 dark:bg-primary-light">
 						<div className="relative">
 							<IonIcon
@@ -123,6 +125,7 @@ const FriendsPage: React.FC = () => {
 							/>
 						</div>
 					</div>
+					*/}
 
 					{/* Friends List */}
 					<div className="gap-4 rounded-lg bg-transparent">
@@ -153,7 +156,7 @@ const FriendsPage: React.FC = () => {
 												/>
 											</button>
 
-											{/* Dropdown Menu */}
+											{/* Dropdown Menu 
 											<div className="group relative">
 												<button className="rounded px-3 py-1 text-2xl font-extrabold text-textPrimary hover:text-gray-500 dark:text-textPrimary-light">
 													⋮
@@ -166,12 +169,13 @@ const FriendsPage: React.FC = () => {
 													</button>
 												</div>
 											</div>
+											*/}
 										</div>
 									</li>
 								))}
 							</ul>
 						) : (
-							<div className="text-center text-gray-500">No friends found.</div>
+							<div className="text-center text-gray-500">No users found.</div>
 						)}
 						{/* Pagination Bar */}
 						<div className="mb-4 flex items-center justify-center rounded-lg bg-transparent p-2">
