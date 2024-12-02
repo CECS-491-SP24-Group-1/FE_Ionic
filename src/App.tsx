@@ -216,7 +216,7 @@ const App: React.FC = () => {
 									<Route path="/camera" component={CameraPage} exact={true} />
 									<Route path="/settings" component={SettingsPage} exact={true} />
 									<Route path="/chat" component={ChatsPage} exact={true} />
-									<Route path="/LandingPage" component={LandingPage} exact={true} />
+									<Route path="/about" component={LandingPage} exact={true} />
 									<Route path="/friends" component={FriendsPage} />
 									<Route exact path="/" render={() => <Redirect to="/chat" />} />
 								</>
