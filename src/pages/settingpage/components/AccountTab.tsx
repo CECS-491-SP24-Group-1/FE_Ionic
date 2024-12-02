@@ -157,11 +157,6 @@ const AccountTab: React.FC = () => {
 					<p className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
 						{user?.display_name || "Display Name"}
 					</p>
-					<a
-						href="#"
-						className="text-sm text-accent hover:underline dark:text-accent-light">
-						View profile
-					</a>
 				</div>
 			</div>
 
