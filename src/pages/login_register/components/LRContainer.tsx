@@ -13,7 +13,7 @@ interface LRContainerProps {
 /** Defines a common container format for login/register pages. */
 const LRContainer: React.FC<LRContainerProps> = ({ title, content, onSubmit }) => {
 	return (
-		<div className="lr-container">
+		<div className="lr-container z-100 relative">
 			{/* Page title */}
 			<h2 className="title">{title}</h2>
 
