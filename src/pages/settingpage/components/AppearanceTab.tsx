@@ -29,7 +29,7 @@ const AppearanceTab: React.FC = () => {
 					lines="full"
 					className="ion-margin-bottom text-textPrimary dark:text-textPrimary-light">
 					<IonLabel>
-						<h3 className="text-textPrimary dark:text-textPrimary-light">Dark Mode</h3>
+						<h3 className="text-textPrimary dark:text-textPrimary-light">Light Mode</h3>
 						<p className="text-textSecondary dark:text-textSecondary-light">
 							Toggle between light and dark themes.
 						</p>
