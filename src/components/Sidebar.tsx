@@ -62,6 +62,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		</>
 	);
 
+	// Function to generate initials from the display name
+	const getInitials = (name: string) => {
+		return name
+			.split(/[\s\-_]+/) // Split by space, hyphen, or underscore
+			.map((part) => part[0]) // Take the first character of each part
+			.join("") // Join the characters
+			.toUpperCase(); // Convert to uppercase
+	};
+
 	// Get the current user info
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -88,10 +97,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 				<div
 					className={`${
 						isExpanded ? "h-12 w-12" : "h-8 w-8"
-					} flex items-center justify-center rounded-full text-lg font-semibold text-white transition-all duration-300`}
-					style={{ backgroundColor: "#444444" }}>
+					} flex items-center justify-center rounded-full transition-all duration-300`}
+					style={{
+						backgroundImage: `url(https://fakeimg.pl/256x256/404040/c4c4c4?text=${
+							currentUser ? getInitials(currentUser.display_name) : "DP"
+						}&font_size=60)`, // Add font_size parameter to enlarge text
+						backgroundSize: "cover",
+						backgroundColor: "#444444"
+					}}>
 					{/* Placeholder for profile image */}
-					<span style={{ backgroundColor: "transparent" }}>DP</span>
 				</div>
 				{isExpanded && currentUser &&(
 					<div
