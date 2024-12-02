@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	FaHome,
 	FaComments,
@@ -8,15 +8,21 @@ import {
 	FaInfoCircle,
 	FaUserFriends
 } from "react-icons/fa";
+import taxios from "../util/token_refresh_hook";
 import { Link, useHistory } from "react-router-dom";
+import { UInfo } from "@ptypes/response_types";
 
 interface SidebarProps {
 	isExpanded: boolean;
 	toggleSidebar: () => void;
 }
 
+
+
 const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 	const history = useHistory();
+
+	const [currentUser, setCurrentUser] = useState<UInfo | null>();
 
 	const menuItems = [
 		{ label: "Home", icon: FaHome, path: "/home" },
@@ -56,6 +62,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		</>
 	);
 
+	// Function to generate initials from the display name
+	const getInitials = (name: string) => {
+		return name
+			.split(/[\s\-_]+/) // Split by space, hyphen, or underscore
+			.map((part) => part[0]) // Take the first character of each part
+			.join("") // Join the characters
+			.toUpperCase(); // Convert to uppercase
+	};
+
+	// Get the current user info
+	useEffect(() => {
+		const fetchUser = async () => {
+			const response = await taxios.get(`${import.meta.env.VITE_API_URL}/user/me`)
+			setCurrentUser(response.data.payloads[0])
+		}
+
+		fetchUser();
+	}, [])
+
 	return (
 		<div
 			className={`hidden h-screen sm:flex ${
@@ -72,12 +97,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 				<div
 					className={`${
 						isExpanded ? "h-12 w-12" : "h-8 w-8"
-					} flex items-center justify-center rounded-full text-lg font-semibold text-white transition-all duration-300`}
-					style={{ backgroundColor: "#444444" }}>
+					} flex items-center justify-center rounded-full transition-all duration-300`}
+					style={{
+						backgroundImage: `url(https://fakeimg.pl/256x256/404040/c4c4c4?text=${
+							currentUser ? getInitials(currentUser.display_name) : "DP"
+						}&font_size=60)`, // Add font_size parameter to enlarge text
+						backgroundSize: "cover",
+						backgroundColor: "#444444"
+					}}>
 					{/* Placeholder for profile image */}
-					<span style={{ backgroundColor: "transparent" }}>DP</span>
 				</div>
-				{isExpanded && (
+				{isExpanded && currentUser &&(
 					<div
 						className="ml-4 transition-opacity duration-300"
 						style={{
@@ -85,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 							transform: `translateX(${isExpanded ? "0" : "-10px"})`
 						}}>
 						<p className="font-semibold text-textPrimary dark:text-textPrimary-light">
-							David
+							{currentUser.display_name}
 						</p>
 						<Link
 							to="#"
