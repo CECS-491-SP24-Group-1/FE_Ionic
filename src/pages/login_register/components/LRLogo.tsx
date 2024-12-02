@@ -1,11 +1,10 @@
 import logo from "@assets/images/glock_primary.svg";
-import "./LRLogo.scss";
 
 const LRLogo: React.FC = () => {
 	return (
-		<div className="logo-container flex flex-col items-center">
+		<div className="flex h-auto w-[200px] flex-col items-center">
 			<img src={logo} alt="Wraith Logo" className="logo" />
-			<p className="logo-text">Wraith</p>
+			<p className="text-2xl font-bold">Wraith</p>
 		</div>
 	);
 };
