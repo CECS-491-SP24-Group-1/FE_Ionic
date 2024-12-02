@@ -33,7 +33,7 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 						type="text"
 						value={newValue}
 						onChange={(e) => setNewValue(e.target.value)}
-						className="rounded border px-2 py-1"
+						className="rounded border px-2 py-1 bg-backgroundHighlight dark:bg-slate-300"
 					/>
 					<button
 						onClick={handleSave}
