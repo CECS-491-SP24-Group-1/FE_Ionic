@@ -1,29 +1,7 @@
 @import "./vars";
 
-// Background Image
-// ion-content::part(scroll) {
-// 	background-image: url("../../../assets/images/registration-background.jpg");
-// 	background-size: cover;
-// 	background-position: center;
-// 	background-repeat: no-repeat;
-// }
-
-@media screen and (max-width: 1100px) {
-	.lr-container {
-		left: 50%; // Center horizontally on smaller screens
-		transform: translate(-50%, -50%);
-	}
-}
-
 // Login and registration Containers
 .lr-container {
-	// Position
-	position: fixed;
-	top: 50%;
-	left: 60%;
-	transform: translate(-50%, -50%);
-	z-index: 1;
-
 	// Styling
 	background-color: white;
 	padding: 2rem;
