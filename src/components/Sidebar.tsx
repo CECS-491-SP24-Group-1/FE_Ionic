@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	FaHome,
 	FaComments,
@@ -8,15 +8,21 @@ import {
 	FaInfoCircle,
 	FaUserFriends
 } from "react-icons/fa";
+import taxios from "../util/token_refresh_hook";
 import { Link, useHistory } from "react-router-dom";
+import { UInfo } from "@ptypes/response_types";
 
 interface SidebarProps {
 	isExpanded: boolean;
 	toggleSidebar: () => void;
 }
 
+
+
 const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 	const history = useHistory();
+
+	const [currentUser, setCurrentUser] = useState<UInfo | null>();
 
 	const menuItems = [
 		{ label: "Home", icon: FaHome, path: "/home" },
@@ -56,6 +62,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		</>
 	);
 
+	// Get the current user info
+	useEffect(() => {
+		const fetchUser = async () => {
+			const response = await taxios.get(`${import.meta.env.VITE_API_URL}/user/me`)
+			setCurrentUser(response.data.payloads[0])
+		}
+
+		fetchUser();
+	}, [])
+
 	return (
 		<div
 			className={`hidden h-screen sm:flex ${
@@ -77,7 +93,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 					{/* Placeholder for profile image */}
 					<span style={{ backgroundColor: "transparent" }}>DP</span>
 				</div>
-				{isExpanded && (
+				{isExpanded && currentUser &&(
 					<div
 						className="ml-4 transition-opacity duration-300"
 						style={{
@@ -85,7 +101,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 							transform: `translateX(${isExpanded ? "0" : "-10px"})`
 						}}>
 						<p className="font-semibold text-textPrimary dark:text-textPrimary-light">
-							David
+							{currentUser.display_name}
 						</p>
 						<Link
 							to="#"
