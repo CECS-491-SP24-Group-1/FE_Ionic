@@ -52,17 +52,16 @@ const ChatList: React.FC<ChatListProps> = ({
 
 			<IonList className={`${isEmpty ? "empty" : ""}`}>
 				{isEmpty ? (
-					<div className="empty-container p-4 text-center">
-						<div className="empty-chat-message">
-							<h2 className="text-lg font-semibold text-textPrimary dark:text-textPrimary-light">
-								No chats found
-							</h2>
-						</div>
+					<div className="empty-container mt-[20vh] flex h-full flex-col items-center justify-center text-center">
 						<img
 							src={emptyFolderImage}
-							className="empty-image mx-auto mt-4"
+							className="empty-image mx-auto mt-4 max-w-[150px] invert dark:invert-0"
 							alt="Empty folder"
 						/>
+						<h2 className="mt-3 text-xl font-bold">No Chats Yet</h2>
+						<p className="max-w-64 text-gray-500">
+							Start a conversation with a friend or create a new chat room.
+						</p>
 					</div>
 				) : (
 					filteredRooms.map((room) => (
