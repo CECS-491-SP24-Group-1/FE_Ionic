@@ -86,6 +86,21 @@ const ChatsPage: React.FC = () => {
 		}
 	};
 
+
+	const hasQueryParams = () => {
+		const searchParams = new URLSearchParams(window.location.search);
+		return [...searchParams.keys()].length > 0; 
+	};
+
+	const getRoomIdFromQuery = () => {
+		const queryParams = new URLSearchParams(window.location.search);
+		return queryParams.get('roomId');
+	};
+
+	useEffect(() => {
+		if (hasQueryParams()) setSelectedChatId(getRoomIdFromQuery())
+	}, [])
+
 	// WebSocket setup
 	useEffect(() => {
 		if (!selectedChatId) return;

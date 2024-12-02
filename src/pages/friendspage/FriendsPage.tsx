@@ -30,7 +30,7 @@ const FriendsPage: React.FC = () => {
 	const [totalPages, setTotalPages] = useState(10);
 	const [perPage, setPerPage] = useState(5);
 	const [searchQuery, setSearchQuery] = useState("");
-
+	const [roomId, setRoomId] = useState<string | null>()
 	const api = import.meta.env.VITE_API_URL;
 
 	useEffect(() => {
@@ -82,6 +82,7 @@ const FriendsPage: React.FC = () => {
 			);
 	
 			const roomsData: Room[] = response.data.payloads;
+			
 	
 			if (Array.isArray(roomsData)) {
 				// Check if the participant already exists in any room
@@ -93,27 +94,41 @@ const FriendsPage: React.FC = () => {
 					// If the participant exists, navigate to the chat page
 					console.log(`Participant exists in room: ${existingRoom.id}`);
 					// Example: Use your navigation logic here
-					window.location.href = "/chat"; // Replace with actual navigation logic
+					navigateToChat(existingRoom.id)
 				} else {
 					// If the participant doesn't exist, create a new chat room
 					console.log("Room not found, creating a new chat room...");
 					const createResponse = await taxios.post(`${api}/chat/room/create`, {
 						participants: [userId] , // Replace "member" with the role if needed
 					});
-					const newRoomId = createResponse.data.payload;
+					const newRoomId = createResponse.data.payloads[0];
 	
 					console.log(`New chat room created with ID: ${newRoomId}`);
 					// Navigate to the new chat room
-					window.location.href = "/chat"; // Replace with actual navigation logic
+
+					navigateToChat(newRoomId)
 				}
 			} else {
 				console.error("Rooms data is not an array or is missing.");
 			}
+
 		} catch (error) {
 			console.error("Error handling start chat:", error);
 		}
 
 	};
+
+	const navigateToChat = (roomId: string) => {
+		console.log(`Navigating to room: ${roomId}`);
+		window.location.href = `/chat?roomId=${roomId}`; // Replace with your navigation logic
+	};
+
+	useEffect(() => {
+
+		if (roomId)
+			window.location.href = `/chat?roomId=${roomId}`; // Replace with actual navigation logic
+
+	}, [roomId])
 
 	const handleRemoveFriend = (userId: string) => {
 		console.log(`Removing friend ${userId}`);
