@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { IonLabel, IonIcon, IonModal, IonButton, IonInput } from "@ionic/react";
-import { search } from "ionicons/icons";
+import { search, addCircle } from "ionicons/icons";
 import CreateChatRoom from "./CreateChatRoom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import "@/App.scss";
 
 interface ChatsHeaderProps {
 	onSearch: (searchQuery: string) => void;
@@ -37,7 +37,10 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 				<div
 					className="absolute right-4 top-4 flex cursor-pointer items-center justify-center text-[19px] text-textAccent transition-colors duration-300 dark:text-textAccent-light"
 					onClick={handleOpenModal}>
-					<FontAwesomeIcon icon={faEdit} />
+					<IonIcon
+						icon={addCircle}
+						className="mr-2 text-2xl text-textPrimary dark:text-textPrimary-light"
+					/>
 				</div>
 			</div>
 
@@ -56,7 +59,8 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 			</div>
 
 			{/* Use IonModal to render CreateChatRoom */}
-			<IonModal isOpen={showModal} onDidDismiss={handleCloseModal} showBackdrop={true}>
+
+			<IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
 				<CreateChatRoom onRoomCreated={handleCloseModal} />
 			</IonModal>
 		</div>
