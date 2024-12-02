@@ -1,6 +1,6 @@
 // src/pages/ChatView/ChatHeader.tsx
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { menuController } from "@ionic/core/components";
 import { IonItem, IonAvatar, IonLabel, IonButton, IonIcon } from "@ionic/react";
 import {
@@ -11,6 +11,8 @@ import {
 	arrowBack
 } from "ionicons/icons";
 import { useRoomStore } from "@/stores/room_store";
+import { createAvatar } from "@dicebear/core";
+import { thumbs } from "@dicebear/collection";
 
 interface ChatHeaderProps {
 	selectedChatId: string;
@@ -26,6 +28,18 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 	isMobileView
 }) => {
 	const selectedChat = useRoomStore((state) => state.rooms[selectedChatId]);
+	const [avatarUrl, setAvatarUrl] = useState<string>("");
+
+	useEffect(() => {
+		const generateAvatar = async () => {
+			if (selectedChatId) {
+				const avatar = await createAvatar(thumbs, { seed: selectedChatId }).toDataUri();
+				setAvatarUrl(avatar);
+			}
+		};
+
+		generateAvatar();
+	}, [selectedChatId]);
 
 	if (!selectedChat) {
 		return null;
@@ -55,7 +69,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 					)}
 					<IonAvatar slot="start" className="h-12 w-12 flex-shrink-0 rounded-full">
 						<img
-							src={`https://i.pravatar.cc/300?u=${selectedChatId}`}
+							src={avatarUrl || "https://via.placeholder.com/48"}
 							alt={`Avatar for chat ${selectedChatId}`}
 						/>
 					</IonAvatar>

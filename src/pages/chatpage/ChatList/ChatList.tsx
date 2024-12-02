@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	IonList,
 	IonItem,
@@ -13,6 +13,8 @@ import { ellipsisHorizontal } from "ionicons/icons";
 import ChatsHeader from "./ChatsHeader";
 import emptyFolderImage from "@assets/images/empty_folder.svg";
 import { RoomCS } from "@ptypes/roomcs";
+import { createAvatar } from "@dicebear/core";
+import { thumbs } from "@dicebear/collection";
 
 interface ChatListProps {
 	onChatSelect: (chatId: string) => void;
@@ -37,6 +39,24 @@ const ChatList: React.FC<ChatListProps> = ({
 		event: undefined,
 		chatId: null
 	});
+
+	const [avatars, setAvatars] = useState<Record<string, string>>({});
+
+	// Generate Dicebear avatars for each room
+	useEffect(() => {
+		const generateAvatars = async () => {
+			const newAvatars: Record<string, string> = {};
+			await Promise.all(
+				Object.values(rooms).map(async (room) => {
+					const avatar = await createAvatar(thumbs, { seed: room.id }).toDataUri();
+					newAvatars[room.id] = avatar;
+				})
+			);
+			setAvatars(newAvatars);
+		};
+
+		generateAvatars();
+	}, [rooms]);
 
 	// Filter rooms based on search query
 	const filteredRooms = Object.values(rooms).filter((room) =>
@@ -84,7 +104,7 @@ const ChatList: React.FC<ChatListProps> = ({
 											slot="start"
 											className="mr-3 flex h-12 w-12 items-center justify-center">
 											<img
-												src={`https://i.pravatar.cc/300?u=${room.id}`}
+												src={avatars[room.id] || "https://via.placeholder.com/48"}
 												alt={`Chat room ${room.id}`}
 												className="rounded-full"
 											/>
