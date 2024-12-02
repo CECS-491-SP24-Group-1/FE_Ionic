@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { IonLabel, IonIcon, IonModal, IonButton, IonInput } from "@ionic/react";
-import { search, addCircle } from "ionicons/icons";
+import { search, addCircle, personAdd, personAddOutline, personAddSharp, people } from "ionicons/icons";
 import CreateChatRoom from "./CreateChatRoom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "@/App.scss";
+import JoinChatRoom from "./JoinChatRoom";
 
 interface ChatsHeaderProps {
 	onSearch: (searchQuery: string) => void;
@@ -11,6 +12,7 @@ interface ChatsHeaderProps {
 
 const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 	const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+	const [showCreateModal, setShowCreateModal] = useState(true);
 	const [searchQuery, setSearchQuery] = useState(""); // State to handle search query
 
 	const handleOpenModal = () => {
@@ -36,10 +38,24 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 				</IonLabel>
 				<div
 					className="absolute right-4 top-4 flex cursor-pointer items-center justify-center text-[19px] text-textAccent transition-colors duration-300 dark:text-textAccent-light"
-					onClick={handleOpenModal}>
+				>
+					{/* Join room */}
 					<IonIcon
-						icon={addCircle}
+						icon={people}
 						className="mr-2 text-2xl text-textPrimary dark:text-textPrimary-light"
+						onClick={() => {
+							setShowCreateModal(false);
+							handleOpenModal();
+						}}
+					/>
+					{/* Create room */}
+					<IonIcon
+						icon={personAdd}
+						className="mr-2 text-2xl text-textPrimary dark:text-textPrimary-light"
+						onClick={() => {
+							setShowCreateModal(true);
+							handleOpenModal();
+						}}
 					/>
 				</div>
 			</div>
@@ -61,7 +77,11 @@ const ChatsHeader: React.FC<ChatsHeaderProps> = ({ onSearch }) => {
 			{/* Use IonModal to render CreateChatRoom */}
 
 			<IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
-				<CreateChatRoom onRoomCreated={handleCloseModal} />
+				{
+					showCreateModal ?
+						<CreateChatRoom onRoomCreated={handleCloseModal} /> :
+						<JoinChatRoom onRoomJoined={handleCloseModal} />
+				}
 			</IonModal>
 		</div>
 	);
