@@ -66,7 +66,7 @@ ion-popover {
 }
 
 ion-popover:hover {
-	--ion-text-color: #d4280a;
+	--ion-text-color: #cfcfcf;
 }
 
 html.dark ion-popover {
@@ -75,7 +75,7 @@ html.dark ion-popover {
 }
 
 html.dark ion-popover:hover {
-	--ion-text-color: #d4280a;
+	--ion-text-color: #cfcfcf;
 }
 
 /* Styles for the IonModal component */
@@ -156,6 +156,10 @@ html.dark ion-popover:hover {
 			}
 		}
 	}
+}
+
+custom-modal-2 {
+	background-color: rgba(0, 0, 0, 0.8);
 }
 
 

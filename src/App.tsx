@@ -31,6 +31,8 @@ import {
 	closeCircleOutline
 } from "ionicons/icons";
 import useVaultStore from "./stores/vault_store";
+import { createAvatar } from "@dicebear/core";
+import { thumbs } from "@dicebear/collection";
 
 // Import pages
 import Home from "./pages/homepage/Home";

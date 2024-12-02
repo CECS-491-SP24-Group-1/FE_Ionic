@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import taxios from "../../../util/token_refresh_hook";
-import useVaultStore from "../../../stores/vault_store";
+import React, { useState, useMemo } from "react";
+import taxios from "@/util/token_refresh_hook";
+import useVaultStore from "@/stores/vault_store";
+import { useRoomStore } from "@/stores/room_store";
 import { IonModal } from "@ionic/react";
-import { useRoomStore } from "../../../stores/room_store";
 import { FaTimes } from "react-icons/fa";
+import { BeamVisualization } from "./BeamVisualization";
 
 interface CreateChatRoomProps {
 	onRoomCreated?: () => void;
@@ -11,7 +12,7 @@ interface CreateChatRoomProps {
 
 const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 	const [roomName, setRoomName] = useState("");
-	const [participants, setParticipants] = useState("");
+	const [participants, setParticipants] = useState<string>("");
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
 
@@ -19,20 +20,34 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 	const addRoom = useRoomStore((state) => state.addRoom);
 	const api = import.meta.env.VITE_API_URL;
 
+	// Memoize parsed participants to avoid unnecessary re-renders
+	const parsedParticipants = useMemo(
+		() =>
+			participants
+				.split(",")
+				.map((p) => p.trim())
+				.filter((p) => p.length > 0),
+		[participants]
+	);
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError("");
 		setSuccess("");
 
-		const participantsArray = participants.split(",").map((p) => p.trim());
+		if (parsedParticipants.length === 0) {
+			setError("Please provide at least one participant.");
+			return;
+		}
 
 		try {
 			const response = await taxios.post(`${api}/chat/room/create`, {
-				participants: participantsArray
+				participants: parsedParticipants
 			});
 
 			const newRoom = response.data.payloads[0];
 
+			// Add new room to the store
 			addRoom({
 				id: newRoom.id,
 				created_at: newRoom.created_at,
@@ -47,7 +62,6 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 			});
 
 			setSuccess("Chat room created successfully!");
-			setRoomName("");
 			setParticipants("");
 		} catch (error) {
 			setError("Failed to create chat room. Please try again.");
@@ -83,13 +97,15 @@ const CreateChatRoom: React.FC<CreateChatRoomProps> = ({ onRoomCreated }) => {
 							className="mt-1 block w-full rounded-md border border-gray-300 bg-white p-2 text-gray-700 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200 sm:text-sm"
 						/>
 					</div>
-					
 					<button
 						type="submit"
 						className="w-full rounded-md bg-accent px-4 py-2 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:ring-offset-gray-900">
 						Create Chat Room
 					</button>
 				</form>
+
+				{/* Beam visualization component */}
+				<BeamVisualization uuidCount={parsedParticipants.length} />
 			</div>
 		</IonModal>
 	);
