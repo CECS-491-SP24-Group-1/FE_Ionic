@@ -335,6 +335,21 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		//window.location.reload();
 	};
 
+	//Handles when the user opts to start over and re-import a vault
+	const handleStartOver = () => {
+		//Clear localstorage and sessionstorage
+		localStorage.removeItem(LS_EVAULT_KEY);
+		sessionStorage.removeItem(SS_VAULT_KEY);
+
+		//Clear vault state
+		setVaultState(prevState => ({
+			...prevState,
+			hasEVault: false,
+			hasVault: false,
+			vaultFile: null
+		}));
+	};
+
 	//Form contents to show when an encrypted vault is not present.
 	const formNoEVault = (
 		<>
@@ -364,7 +379,8 @@ const Login: React.FC<LoginProps> = ({ togglePage }) => {
 		<>
 			<p className="subtitle top">
 				An existing vault was found. Please enter your credentials to decrypt it. Use the
-				same passphrase you used to encrypt the vault.
+				same passphrase you used to encrypt the vault. If you wish you may clear this vault by&nbsp;
+				<a className="cursor-pointer" onClick={handleStartOver}>clicking here</a>.
 			</p>
 
 			{/* Passphrase security */}

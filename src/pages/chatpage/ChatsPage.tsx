@@ -228,11 +228,11 @@ const ChatsPage: React.FC = () => {
 
 				useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
 					id: chat.id,
-					type: "FILE",
+					type: "UNKNOWN", //TODO: change this later
 					sender_id: myID,
 					recipient_id: selectedChatId,
 					content: file.name,
-					url: url
+					//url: url
 				});
 			} catch (error) {
 				console.error("Error uploading file:", error);
@@ -291,11 +291,11 @@ const ChatsPage: React.FC = () => {
 
 				useRoomStore.getState().addMessageToRoom(selectedChatId, chat.id, {
 					id: chat.id,
-					type: "FILE",
+					type: "UNKNOWN", //TODO: change this later
 					sender_id: myID,
 					recipient_id: selectedChatId,
 					content: "[Audio Message]",
-					url: url
+					//url: url
 				});
 			} catch (error) {
 				console.error("Error uploading audio file:", error);
