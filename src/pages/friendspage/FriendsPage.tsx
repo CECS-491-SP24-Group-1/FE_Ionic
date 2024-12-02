@@ -15,6 +15,7 @@ import taxios from "@/util/token_refresh_hook";
 import PageHandler from "@/components/PageHandler";
 import { createAvatar } from "@dicebear/core";
 import { thumbs } from "@dicebear/collection";
+import { Room } from "@ptypes/room";
 interface User {
 	id: string;
 	display_name: string;
@@ -71,8 +72,47 @@ const FriendsPage: React.FC = () => {
     */
 	};
 
-	const handleStartChat = (userId: string) => {
+	const handleStartChat = async (userId: string) => {
 		console.log(`Starting chat with user ${userId}`);
+
+		try {
+			// Fetch the list of chat rooms
+			const response = await taxios.get(
+				`${api}/chat/room/list` // Adjust this endpoint to your actual API for fetching chat rooms
+			);
+	
+			const roomsData: Room[] = response.data.payloads;
+	
+			if (Array.isArray(roomsData)) {
+				// Check if the participant already exists in any room
+				const existingRoom = roomsData.find((room) =>
+					Object.keys(room.participants).includes(userId)
+				);
+	
+				if (existingRoom) {
+					// If the participant exists, navigate to the chat page
+					console.log(`Participant exists in room: ${existingRoom.id}`);
+					// Example: Use your navigation logic here
+					window.location.href = "/chat"; // Replace with actual navigation logic
+				} else {
+					// If the participant doesn't exist, create a new chat room
+					console.log("Room not found, creating a new chat room...");
+					const createResponse = await taxios.post(`${api}/chat/room/create`, {
+						participants: [userId] , // Replace "member" with the role if needed
+					});
+					const newRoomId = createResponse.data.payload;
+	
+					console.log(`New chat room created with ID: ${newRoomId}`);
+					// Navigate to the new chat room
+					window.location.href = "/chat"; // Replace with actual navigation logic
+				}
+			} else {
+				console.error("Rooms data is not an array or is missing.");
+			}
+		} catch (error) {
+			console.error("Error handling start chat:", error);
+		}
+
 	};
 
 	const handleRemoveFriend = (userId: string) => {
