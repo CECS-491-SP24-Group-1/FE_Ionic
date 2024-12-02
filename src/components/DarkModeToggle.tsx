@@ -21,6 +21,8 @@ const DarkModeToggle: React.FC = () => {
 		localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
 	}, [isDarkMode]);
 
+	
+
 	return (
 		<div>
 			<IonToggle
