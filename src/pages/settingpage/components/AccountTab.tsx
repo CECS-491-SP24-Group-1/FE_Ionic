@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import { useUser } from "@/hooks/useUser";
 import useVaultStore from "@/stores/vault_store";
 import useSWR, { mutate } from "swr";
+import { createAvatar } from "@dicebear/core";
+import { thumbs } from "@dicebear/collection";
 
 interface InfoFieldProps {
 	label: string;
 	value: string;
 	isEditable: boolean;
-	onSave?: (newValue: string) => void; // Callback for saving edits
+	onSave?: (newValue: string) => void;
 }
 
 const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave }) => {
@@ -17,13 +19,13 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 
 	const handleSave = () => {
 		if (onSave && newValue !== value) {
-			onSave(newValue); // Call the parent save function
+			onSave(newValue);
 		}
-		setIsEditing(false); // Exit edit mode
+		setIsEditing(false);
 	};
 
 	return (
-		<div className="flex justify-between items-center py-3 border-b border-borderPrimary dark:border-borderPrimary-light">
+		<div className="flex items-center justify-between border-b border-borderPrimary py-3 dark:border-borderPrimary-light">
 			<p className="text-textSecondary dark:text-textSecondary-light">{label}</p>
 			{isEditing ? (
 				<div className="flex items-center">
@@ -41,15 +43,13 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 				</div>
 			) : (
 				<div className="flex items-center space-x-2">
-					{/* Display Value */}
 					<p className="text-textPrimary dark:text-textPrimary-light">{value}</p>
-					{/* Edit Button */}
 					{isEditable && (
 						<a
 							href="#"
 							onClick={(e) => {
 								e.preventDefault();
-								setIsEditing(true); // Enable edit mode
+								setIsEditing(true);
 							}}
 							className="text-sm text-accent hover:underline dark:text-accent-light">
 							Edit
@@ -64,7 +64,21 @@ const InfoField: React.FC<InfoFieldProps> = ({ label, value, isEditable, onSave 
 const AccountTab: React.FC = () => {
 	const myID = useVaultStore((state) => state.myID);
 	const { user, isLoading, error, updateUser } = useUser(myID);
-	const [newPhoto, setNewPhoto] = useState<string>("");
+	const [avatarUrl, setAvatarUrl] = useState<string>("");
+
+	useEffect(() => {
+		if (user && !user.photo_url) {
+			const generateAvatar = async () => {
+				const avatar = await createAvatar(thumbs, {
+					seed: user.display_name || "Default Avatar"
+				}).toDataUri();
+				setAvatarUrl(avatar);
+			};
+			generateAvatar();
+		} else if (user?.photo_url) {
+			setAvatarUrl(user.photo_url);
+		}
+	}, [user]);
 
 	if (isLoading) {
 		return <p>Loading...</p>;
@@ -91,11 +105,11 @@ const AccountTab: React.FC = () => {
 			const reader = new FileReader();
 			reader.onload = async () => {
 				try {
-					// Update user photo
 					const updatedUser = { ...user, photo_url: reader.result as string };
 					mutate(`${import.meta.env.VITE_API_URL}/user/${myID}`, updatedUser, false);
 					await updateUser({ photo_url: reader.result });
 					mutate(`${import.meta.env.VITE_API_URL}/user/${myID}`);
+					setAvatarUrl(reader.result as string);
 				} catch (err) {
 					console.error("Failed to update user photo:", err);
 				}
@@ -119,15 +133,15 @@ const AccountTab: React.FC = () => {
 	return (
 		<div className="flex flex-col space-y-6">
 			<div className="flex items-center space-x-4">
-				<div className="relative w-16 h-16">
+				<div className="relative h-16 w-16">
 					<img
-						src={user?.photo_url || "https://via.placeholder.com/64"}
+						src={avatarUrl || "https://via.placeholder.com/64"}
 						alt="Profile"
 						className="h-full w-full rounded-full object-cover"
 					/>
 					<label
 						htmlFor="photo-upload"
-						className="absolute bottom-0 right-0 bg-muted text-textPrimary p-1 rounded-full text-xs cursor-pointer dark:bg-muted-light dark:text-textPrimary-light">
+						className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-muted p-1 text-xs text-textPrimary dark:bg-muted-light dark:text-textPrimary-light">
 						<FaCamera />
 					</label>
 					<input

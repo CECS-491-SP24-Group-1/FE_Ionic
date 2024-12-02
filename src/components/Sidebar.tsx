@@ -11,18 +11,19 @@ import {
 import taxios from "../util/token_refresh_hook";
 import { Link, useHistory } from "react-router-dom";
 import { UInfo } from "@ptypes/response_types";
+import { createAvatar } from "@dicebear/core";
+import { thumbs } from "@dicebear/collection";
 
 interface SidebarProps {
 	isExpanded: boolean;
 	toggleSidebar: () => void;
 }
 
-
-
 const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 	const history = useHistory();
 
 	const [currentUser, setCurrentUser] = useState<UInfo | null>();
+	const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
 	const menuItems = [
 		{ label: "Home", icon: FaHome, path: "/home" },
@@ -62,24 +63,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		</>
 	);
 
-	// Function to generate initials from the display name
-	const getInitials = (name: string) => {
-		return name
-			.split(/[\s\-_]+/) // Split by space, hyphen, or underscore
-			.map((part) => part[0]) // Take the first character of each part
-			.join("") // Join the characters
-			.toUpperCase(); // Convert to uppercase
-	};
-
-	// Get the current user info
 	useEffect(() => {
 		const fetchUser = async () => {
-			const response = await taxios.get(`${import.meta.env.VITE_API_URL}/user/me`)
-			setCurrentUser(response.data.payloads[0])
-		}
+			try {
+				const response = await taxios.get(`${import.meta.env.VITE_API_URL}/user/me`);
+				const userData = response.data.payloads[0];
+				setCurrentUser(userData);
+
+				// Generate Dicebear avatar
+				const avatar = await createAvatar(thumbs, {
+					seed: userData.display_name
+				}).toDataUri();
+				setAvatarUrl(avatar);
+			} catch (error) {
+				console.error("Error fetching user data:", error);
+			}
+		};
 
 		fetchUser();
-	}, [])
+	}, []);
 
 	return (
 		<div
@@ -92,22 +94,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 				className="mb-6 text-textPrimary hover:text-blue-400 dark:text-textPrimary-light">
 				<FaBars className="text-2xl" />
 			</button>
+
 			{/* Profile Section */}
 			<div className="mb-6 flex items-center transition-all duration-300">
 				<div
 					className={`${
 						isExpanded ? "h-12 w-12" : "h-8 w-8"
-					} flex items-center justify-center rounded-full transition-all duration-300`}
-					style={{
-						backgroundImage: `url(https://fakeimg.pl/256x256/404040/c4c4c4?text=${
-							currentUser ? getInitials(currentUser.display_name) : "DP"
-						}&font_size=60)`, // Add font_size parameter to enlarge text
-						backgroundSize: "cover",
-						backgroundColor: "#444444"
-					}}>
-					{/* Placeholder for profile image */}
+					} flex items-center justify-center rounded-full bg-gray-400 transition-all duration-300`}>
+					<img
+						src={avatarUrl || "https://via.placeholder.com/150"}
+						alt="User avatar"
+						className="h-full w-full rounded-full object-cover"
+					/>
 				</div>
-				{isExpanded && currentUser &&(
+				{isExpanded && currentUser && (
 					<div
 						className="ml-4 transition-opacity duration-300"
 						style={{
