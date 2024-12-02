@@ -85,6 +85,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
 				{/* Right Section: Action Buttons */}
 				<div className="ml-auto">
+					
+					<IonButton
+						onClick={openMenu}
+						fill="clear"
+						className="text-accent dark:text-accent-light">
+						<IonIcon icon={informationCircle} />
+					</IonButton>
 					{/* Hide the exit button on mobile if the back button is present */}
 					{!isMobileView && (
 						<IonButton
@@ -94,18 +101,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 							<IonIcon icon={exitOutline} />
 						</IonButton>
 					)}
-					<IonButton fill="clear" className="text-accent dark:text-accent-light">
-						<IonIcon icon={call} />
-					</IonButton>
-					<IonButton fill="clear" className="text-accent dark:text-accent-light">
-						<IonIcon icon={videocam} />
-					</IonButton>
-					<IonButton
-						onClick={openMenu}
-						fill="clear"
-						className="text-accent dark:text-accent-light">
-						<IonIcon icon={informationCircle} />
-					</IonButton>
 				</div>
 			</div>
 		</IonItem>
