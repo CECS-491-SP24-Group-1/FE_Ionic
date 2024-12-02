@@ -118,7 +118,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 							{currentUser.display_name}
 						</p>
 						<Link
-							to="#"
+							to="/settings"
 							className="text-sm text-blue-400 hover:underline dark:text-blue-800">
 							View profile
 						</Link>
