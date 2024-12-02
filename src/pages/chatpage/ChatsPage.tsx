@@ -414,6 +414,7 @@ const ChatsPage: React.FC = () => {
 												onIonChange={(e: CustomEvent) => setInputMessage(e.detail.value!)}
 												onKeyDown={(e) => handleKeyDown(e as React.KeyboardEvent)}
 												className="mb-3 ml-4 flex-1 rounded-3xl bg-secondary pl-4 text-gray-200 dark:bg-secondary-light dark:text-gray-700"
+												style={{ cssText: "padding-left: 1em !important" }}
 											/>
 
 											<IonButton
