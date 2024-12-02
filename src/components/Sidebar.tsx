@@ -6,7 +6,8 @@ import {
 	FaBars,
 	FaCog,
 	FaInfoCircle,
-	FaUserFriends
+	FaUserFriends,
+	FaSignOutAlt
 } from "react-icons/fa";
 import taxios from "../util/token_refresh_hook";
 import { Link, useHistory } from "react-router-dom";
@@ -38,6 +39,30 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 		history.push(path);
 	};
 
+	const handleLogout = async () => {
+		try {
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
+				method: "POST",
+				credentials: "include" // Send cookies along with the request
+			});
+
+			if (response.ok) {
+				// Remove local storage/session data
+				localStorage.removeItem("authToken");
+				sessionStorage.removeItem("authToken");
+
+				// Redirect to the login page
+				history.push("/");
+
+				console.log("User fully logged out");
+			} else {
+				console.error("Failed to log out:", await response.text());
+			}
+		} catch (error) {
+			console.error("Logout error:", error);
+		}
+	};
+
 	const buttonClasses =
 		"group flex items-center space-x-3 text-lg pl-2 transition-transform duration-300";
 
@@ -60,6 +85,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, toggleSidebar }) => {
 					</div>
 				</button>
 			))}
+			{/* Logout Button */}
+			<button
+				onClick={handleLogout}
+				className={`${buttonClasses} ${
+					!isExpanded ? "justify-center" : ""
+				} hover:text-red-400`}>
+				<div className="flex items-center space-x-2">
+					<FaSignOutAlt className="text-xl transition-transform duration-300 group-hover:scale-105 group-hover:text-red-400 dark:text-textPrimary-light" />
+					{isExpanded && (
+						<span className="transition-opacity duration-300 group-hover:text-red-400 dark:text-textPrimary-light">
+							Logout
+						</span>
+					)}
+				</div>
+			</button>
 		</>
 	);
 
