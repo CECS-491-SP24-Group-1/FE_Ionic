@@ -88,8 +88,13 @@ const FriendsPage: React.FC = () => {
 			<IonHeader className="bg-primary dark:bg-primary-light">
 				<div className="flex flex-row items-center gap-4 px-4">
 					{/* Icon and Heading */}
-					<IonIcon icon={peopleOutline} className="text-3xl text-white" />
-					<h1 className="mb-5 text-xl font-bold text-gray-200">Friends</h1>
+					<IonIcon
+						icon={peopleOutline}
+						className="text-3xl text-textPrimary dark:text-textPrimary-light"
+					/>
+					<h1 className="mb-5 text-xl font-bold text-textPrimary dark:text-textPrimary-light">
+						Friends
+					</h1>
 
 					{/* Separator Line */}
 					<div className="h-8 w-[1px] bg-gray-500"></div>
@@ -103,17 +108,15 @@ const FriendsPage: React.FC = () => {
 			<IonContent className="bg-primary text-gray-100 dark:bg-primary-light">
 				<div className="min-h-screen bg-primary p-4 dark:bg-primary-light">
 					{/* Search Bar */}
-					<div
-						className="sticky top-0 z-10 bg-primary pb-4 pt-2 dark:bg-primary-light"
-						style={{ boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)" }}>
+					<div className="sticky top-0 z-10 bg-primary pb-4 pt-2 dark:bg-primary-light">
 						<div className="relative">
 							<IonIcon
 								icon={searchCircleOutline}
-								className="absolute left-3 top-1/2 -translate-y-1/2 transform text-3xl text-gray-400"
+								className="absolute left-3 top-1/2 -translate-y-1/2 transform text-3xl text-textPrimary dark:text-textPrimary-light"
 							/>
 							<input
 								type="text"
-								className="w-full rounded-lg bg-backgroundHighlight px-12 py-2 text-gray-200 focus:outline-none dark:bg-backgroundHighlight-light dark:text-textPrimary-light"
+								className="dark:text-textPrimary-lightfocus:outline-none w-full rounded-lg bg-backgroundHighlight px-12 py-2 text-textPrimary dark:bg-backgroundHighlight-light dark:text-textPrimary-light"
 								placeholder="Search friends..."
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
@@ -135,19 +138,24 @@ const FriendsPage: React.FC = () => {
 												alt={`${user.display_name}'s avatar`}
 												className="h-10 w-10 rounded-full"
 											/>
-											<span className="font-semibold">{user.display_name}</span>
+											<span className="font-semibold text-textPrimary dark:text-textPrimary-light">
+												{user.display_name}
+											</span>
 										</div>
 										<div className="relative flex items-center gap-1">
 											{/* Start Chat Button with Icon */}
 											<button
 												onClick={() => handleStartChat(user.id)}
-												className="rounded-full bg-backgroundHighlight p-2 hover:bg-blue-700 dark:bg-backgroundHighlight-light">
-												<IonIcon icon={chatbubble} className="text-2xl text-white" />
+												className="rounded-full bg-backgroundHighlight p-2 hover:bg-blue-700 dark:bg-backgroundHighlight-light dark:hover:bg-blue-400">
+												<IonIcon
+													icon={chatbubble}
+													className="text-2xl text-textSecondary dark:text-textSecondary-light"
+												/>
 											</button>
 
 											{/* Dropdown Menu */}
 											<div className="group relative">
-												<button className="rounded px-3 py-1 text-2xl font-extrabold hover:text-gray-500">
+												<button className="rounded px-3 py-1 text-2xl font-extrabold text-textPrimary hover:text-gray-500 dark:text-textPrimary-light">
 													⋮
 												</button>
 												<div className="absolute right-0 mt-1 hidden w-40 rounded bg-gray-800 shadow-lg group-hover:block">

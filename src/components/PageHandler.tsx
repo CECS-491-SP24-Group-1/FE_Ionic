@@ -62,7 +62,10 @@ const PageHandler: React.FC<PaginationDetails> = ({
 				onClick={handleFirstPage}
 				disabled={currentPage === 1}
 				className="flex items-center justify-center rounded-full p-2 disabled:cursor-not-allowed disabled:opacity-50">
-				<IonIcon icon={playSkipBack} className="text-xl text-white" />
+				<IonIcon
+					icon={playSkipBack}
+					className="text-xl text-textPrimary dark:text-textPrimary-light"
+				/>
 			</IonButton>
 
 			{/* Previous button */}
@@ -70,12 +73,15 @@ const PageHandler: React.FC<PaginationDetails> = ({
 				onClick={handlePrevPage}
 				disabled={currentPage === 1}
 				className="flex items-center justify-center rounded-full p-2 disabled:cursor-not-allowed disabled:opacity-50">
-				<IonIcon icon={arrowBack} className="text-xl text-white" />
+				<IonIcon
+					icon={arrowBack}
+					className="text-xl text-textPrimary dark:text-textPrimary-light"
+				/>
 			</IonButton>
 
 			{/* Current page info */}
 			<div className="w-10 text-center">
-				<IonText className="text-sm text-gray-300">
+				<IonText className="text-sm text-textPrimary dark:text-textPrimary-light">
 					Page <span className="font-semibold">{currentPage}</span> of{" "}
 					<span className="font-semibold">{totalPages}</span>
 				</IonText>
@@ -83,25 +89,33 @@ const PageHandler: React.FC<PaginationDetails> = ({
 
 			{/* Dropdown to Change Items Per Page */}
 			<div className="flex w-32 flex-row items-center gap-2">
-				<IonText className="text-sm text-gray-300">Items per page: </IonText>
+				<IonText className="text-sm text-textPrimary dark:text-textPrimary-light">
+					Items per page:{" "}
+				</IonText>
 				<IonSelect
 					value={perPage}
 					placeholder="Items per page"
 					onIonChange={(e) => handlePerPageChange(e.detail.value)}
-					className="rounded-lg bg-backgroundHighlight pl-6 text-sm text-white focus:outline-none dark:bg-backgroundHighlight-light"
+					className="rounded-lg bg-backgroundHighlight pl-6 text-sm text-textPrimary focus:outline-none dark:bg-backgroundHighlight-light dark:text-textPrimary-light"
 					interface="popover">
 					<IonSelectOption
 						value={5}
-						className="text-center text-gray-300 hover:bg-transparent">
+						className="text-center text-textPrimary hover:bg-transparent dark:text-textPrimary-light">
 						5
 					</IonSelectOption>
-					<IonSelectOption value={10} className="text-center text-gray-300">
+					<IonSelectOption
+						value={10}
+						className="text-center text-textPrimary dark:text-textPrimary-light">
 						10
 					</IonSelectOption>
-					<IonSelectOption value={20} className="text-center text-gray-300">
+					<IonSelectOption
+						value={20}
+						className="text-center text-textPrimary dark:text-textPrimary-light">
 						20
 					</IonSelectOption>
-					<IonSelectOption value={50} className="text-center text-gray-300">
+					<IonSelectOption
+						value={50}
+						className="text-center text-textPrimary dark:text-textPrimary-light">
 						50
 					</IonSelectOption>
 				</IonSelect>
@@ -111,8 +125,11 @@ const PageHandler: React.FC<PaginationDetails> = ({
 			<IonButton
 				onClick={handleNextPage}
 				disabled={currentPage === totalPages}
-				className="flex items-center justify-center rounded-full p-2 disabled:cursor-not-allowed disabled:opacity-50">
-				<IonIcon icon={arrowForward} className="text-xl text-white" />
+				className="flex items-center justify-center p-2 disabled:cursor-not-allowed disabled:opacity-50">
+				<IonIcon
+					icon={arrowForward}
+					className="text-xl text-textPrimary dark:text-textPrimary-light"
+				/>
 			</IonButton>
 
 			{/* Last page button */}
@@ -120,7 +137,10 @@ const PageHandler: React.FC<PaginationDetails> = ({
 				onClick={handleLastPage}
 				disabled={currentPage === totalPages}
 				className="flex items-center justify-center rounded-full p-2 disabled:cursor-not-allowed disabled:opacity-50">
-				<IonIcon icon={playSkipForward} className="text-xl text-white" />
+				<IonIcon
+					icon={playSkipForward}
+					className="text-xl text-textPrimary dark:text-textPrimary-light"
+				/>
 			</IonButton>
 		</div>
 	);
